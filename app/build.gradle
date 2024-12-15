@@ -1,0 +1,31 @@
+plugins {
+    id 'application'
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext.junitVersion = '5.11.3'
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.2'
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+application {
+    mainClass = 'controller.ControllerImpl'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
