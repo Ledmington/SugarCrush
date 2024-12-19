@@ -1,31 +1,54 @@
 plugins {
     id 'application'
-    id 'java'
 }
 
-repositories {
-    mavenCentral()
+// utility function
+static def path(final String ...s) {
+    return String.join(File.separator, s)
 }
 
-ext.junitVersion = '5.11.3'
+String version = "1.0.0"
+String fatJarBaseName = "SugarCrush-${version}"
+String fatJarName = "${fatJarBaseName}.jar"
+String fatJarPath = path("${project.layout.buildDirectory.get().toString()}", "libs", "${fatJarName}")
+String mainClassName = "controller.ControllerImpl"
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
 }
 
 application {
-    mainClass = 'controller.ControllerImpl'
+    mainClass = mainClassName
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+run {
+    args = []
+    jvmArgs = []
 }
+
+tasks.register('fatJar', Jar) {
+    group 'distribution'
+    description 'Builds the fat jar of the application'
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    manifest {
+        archiveBaseName = "SugarCrush"
+        attributes(
+                // "Implementation-Title": "Gradle",
+                "Implementation-Version": "${version}",
+                "Main-Class": "$mainClassName"
+        )
+    }
+    archiveBaseName = "${fatJarBaseName}"
+
+    doLast {
+        printf "The fat jar is %s\n", fatJarPath
+        printf "Fat jar size: %.3f MB\n", new File(fatJarPath).length() / 1_000_000L
+    }
+}
+
+tasks.build.dependsOn(fatJar)
