@@ -8,3 +8,18 @@ Sono inoltre presenti molti ostacoli, che rendono più difficile il superamento 
 La struttura di **Sugar Crush** è molto simile: sono disponibili 10 livelli, di difficoltà crescente, sbloccabili in sequenza.
 Sono presenti due degli ostacoli del gioco originale, ossia il cioccolato e la gelatina, oltre ai potenziamenti acquistabili con le monete ottenute superando i livelli.
 Le statistiche dei giocatori rimangono salvate su file, permettendo ad essi di proseguire il gioco da dove lo avevano lasciato.
+
+## Come compilare
+Linux:
+```bash
+./gradlew fatjar
+```
+Windows:
+```bash
+gradlew.bat fatjar
+```
+
+Questo comando produrrà un jar eseguibile nella cartella `build`:
+```bash
+java -jar build/libs/SugarCrush-1.0.0.jar
+```
