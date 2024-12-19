@@ -43,7 +43,6 @@ public final class ScoreBoard {
 				.forEach(p -> this.rankPlayer.add(new Pair<>(
 						p.get(playerName).toString(),
 						Integer.parseInt(p.get(StatsTypes.totalScore.name()).toString()))));
-
 		return this.rankPlayer;
 	}
 
@@ -60,7 +59,6 @@ public final class ScoreBoard {
 				.forEach(p -> this.rankPlayer.add(new Pair<>(
 						p.get(playerName).toString(),
 						Integer.parseInt(p.get("level" + lvlNumber + "Score").toString()))));
-
 		return this.rankPlayer;
 	}
 }

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import controller.Controller;
@@ -36,12 +36,12 @@ import utils.Pair;
 /** @author Davide Degli Esposti */
 public final class TestScoreBoard {
 
-	private PlayerManagerImpl pm;
-	private ScoreBoard sb;
-	private List<Pair<String, Integer>> testList;
+	private static PlayerManagerImpl pm;
+	private static ScoreBoard sb;
+	private static List<Pair<String, Integer>> testList;
 
-	@BeforeEach
-	public void prepare() {
+	@BeforeAll
+	public static void prepare() {
 		sb = new ScoreBoard();
 		pm = new PlayerManagerImpl();
 		testList = new ArrayList<>();
