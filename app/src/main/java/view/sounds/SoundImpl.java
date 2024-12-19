@@ -17,11 +17,14 @@
  */
 package view.sounds;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * A class that implements {@link Sound}
@@ -30,9 +33,9 @@ import javax.sound.sampled.Clip;
  */
 public final class SoundImpl implements Sound {
 
-	private boolean soundEnabled = true;
+	private boolean soundEnabled = false;
 
-	public void playSound(String sound) {
+	public void playSound(final String sound) {
 		if (this.soundEnabled) {
 			try {
 				final Clip clip = AudioSystem.getClip();
@@ -40,7 +43,7 @@ public final class SoundImpl implements Sound {
 				final AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundUrl);
 				clip.open(inputStream);
 				clip.start();
-			} catch (final Exception e) {
+			} catch (final UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 				throw new RuntimeException(e);
 			}
 		}
