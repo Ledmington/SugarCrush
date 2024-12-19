@@ -32,7 +32,7 @@ public final class Goal {
 
 	private final String title; // is the main title of the goal
 	private final String descr; // is the short description of the goal
-	private boolean reached; // is the flag that is true if the agoal is reached
+	private boolean reached; // is the flag that is true if the a goal is reached
 	private final Predicate<Map<String, Object>> method; // the method for check if a goal is reached
 	private final PlayerManagerImpl pm = new PlayerManagerImpl(); // variable to get the list of the players
 	private final Controller cntrlImpl;
@@ -78,7 +78,7 @@ public final class Goal {
 	 */
 	public boolean checkIfReached() {
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
-		for (var map : list) {
+		for (final Map<String, Object> map : list) {
 			if (map.get(playerName).toString().equals("\"" + cntrlImpl.getCurrentPlayer() + "\"")) {
 				this.reached = this.method.test(map);
 				break;

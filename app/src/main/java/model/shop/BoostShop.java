@@ -129,7 +129,7 @@ public final class BoostShop {
 	 */
 	private void addBoostToPlayer(final String name, final Boost bst) {
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.BOOSTS);
-		for (var map : list) {
+		for (final Map<String, Object> map : list) {
 			if (map.get(playerName).toString().equals("\"" + name + "\"")) {
 				map.put(bst.getName(), Integer.parseInt(map.get(bst.getName()).toString()) + 1);
 			}

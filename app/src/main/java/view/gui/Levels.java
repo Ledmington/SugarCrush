@@ -66,7 +66,7 @@ public final class Levels extends GUI {
 		tutorialButton.addActionListener(e -> {
 			controller.getSound().playSound("button_press");
 			controller.startTutorial();
-			var tmpView = new Game(controller, view);
+			final Game tmpView = new Game(controller, view);
 			this.load(tmpView);
 			tmpView.setTitle("Tutorial");
 		});

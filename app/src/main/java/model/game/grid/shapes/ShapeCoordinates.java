@@ -120,7 +120,7 @@ public final class ShapeCoordinates {
 				// If non already in shpC.
 				if (!coordsWithImplicit.contains(neirCrd)) {
 					// Creating this possible shape (removing considered coordinate, adding the new one).
-					var tmpList = new ArrayList<>(coordsWithImplicit);
+					final List<Point2D> tmpList = new ArrayList<>(coordsWithImplicit);
 					tmpList.remove(crd);
 					tmpList.add(neirCrd);
 					// Add this list to shpLst.

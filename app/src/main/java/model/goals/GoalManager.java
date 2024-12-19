@@ -228,7 +228,7 @@ public final class GoalManager {
 
 	/** Tells the {@link GoalManager} to reset the internal data about current player. */
 	public void resetPlayerMap() {
-		for (var map : pm.getPlayers(FileTypes.STATS)) {
+		for (final Map<String, Object> map : pm.getPlayers(FileTypes.STATS)) {
 			if (map.get(playerName).toString().equals("\"" + cntrlImpl.getCurrentPlayer() + "\"")) {
 				mapCurrentPlayer = map;
 				break;
