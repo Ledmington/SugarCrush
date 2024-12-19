@@ -1,3 +1,20 @@
+/*
+ * Sugar Crush
+ * Copyright (C) 2020 Filippo Benvenuti, Filippo Barbari, Lamagna Emanuele, Degli Esposti Davide
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package test;
 
 import static org.junit.Assert.assertFalse;
@@ -13,22 +30,18 @@ import org.junit.*;
 
 import controller.Controller;
 import controller.ControllerImpl;
-import model.score.Status;
-import model.score.StatusImpl;
+import model.game.grid.GridManager;
+import model.game.grid.GridManagerImpl;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyFactory;
 import model.game.grid.candies.CandyFactoryImpl;
 import model.game.grid.candies.CandyTypes;
-import model.game.grid.GridManager;
-import model.game.grid.GridManagerImpl;
+import model.score.Status;
+import model.score.StatusImpl;
 import utils.Point2D;
 
-/**
- * 
- * @author Filippo Benvenuti
- *
- */
+/** @author Filippo Benvenuti */
 public final class TestGridManager {
 
 	private GridManager grdMng;
@@ -40,7 +53,6 @@ public final class TestGridManager {
 	private Status score;
 	private final Controller c = new ControllerImpl();
 
-
 	@Before
 	public final void prepare() {
 		this.score = new StatusImpl(c);
@@ -51,43 +63,43 @@ public final class TestGridManager {
 		colors.add(CandyColors.YELLOW);
 		colors.add(CandyColors.PURPLE);
 		colors.add(CandyColors.RED);
-		map = new HashMap<>(){/**
-		 * 
-		 */
-		 private static final long serialVersionUID = 1L;
+		map = new HashMap<>() {
+			/** */
+			private static final long serialVersionUID = 1L;
 
-		 {
-			 put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-			 put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-			 put(new Point2D(3, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-			 put(new Point2D(4, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-			 put(new Point2D(5, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-		 }};
-		 map.put(new Point2D(6, 0), Optional.empty());
-		 map2 = new HashMap<>(){/**
-		  * 
-		  */
-			 private static final long serialVersionUID = 1L;
+			{
+				put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(3, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(4, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(5, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+			}
+		};
+		map.put(new Point2D(6, 0), Optional.empty());
+		map2 = new HashMap<>() {
+			/** */
+			private static final long serialVersionUID = 1L;
 
-			 {
-				 put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-				 put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.GREEN)));
-				 put(new Point2D(4, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-			 }};
-			 map3 = new HashMap<>(){/**
-			  * 
-			  */
-				 private static final long serialVersionUID = 1L;
+			{
+				put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.GREEN)));
+				put(new Point2D(4, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+			}
+		};
+		map3 = new HashMap<>() {
+			/** */
+			private static final long serialVersionUID = 1L;
 
-				 {
-					 put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-					 put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.PURPLE)));
-					 put(new Point2D(3, 0), Optional.of(cndFac.getNormalCandy(CandyColors.GREEN)));
-					 put(new Point2D(4, 0), Optional.of(cndFac.getChocolate()));
-				 }};
+			{
+				put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.PURPLE)));
+				put(new Point2D(3, 0), Optional.of(cndFac.getNormalCandy(CandyColors.GREEN)));
+				put(new Point2D(4, 0), Optional.of(cndFac.getChocolate()));
+			}
+		};
 	}
 
-	@Test (expected = NullPointerException.class)
+	@Test(expected = NullPointerException.class)
 	public final void gridCantBeNull() {
 		new GridManagerImpl(c, null, null, null, false);
 	}
@@ -102,8 +114,8 @@ public final class TestGridManager {
 	public final void frecklesPresent() {
 		grdMng = new GridManagerImpl(c, map, this.score, colors, false);
 		boolean found = false;
-		for(var crd : grdMng.getGrid().entrySet()){
-			found = found ||  crd.getValue().get().getType() == CandyTypes.FRECKLES;
+		for (var crd : grdMng.getGrid().entrySet()) {
+			found = found || crd.getValue().get().getType() == CandyTypes.FRECKLES;
 		}
 		assertTrue(found);
 	}
@@ -122,8 +134,8 @@ public final class TestGridManager {
 	@Test
 	public final void insaneAndCurious() {
 		Map<Point2D, Optional<Candy>> nsnMap = new HashMap<>();
-		for(int i = 0; i < 10; i++) {
-			for(int j = 0; j < 10; j++) {
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
 				nsnMap.put(new Point2D(i, j), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
 			}
 		}
@@ -143,5 +155,4 @@ public final class TestGridManager {
 		assertTrue(grdMng.destroyCandy(new Point2D(2, 0)));
 		assertTrue(grdMng.getGrid().get(new Point2D(3, 0)).isEmpty());
 	}
-
 }

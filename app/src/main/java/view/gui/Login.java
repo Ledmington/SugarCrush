@@ -1,5 +1,23 @@
+/*
+ * Sugar Crush
+ * Copyright (C) 2020 Filippo Benvenuti, Filippo Barbari, Lamagna Emanuele, Degli Esposti Davide
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package view.gui;
 
+import static controller.Controller.playerName;
 import static controller.files.FileTypes.*;
 
 import java.awt.Color;
@@ -15,76 +33,72 @@ import controller.Controller;
 import view.View;
 import view.sounds.*;
 
-import static controller.Controller.playerName;
-
 /**
  * A {@link GUI} that sets the current player and add him if he isn't already saved
- * 
- * @author Emanuele Lamagna
  *
+ * @author Emanuele Lamagna
  */
 public final class Login extends GUI {
 
-    private static final long serialVersionUID = -1392377673421616906L;
+	private static final long serialVersionUID = -1392377673421616906L;
 
-    public Login(final Controller controller, final View view) {
-        super(controller, view);
+	public Login(final Controller controller, final View view) {
+		super(controller, view);
 
-        final JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 1));
-        this.getContentPane().add(panel);
+		final JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(4, 1));
+		this.getContentPane().add(panel);
 
-        panel.add(new JLabel("WHAT'S YOUR NAME?"));
+		panel.add(new JLabel("WHAT'S YOUR NAME?"));
 
-        final JTextField jtf = new JTextField();
-        panel.add(jtf);
+		final JTextField jtf = new JTextField();
+		panel.add(jtf);
 
-        final JLabel comment = new JLabel();
-        panel.add(comment);
+		final JLabel comment = new JLabel();
+		panel.add(comment);
 
-        final ActionListener al = (e)->{
-            this.performAction(jtf, comment);
-        };
+		final ActionListener al = (e) -> {
+			this.performAction(jtf, comment);
+		};
 
-        final JButton bt = new JButton("ENTER");
-        bt.addActionListener(al);
+		final JButton bt = new JButton("ENTER");
+		bt.addActionListener(al);
 
-        jtf.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    performAction(jtf, comment);
-                }
-            }
-        });
+		jtf.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					performAction(jtf, comment);
+				}
+			}
+		});
 
-        panel.add(bt);
-        panel.setBackground(Color.PINK);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.pack();
-        this.setVisible(true);
-    }
+		panel.add(bt);
+		panel.setBackground(Color.PINK);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.pack();
+		this.setVisible(true);
+	}
 
-    //contains the action of the login (verify the name and access to the main menu)
-    private final void performAction(final JTextField jtf, final JLabel comment) {
-    	new SoundImpl().playSound("button_press");
-        if(!jtf.getText().equals("") && !jtf.getText().contains("\"")) {
-            boolean isPresent = false;
-            for(Map<String, Object> map: controller.getPlayers(STATS)){
-                if(map.get(playerName).toString().equals("\"" + jtf.getText() + "\"")){
-                    isPresent = true;
-                    break;
-                }
-            }
-            if(!isPresent){
-                controller.addPlayer(jtf.getText());
-                JOptionPane.showMessageDialog(this, "First time here? Try the tutorial!");
-            }
-            controller.setCurrentPlayer(jtf.getText());
-            this.load(new MainMenu(controller, this.view));
-        } else {
-            comment.setText("Enter a valid name");
-            comment.setForeground(Color.RED);
-        }
-    }
-
+	// contains the action of the login (verify the name and access to the main menu)
+	private final void performAction(final JTextField jtf, final JLabel comment) {
+		new SoundImpl().playSound("button_press");
+		if (!jtf.getText().equals("") && !jtf.getText().contains("\"")) {
+			boolean isPresent = false;
+			for (Map<String, Object> map : controller.getPlayers(STATS)) {
+				if (map.get(playerName).toString().equals("\"" + jtf.getText() + "\"")) {
+					isPresent = true;
+					break;
+				}
+			}
+			if (!isPresent) {
+				controller.addPlayer(jtf.getText());
+				JOptionPane.showMessageDialog(this, "First time here? Try the tutorial!");
+			}
+			controller.setCurrentPlayer(jtf.getText());
+			this.load(new MainMenu(controller, this.view));
+		} else {
+			comment.setText("Enter a valid name");
+			comment.setForeground(Color.RED);
+		}
+	}
 }

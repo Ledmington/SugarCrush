@@ -1,16 +1,31 @@
+/*
+ * Sugar Crush
+ * Copyright (C) 2020 Filippo Benvenuti, Filippo Barbari, Lamagna Emanuele, Degli Esposti Davide
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package model.game.grid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
 import controller.Controller;
-import java.util.List;
-
-import model.score.Status;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyBuilderImpl;
 import model.game.grid.candies.CandyColors;
@@ -19,13 +34,10 @@ import model.game.grid.candies.CandyFactoryImpl;
 import model.game.grid.candies.CandyTypes;
 import model.game.grid.shapes.ShapeCoordinates;
 import model.game.grid.shapes.Shapes;
+import model.score.Status;
 import utils.Point2D;
 
-/**
- * 
- * @author Filippo Benvenuti
- *
- */
+/** @author Filippo Benvenuti */
 public final class GridManagerImpl implements GridManager {
 
 	private final Map<Point2D, Optional<Candy>> grid;
@@ -38,7 +50,11 @@ public final class GridManagerImpl implements GridManager {
 	private boolean chocolateNeedUpdate = false;
 	private Optional<Map<Point2D, Integer>> jelly;
 
-	public GridManagerImpl(final Controller controller, final Map<Point2D, Optional<Candy>> initialGrid, final Status score, final List<CandyColors> colors,
+	public GridManagerImpl(
+			final Controller controller,
+			final Map<Point2D, Optional<Candy>> initialGrid,
+			final Status score,
+			final List<CandyColors> colors,
 			final boolean jelly) {
 		if (initialGrid == null || score == null || colors == null || controller == null) {
 			throw new NullPointerException();
@@ -196,53 +212,53 @@ public final class GridManagerImpl implements GridManager {
 
 		// Different behavior for each candy.
 		switch (this.grid.get(cord).get().getType()) {
-		case STRIPED_VERTICAL:
-			controller.getSound().playSound("line_blast1");
-			this.grid.forEach((crd, cnd) -> {
-				// Same column.
-				if (crd.getY() == cord.getY()) {
-					cndDestroy.add(crd);
-				}
-			});
-			break;
-		case STRIPED_HORIZONTAL:
-			controller.getSound().playSound("line_blast1");
-			this.grid.forEach((crd, cnd) -> {
-				// Same row.
-				if (crd.getX() == cord.getX()) {
-					cndDestroy.add(crd);
-				}
-			});
-			break;
-		case WRAPPED:
-			controller.getSound().playSound("bomb_sound1");
-			this.grid.forEach((crd, cnd) -> {
-				// Contour (even diagonally).
-				if ((Math.abs(crd.getX() - cord.getX()) == 0 || Math.abs(crd.getX() - cord.getX()) == 1)
-						&& (Math.abs(crd.getY() - cord.getY()) == 0 || Math.abs(crd.getY() - cord.getY()) == 1)) {
-					cndDestroy.add(crd);
-				}
-			});
-			break;
-		case FRECKLES:
-			controller.getSound().playSound("colour_bomb1");
-			this.grid.forEach((crd, cnd) -> {
-				// Candy not already destroyed.
-				if (this.grid.get(crd).isPresent()) {
-					// Same color.
-					if (cnd.get().getColor() == this.grid.get(cord).get().getColor()) {
+			case STRIPED_VERTICAL:
+				controller.getSound().playSound("line_blast1");
+				this.grid.forEach((crd, cnd) -> {
+					// Same column.
+					if (crd.getY() == cord.getY()) {
 						cndDestroy.add(crd);
 					}
-				}
-			});
-			break;
-		case CHOCOLATE:
-			// Inform score that chocolate has been destroyed.
-			this.score.update(this.grid.get(cord).get());
-			this.grid.put(cord, Optional.empty());
-			return true;
-		default:
-			break;
+				});
+				break;
+			case STRIPED_HORIZONTAL:
+				controller.getSound().playSound("line_blast1");
+				this.grid.forEach((crd, cnd) -> {
+					// Same row.
+					if (crd.getX() == cord.getX()) {
+						cndDestroy.add(crd);
+					}
+				});
+				break;
+			case WRAPPED:
+				controller.getSound().playSound("bomb_sound1");
+				this.grid.forEach((crd, cnd) -> {
+					// Contour (even diagonally).
+					if ((Math.abs(crd.getX() - cord.getX()) == 0 || Math.abs(crd.getX() - cord.getX()) == 1)
+							&& (Math.abs(crd.getY() - cord.getY()) == 0 || Math.abs(crd.getY() - cord.getY()) == 1)) {
+						cndDestroy.add(crd);
+					}
+				});
+				break;
+			case FRECKLES:
+				controller.getSound().playSound("colour_bomb1");
+				this.grid.forEach((crd, cnd) -> {
+					// Candy not already destroyed.
+					if (this.grid.get(crd).isPresent()) {
+						// Same color.
+						if (cnd.get().getColor() == this.grid.get(cord).get().getColor()) {
+							cndDestroy.add(crd);
+						}
+					}
+				});
+				break;
+			case CHOCOLATE:
+				// Inform score that chocolate has been destroyed.
+				this.score.update(this.grid.get(cord).get());
+				this.grid.put(cord, Optional.empty());
+				return true;
+			default:
+				break;
 		}
 		// Inform score that this candy has been destroyed.
 		if (this.updateScore) {
@@ -287,14 +303,17 @@ public final class GridManagerImpl implements GridManager {
 						// If candy is present.
 						if (this.grid.get(crd).isPresent()) {
 							// If shape can be created.
-							if(this.shapePossible(curShp, crd)) {
+							if (this.shapePossible(curShp, crd)) {
 								// If we find the shape.
 								if (this.findShape(nearShp, crd, true)) {
 									var tmpList = nearShp.getRelativeCoordinates();
 									// We move relative coordinates based on crd.
 									for (int i = 0; i < tmpList.size(); i++) {
-										tmpList.set(i, new Point2D(tmpList.get(i).getX() + crd.getX(),
-												tmpList.get(i).getY() + crd.getY()));
+										tmpList.set(
+												i,
+												new Point2D(
+														tmpList.get(i).getX() + crd.getX(),
+														tmpList.get(i).getY() + crd.getY()));
 									}
 									// We return this list as a tip.
 									return tmpList;
@@ -310,8 +329,8 @@ public final class GridManagerImpl implements GridManager {
 	}
 
 	public final void consumeRemainingMoves() {
-		List<CandyTypes> spawnable = Arrays.asList(CandyTypes.WRAPPED, CandyTypes.STRIPED_HORIZONTAL,
-				CandyTypes.STRIPED_VERTICAL);
+		List<CandyTypes> spawnable =
+				Arrays.asList(CandyTypes.WRAPPED, CandyTypes.STRIPED_HORIZONTAL, CandyTypes.STRIPED_VERTICAL);
 
 		// For each remaining move a random special candy is generated in a random
 		// position.
@@ -326,8 +345,12 @@ public final class GridManagerImpl implements GridManager {
 			} while (this.grid.get(tmp).get().getType() != CandyTypes.NORMAL);
 
 			// Mutate the candy, same color but different type.
-			this.mutateCandy(tmp, new CandyBuilderImpl().setColor(this.grid.get(tmp).get().getColor())
-					.setType(spawnable.get(rnd.nextInt(spawnable.size()))).build());
+			this.mutateCandy(
+					tmp,
+					new CandyBuilderImpl()
+							.setColor(this.grid.get(tmp).get().getColor())
+							.setType(spawnable.get(rnd.nextInt(spawnable.size())))
+							.build());
 		}
 
 		// Destroying special candies until no special candies are present.
@@ -335,7 +358,7 @@ public final class GridManagerImpl implements GridManager {
 		do {
 			anotherFound = false;
 			for (var crd : this.grid.keySet()) {
-				if(this.grid.get(crd).isPresent()) {
+				if (this.grid.get(crd).isPresent()) {
 					var cnd = this.grid.get(crd).get();
 					if (cnd.getType() != CandyTypes.NORMAL && cnd.getType() != CandyTypes.CHOCOLATE) {
 						// Special candy found, destroy that.
@@ -380,33 +403,33 @@ public final class GridManagerImpl implements GridManager {
 							}
 							// Adding special candy if needed.
 							switch (shp.getCandyType()) {
-							case FRECKLES:
-								this.grid.put(crd, Optional.of(cndFac.getFreckles()));
-								if(this.updateScore) {
-									controller.getSound().playSound("colour_bomb_created");
-								}
-								break;
-							case STRIPED_HORIZONTAL:
-								this.grid.put(crd, Optional.of(cndFac.getHorizontalStriped(cndCol)));
-								if(this.updateScore) {
-									controller.getSound().playSound("striped_candy_created1");
-								}
-								break;
-							case STRIPED_VERTICAL:
-								this.grid.put(crd, Optional.of(cndFac.getVerticalStripedCandy(cndCol)));
-								if(this.updateScore) {
-									controller.getSound().playSound("striped_candy_created1");
-								}
-								break;
-							case WRAPPED:
-								this.grid.put(crd, Optional.of(cndFac.getWrapped(cndCol)));
-								if(this.updateScore) {
-									controller.getSound().playSound("wrapped_candy_created1");
-								}
-								break;
-							default:
-								this.destroyCandy(crd);
-								break;
+								case FRECKLES:
+									this.grid.put(crd, Optional.of(cndFac.getFreckles()));
+									if (this.updateScore) {
+										controller.getSound().playSound("colour_bomb_created");
+									}
+									break;
+								case STRIPED_HORIZONTAL:
+									this.grid.put(crd, Optional.of(cndFac.getHorizontalStriped(cndCol)));
+									if (this.updateScore) {
+										controller.getSound().playSound("striped_candy_created1");
+									}
+									break;
+								case STRIPED_VERTICAL:
+									this.grid.put(crd, Optional.of(cndFac.getVerticalStripedCandy(cndCol)));
+									if (this.updateScore) {
+										controller.getSound().playSound("striped_candy_created1");
+									}
+									break;
+								case WRAPPED:
+									this.grid.put(crd, Optional.of(cndFac.getWrapped(cndCol)));
+									if (this.updateScore) {
+										controller.getSound().playSound("wrapped_candy_created1");
+									}
+									break;
+								default:
+									this.destroyCandy(crd);
+									break;
 							}
 							this.controller.updateGrid();
 						}
@@ -432,7 +455,9 @@ public final class GridManagerImpl implements GridManager {
 					for (int i = 1; i <= crd.getX(); i++) {
 						if (this.grid.containsKey(new Point2D(crd.getX() - i, crd.getY()))) {
 							// If candy is empty we don't need to drop that one.
-							if (this.grid.get(new Point2D(crd.getX() - i, crd.getY())).isEmpty()) {
+							if (this.grid
+									.get(new Point2D(crd.getX() - i, crd.getY()))
+									.isEmpty()) {
 								found = true;
 								break;
 							}
@@ -446,9 +471,8 @@ public final class GridManagerImpl implements GridManager {
 					}
 					// If no candy was found, we generate a new one.
 					if (!found) {
-						tmp = Optional.of(cndFac
-								.getNormalCandy(
-										this.spawnedCandyColors.get(rnd.nextInt(this.spawnedCandyColors.size()))));
+						tmp = Optional.of(cndFac.getNormalCandy(
+								this.spawnedCandyColors.get(rnd.nextInt(this.spawnedCandyColors.size()))));
 					}
 
 					if (tmp.isPresent()) {
@@ -525,8 +549,11 @@ public final class GridManagerImpl implements GridManager {
 			// coordinates.
 			// Else
 			// We check for the match of colors with original one.
-			if ((near) ? this.grid.get(last.get()).get().getColor() != this.grid.get(relCord).get().getColor()
-					: this.grid.get(crd).get().getColor() != this.grid.get(relCord).get().getColor()) {
+			if ((near)
+					? this.grid.get(last.get()).get().getColor()
+							!= this.grid.get(relCord).get().getColor()
+					: this.grid.get(crd).get().getColor()
+							!= this.grid.get(relCord).get().getColor()) {
 				return false;
 			}
 		}
@@ -576,9 +603,11 @@ public final class GridManagerImpl implements GridManager {
 		// Select random neighbor.
 		do {
 			int rndInd = rnd.nextInt(relMov.size());
-			crdToChocolize = new Point2D(crdRandom.getX() + relMov.get(rndInd).getX(),
+			crdToChocolize = new Point2D(
+					crdRandom.getX() + relMov.get(rndInd).getX(),
 					crdRandom.getY() + relMov.get(rndInd).getY());
-		} while ((!this.grid.containsKey(crdToChocolize)) || this.grid.get(crdToChocolize).isEmpty()
+		} while ((!this.grid.containsKey(crdToChocolize))
+				|| this.grid.get(crdToChocolize).isEmpty()
 				|| this.grid.get(crdToChocolize).get().getType() == CandyTypes.CHOCOLATE);
 		// Found non chocolate neighbor.
 		// CHOCOLIZE IT!!!!
@@ -635,52 +664,53 @@ public final class GridManagerImpl implements GridManager {
 		CandyTypes aT = this.grid.get(a).get().getType();
 		CandyTypes bT = this.grid.get(b).get().getType();
 		// In case they are the same.
-		if (aT == bT || (aT == CandyTypes.STRIPED_HORIZONTAL && bT == CandyTypes.STRIPED_VERTICAL)
+		if (aT == bT
+				|| (aT == CandyTypes.STRIPED_HORIZONTAL && bT == CandyTypes.STRIPED_VERTICAL)
 				|| (aT == CandyTypes.STRIPED_VERTICAL && bT == CandyTypes.STRIPED_HORIZONTAL)) {
 			List<Point2D> toDestroy = new ArrayList<>();
 			switch (aT) {
-			case FRECKLES:
-				// Just destroy every candy.
-				this.grid.forEach((crd, cnd) -> {
-					toDestroy.add(crd);
-				});
-				// Destroy all candies.
-				for (var x : toDestroy) {
-					this.destroyCandy(x);
-				}
-				return true;
-
-			case WRAPPED:
-				// Destroy candies near (24 around) (grid 5x5).
-				this.grid.forEach((crd, cnd) -> {
-					// If enough near.
-					if (Math.abs(crd.getX() - b.getX()) <= 2 && Math.abs(crd.getY() - b.getY()) <= 2) {
+				case FRECKLES:
+					// Just destroy every candy.
+					this.grid.forEach((crd, cnd) -> {
 						toDestroy.add(crd);
+					});
+					// Destroy all candies.
+					for (var x : toDestroy) {
+						this.destroyCandy(x);
 					}
-				});
-				// Destroy all candies in toDestroy.
-				for (var x : toDestroy) {
-					this.destroyCandy(x);
-				}
-				return true;
+					return true;
 
-			case STRIPED_HORIZONTAL:
-			case STRIPED_VERTICAL:
-				// Destroy all candies in same row or same column.
-				this.grid.forEach((crd, cnd) -> {
-					// If same row or same column.
-					if (crd.getX() == b.getX() || crd.getY() == b.getY()) {
-						toDestroy.add(crd);
+				case WRAPPED:
+					// Destroy candies near (24 around) (grid 5x5).
+					this.grid.forEach((crd, cnd) -> {
+						// If enough near.
+						if (Math.abs(crd.getX() - b.getX()) <= 2 && Math.abs(crd.getY() - b.getY()) <= 2) {
+							toDestroy.add(crd);
+						}
+					});
+					// Destroy all candies in toDestroy.
+					for (var x : toDestroy) {
+						this.destroyCandy(x);
 					}
-				});
-				// Destroy all candies.
-				for (var x : toDestroy) {
-					this.destroyCandy(x);
-				}
-				return true;
+					return true;
 
-			default:
-				return false;
+				case STRIPED_HORIZONTAL:
+				case STRIPED_VERTICAL:
+					// Destroy all candies in same row or same column.
+					this.grid.forEach((crd, cnd) -> {
+						// If same row or same column.
+						if (crd.getX() == b.getX() || crd.getY() == b.getY()) {
+							toDestroy.add(crd);
+						}
+					});
+					// Destroy all candies.
+					for (var x : toDestroy) {
+						this.destroyCandy(x);
+					}
+					return true;
+
+				default:
+					return false;
 			}
 		}
 
@@ -711,8 +741,12 @@ public final class GridManagerImpl implements GridManager {
 					// If normal candy gets mutated.
 					if (cnd.getValue().get().getType() == CandyTypes.NORMAL) {
 						// Mutate candy, same color but different type.
-						this.mutateCandy(cnd.getKey(), new CandyBuilderImpl().setColor(cnd.getValue().get().getColor())
-								.setType(tmp.getType()).build());
+						this.mutateCandy(
+								cnd.getKey(),
+								new CandyBuilderImpl()
+										.setColor(cnd.getValue().get().getColor())
+										.setType(tmp.getType())
+										.build());
 					}
 				}
 			}
@@ -752,24 +786,24 @@ public final class GridManagerImpl implements GridManager {
 		}
 		return false;
 	}
-	
-	private final boolean shapePossible(final ShapeCoordinates shp, final Point2D crd){
+
+	private final boolean shapePossible(final ShapeCoordinates shp, final Point2D crd) {
 		Point2D relCrd;
 		List<Point2D> lstCrd = shp.getRelativeCoordinates();
 		// Adding implicit coordinate 0, 0.
 		lstCrd.add(new Point2D(0, 0));
-		for(Point2D cord : lstCrd) {
+		for (Point2D cord : lstCrd) {
 			relCrd = new Point2D(cord.getX() + crd.getX(), cord.getY() + crd.getY());
 			// Not inside the grid.
-			if(!this.grid.containsKey(relCrd)) {
+			if (!this.grid.containsKey(relCrd)) {
 				return false;
 			}
 			// Not present.
-			if(this.grid.get(relCrd).isEmpty()) {
+			if (this.grid.get(relCrd).isEmpty()) {
 				return false;
 			}
 			// Is chocolate.
-			if(this.grid.get(relCrd).get().getType() == CandyTypes.CHOCOLATE) {
+			if (this.grid.get(relCrd).get().getType() == CandyTypes.CHOCOLATE) {
 				return false;
 			}
 		}
