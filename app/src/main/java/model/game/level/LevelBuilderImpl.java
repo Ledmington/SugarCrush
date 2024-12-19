@@ -81,7 +81,7 @@ public final class LevelBuilderImpl implements LevelBuilder {
 
 		this.alreadyBuilt = true;
 
-		return new LevelImpl(controller.get(), stages);
+		return new LevelImpl(controller.orElseThrow(), stages);
 	}
 
 	@Override

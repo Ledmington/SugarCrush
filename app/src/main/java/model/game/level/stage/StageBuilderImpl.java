@@ -196,7 +196,8 @@ public final class StageBuilderImpl implements StageBuilder {
 		chocolate.forEach(p -> grid.put(p, Optional.of(cf.getChocolate())));
 
 		return new StageImpl(
-				new GridManagerImpl(controller.orElseThrow(), grid, new StatusImpl(controller.get()), colorList, jelly),
+				new GridManagerImpl(
+						controller.orElseThrow(), grid, new StatusImpl(controller.orElseThrow()), colorList, jelly),
 				objective.orElseThrow(),
 				startingMessage,
 				endingMessage);

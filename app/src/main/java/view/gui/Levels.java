@@ -19,6 +19,7 @@ package view.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.io.Serial;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -37,14 +38,13 @@ import view.View;
  */
 public final class Levels extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = -8843512028871525894L;
-	private final int numLevels;
-	private final int lastLevelUnlocked;
 
-	protected Levels(final Controller controller, final View view) {
+	Levels(final Controller controller, final View view) {
 		super(controller, view);
-		this.numLevels = controller.getNumLevels();
-		this.lastLevelUnlocked = controller.getLastLevelUnlocked();
+		final int numLevels = controller.getNumLevels();
+		final int lastLevelUnlocked = controller.getLastLevelUnlocked();
 
 		// Panel inside Frame
 		final JPanel mainPanel = new JPanel();
@@ -79,15 +79,15 @@ public final class Levels extends GUI {
 		centerPanel.add(levelsPanel);
 
 		// Filling the grid
-		for (int i = 0; i < this.numLevels; i++) {
-			final Integer levelIndex = i + 1;
-			final JButton jb = new JButton(levelIndex.toString());
+		for (int i = 0; i < numLevels; i++) {
+			final int levelIndex = i + 1;
+			final JButton jb = new JButton(String.valueOf(levelIndex));
 			levelsPanel.add(jb);
 
 			jb.addActionListener(e -> {
 				controller.getSound().playSound("button_press");
 				controller.startLevel(levelIndex);
-				var tmpView = new Game(controller, view);
+				final Game tmpView = new Game(controller, view);
 				this.load(tmpView);
 				tmpView.setTitle("Level " + levelIndex);
 

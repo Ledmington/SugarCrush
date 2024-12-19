@@ -22,23 +22,14 @@ package utils;
  *
  * @author Filippo Barbari
  */
-public final class Point2D extends Pair<Integer, Integer> {
-
-	public Point2D(final Integer newX, final Integer newY) {
-		super(newX, newY);
-	}
+public record Point2D(int x, int y) {
 
 	/**
-	 * Creates a new instance of Point2D which the result of vectorial sum between this and otherPoint.
+	 * Creates a new instance of Point2D which the result of the sum between this and otherPoint.
 	 *
 	 * @return A new Point2D.
 	 */
-	public final Point2D add(final Point2D otherPoint) {
-		return new Point2D(this.x + otherPoint.getX(), this.y + otherPoint.getY());
-	}
-
-	@Override
-	public final String toString() {
-		return "Point2D [x=" + x + ", y=" + y + "]";
+	public Point2D add(final Point2D otherPoint) {
+		return new Point2D(this.x + otherPoint.x(), this.y + otherPoint.y());
 	}
 }

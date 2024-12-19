@@ -62,7 +62,7 @@ public final class LevelImpl implements Level {
 
 	public final Objective getObjective() {
 		assertCurrentStageSet();
-		return currentStage.get().getObjective();
+		return currentStage.orElseThrow().getObjective();
 	}
 
 	/** @author Emanuele Lamagna */
@@ -86,7 +86,7 @@ public final class LevelImpl implements Level {
 	private final boolean isCompleted() {
 		assertCurrentStageSet();
 		Objective objective = getObjective();
-		Challenge challenge = objective.getChallenge().get();
+		Challenge challenge = objective.getChallenge().orElseThrow();
 		final Status status = getCurrentScore();
 		return status.getColors(CandyColors.BLUE) >= challenge.getBlueToDestroy()
 				&& status.getColors(CandyColors.RED) >= challenge.getRedToDestroy()
@@ -112,43 +112,43 @@ public final class LevelImpl implements Level {
 
 	public final boolean move(final Point2D first, final Point2D second) {
 		assertCurrentStageSet();
-		return currentStage.get().move(first, second);
+		return currentStage.orElseThrow().move(first, second);
 	}
 
 	public final Status getCurrentScore() {
 		assertCurrentStageSet();
-		return currentStage.get().getCurrentScore();
+		return currentStage.orElseThrow().getCurrentScore();
 	}
 
 	public final Map<Point2D, Optional<Candy>> getGrid() {
 		assertCurrentStageSet();
-		return currentStage.get().getGrid();
+		return currentStage.orElseThrow().getGrid();
 	}
 
 	public final List<Point2D> getHint() {
 		assertCurrentStageSet();
-		return currentStage.get().getHint();
+		return currentStage.orElseThrow().getHint();
 	}
 
 	public final Optional<String> getStartingMessage() {
 		assertCurrentStageSet();
-		return currentStage.get().getStartingMessage();
+		return currentStage.orElseThrow().getStartingMessage();
 	}
 
 	public final Optional<String> getEndingMessage() {
 		assertCurrentStageSet();
-		return currentStage.get().getEndingMessage();
+		return currentStage.orElseThrow().getEndingMessage();
 	}
 
 	public final void consumeRemainingMoves() {
-		currentStage.get().consumeRemainingMoves();
+		currentStage.orElseThrow().consumeRemainingMoves();
 	}
 
 	public final Optional<Map<Point2D, Integer>> getJelly() {
-		return currentStage.get().getJelly();
+		return currentStage.orElseThrow().getJelly();
 	}
 
 	public final boolean mutateCandy(final Point2D cord, final Candy cnd) {
-		return currentStage.get().mutateCandy(cord, cnd);
+		return currentStage.orElseThrow().mutateCandy(cord, cnd);
 	}
 }

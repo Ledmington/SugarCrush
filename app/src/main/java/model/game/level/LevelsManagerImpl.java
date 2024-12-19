@@ -19,6 +19,7 @@ package model.game.level;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -165,12 +166,17 @@ public final class LevelsManagerImpl implements LevelsManager {
 							.setChallenge(Optional.empty())
 							.setObjectiveText("Try to swap the two special candies.")
 							.build())
-					.setStartingMessage(
-							"If you swap two special candies, their special effects will produce more magic together.\n"
-									+ "Try to swap those two and see what happens :)")
-					.setEndingMessage("That's incredible! You completed the tutorial!\n"
-							+ "You're ready to face the hardest campaign ever made.\n"
-							+ "Good luck ;)")
+					.setStartingMessage(String.join(
+							"\n",
+							List.of(
+									"If you swap two special candies, their special effects will produce more magic together.",
+									"Try to swap those two and see what happens :)")))
+					.setEndingMessage(String.join(
+							"\n",
+							List.of(
+									"That's incredible! You completed the tutorial!",
+									"You're ready to face the hardest campaign ever made.",
+									"Good luck ;)")))
 					.setController(controller)
 					.build();
 
@@ -461,7 +467,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 		});
 	}
 
-	public final Level getLevel(final int levelNumber) {
+	public Level getLevel(final int levelNumber) {
 		if (levelNumber <= 0 || !this.normalLevels.containsKey(levelNumber)) {
 			throw new IllegalStateException("Level number not valid.");
 		}
@@ -469,40 +475,46 @@ public final class LevelsManagerImpl implements LevelsManager {
 		return this.normalLevels.get(levelNumber).get();
 	}
 
-	public final Level getTutorial() {
+	public Level getTutorial() {
 		return tutorial.get();
 	}
 
-	public final int getNumLevels() {
-		return this.normalLevels.keySet().size();
+	public int getNumLevels() {
+		return this.normalLevels.size();
 	}
 
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((normalLevels == null) ? 0 : normalLevels.hashCode());
+		result = prime * result + normalLevels.hashCode();
 		result = prime * result + ((tutorial == null) ? 0 : tutorial.hashCode());
 		return result;
 	}
 
 	@Override
-	public final boolean equals(final Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		LevelsManagerImpl other = (LevelsManagerImpl) obj;
-		if (normalLevels == null) {
-			if (other.normalLevels != null) return false;
-		} else if (!normalLevels.equals(other.normalLevels)) return false;
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof final LevelsManagerImpl other)) {
+			return false;
+		}
+		if (!normalLevels.equals(other.normalLevels)) {
+			return false;
+		}
 		if (tutorial == null) {
-			if (other.tutorial != null) return false;
-		} else if (!tutorial.equals(other.tutorial)) return false;
-		return true;
+			return other.tutorial == null;
+		} else {
+			return tutorial.equals(other.tutorial);
+		}
 	}
 
 	@Override
-	public final String toString() {
+	public String toString() {
 		return "LevelsManager [normalLevels=" + normalLevels + ", tutorial=" + tutorial + "]";
 	}
 }

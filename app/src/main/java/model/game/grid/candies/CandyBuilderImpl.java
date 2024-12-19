@@ -57,12 +57,12 @@ public final class CandyBuilderImpl implements CandyBuilder {
 
 			@Override
 			public final CandyTypes getType() {
-				return cndTyp.get();
+				return cndTyp.orElseThrow();
 			}
 
 			@Override
 			public final CandyColors getColor() {
-				return cndCol.get();
+				return cndCol.orElseThrow();
 			}
 
 			@Override
@@ -82,12 +82,13 @@ public final class CandyBuilderImpl implements CandyBuilder {
 				if (this.getClass() != obj.getClass()) {
 					return false;
 				}
-				return cndCol.get() == ((Candy) obj).getColor() && cndTyp.get() == ((Candy) obj).getType();
+				return cndCol.orElseThrow() == ((Candy) obj).getColor()
+						&& cndTyp.orElseThrow() == ((Candy) obj).getType();
 			}
 
 			@Override
 			public String toString() {
-				return cndTyp.get().name() + "_" + cndCol.get().name();
+				return cndTyp.orElseThrow().name() + "_" + cndCol.orElseThrow().name();
 			}
 		};
 	}

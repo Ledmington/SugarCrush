@@ -43,9 +43,12 @@ public interface Status {
 		MONEY(100),
 		REDUCE_MONEY(5);
 
-		private int ratio;
+		private final int ratio;
 
-		private Ratios(final int ratio) {
+		Ratios(final int ratio) {
+			if (ratio < 1) {
+				throw new IllegalArgumentException(String.format("%,d is an invalid ratio.", ratio));
+			}
 			this.ratio = ratio;
 		}
 

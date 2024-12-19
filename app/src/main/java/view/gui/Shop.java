@@ -48,7 +48,6 @@ public final class Shop extends GUI {
 	private final JPanel mainPanel =
 			new JPanel(new BorderLayout()); // the panel that contain all the element of the view
 	private final JPanel shopPanel = new JPanel(); // panel that contain the item on sale
-	private final JButton back = new JButton("Back"); // the button for turn back on main menu
 	private final transient List<JButton> itemBtns =
 			new ArrayList<JButton>(); // list of buttons that represents the boost on sale
 	private final transient ImageManager im = new ImageManagerImpl(); // variable to get the image of the candy
@@ -74,6 +73,8 @@ public final class Shop extends GUI {
 		createShopView();
 
 		mainPanel.setBackground(Color.green);
+		// the button for turn back on main menu
+		final JButton back = new JButton("Back");
 		mainPanel.add(back, BorderLayout.SOUTH);
 
 		// event on back button
@@ -83,10 +84,10 @@ public final class Shop extends GUI {
 		});
 
 		// event on each button that represents items on sale in the shop
-		for (JButton btn : itemBtns) {
+		for (final JButton btn : itemBtns) {
 			btn.addActionListener(e -> {
 				controller.getSound().playSound("button_press");
-				int index;
+				final int index;
 				final JButton jb = (JButton) e.getSource();
 				index = itemBtns.indexOf(jb);
 				try {
@@ -125,10 +126,7 @@ public final class Shop extends GUI {
 	}
 
 	/** @return true if the shop doesn't contain boost */
-	public final boolean isShopEmpty() {
-		if (btnNotEnable == 0 || itemBtns.isEmpty()) {
-			return true;
-		}
-		return false;
+	public boolean isShopEmpty() {
+		return btnNotEnable == 0 || itemBtns.isEmpty();
 	}
 }

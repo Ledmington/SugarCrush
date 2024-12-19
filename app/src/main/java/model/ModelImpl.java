@@ -76,54 +76,54 @@ public final class ModelImpl implements Model {
 		if (levelIndex.isEmpty()) {
 			this.currentLevel = Optional.of(this.lm.getTutorial());
 		} else {
-			this.currentLevel = Optional.of(this.lm.getLevel(levelIndex.get()));
+			this.currentLevel = Optional.of(this.lm.getLevel(levelIndex.orElseThrow()));
 		}
 	}
 
 	public final Optional<String> getStartingMessage() {
 		assertGameRunning();
-		return this.currentLevel.get().getStartingMessage();
+		return this.currentLevel.orElseThrow().getStartingMessage();
 	}
 
 	public final Optional<String> getEndingMessage() {
 		assertGameRunning();
-		return this.currentLevel.get().getEndingMessage();
+		return this.currentLevel.orElseThrow().getEndingMessage();
 	}
 
 	public final boolean hasNextStage() {
 		assertGameRunning();
-		return this.currentLevel.get().hasNextStage();
+		return this.currentLevel.orElseThrow().hasNextStage();
 	}
 
 	public final void nextStage() {
 		assertGameRunning();
-		this.currentLevel.get().nextStage();
+		this.currentLevel.orElseThrow().nextStage();
 	}
 
 	public final Objective getObjective() {
 		this.assertGameRunning();
-		return this.currentLevel.get().getObjective();
+		return this.currentLevel.orElseThrow().getObjective();
 	}
 
 	public final Map<Point2D, Optional<Candy>> getGrid() {
 		this.assertGameRunning();
-		return this.currentLevel.get().getGrid();
+		return this.currentLevel.orElseThrow().getGrid();
 	}
 
 	public final boolean move(final Point2D first, final Point2D second) {
 		this.assertGameRunning();
-		return this.currentLevel.get().move(first, second);
+		return this.currentLevel.orElseThrow().move(first, second);
 	}
 
 	public final Status getCurrentScore() {
 		this.assertGameRunning();
-		return this.currentLevel.get().getCurrentScore();
+		return this.currentLevel.orElseThrow().getCurrentScore();
 	}
 
 	public final Integer getRemainingMoves() {
 		this.assertGameRunning();
-		return this.currentLevel.get().getObjective().getMaxMoves()
-				- this.currentLevel.get().getCurrentScore().getMoves();
+		return this.currentLevel.orElseThrow().getObjective().getMaxMoves()
+				- this.currentLevel.orElseThrow().getCurrentScore().getMoves();
 	}
 
 	public final GameResult getResult() {
@@ -131,9 +131,9 @@ public final class ModelImpl implements Model {
 			return GameResult.CHALLENGE_COMPLETED;
 		}
 		this.assertGameRunning();
-		final GameResult result = currentLevel.get().getResult();
+		final GameResult result = currentLevel.orElseThrow().getResult();
 		if (result == GameResult.MIN_SCORE_REACHED || result == GameResult.CHALLENGE_COMPLETED) {
-			currentLevel.get().getCurrentScore().complete();
+			currentLevel.orElseThrow().getCurrentScore().complete();
 		}
 		return result;
 	}
@@ -182,22 +182,22 @@ public final class ModelImpl implements Model {
 
 	public final Level getCurrentLevel() {
 		this.assertGameRunning();
-		return currentLevel.get();
+		return currentLevel.orElseThrow();
 	}
 
 	public final List<Point2D> getHint() {
 		this.assertGameRunning();
-		return currentLevel.get().getHint();
+		return currentLevel.orElseThrow().getHint();
 	}
 
 	public final void consumeRemainingMoves() {
 		this.assertGameRunning();
-		this.currentLevel.get().consumeRemainingMoves();
+		this.currentLevel.orElseThrow().consumeRemainingMoves();
 	}
 
 	public final Optional<Map<Point2D, Integer>> getJelly() {
 		this.assertGameRunning();
-		return this.currentLevel.get().getJelly();
+		return this.currentLevel.orElseThrow().getJelly();
 	}
 
 	public final void resetGoals() {
@@ -227,7 +227,7 @@ public final class ModelImpl implements Model {
 
 	public final boolean mutateCandy(final Point2D cord, final Candy cnd) {
 		assertGameRunning();
-		return currentLevel.get().mutateCandy(cord, cnd);
+		return currentLevel.orElseThrow().mutateCandy(cord, cnd);
 	}
 
 	public final void resetShop() {

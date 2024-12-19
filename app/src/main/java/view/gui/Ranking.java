@@ -19,6 +19,8 @@ package view.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.io.Serial;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,31 +33,39 @@ import view.View;
 /** @author Davide Degli Esposti */
 public final class Ranking extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = 4592677871472067270L;
+
 	private static final JLabel titleLabel = new JLabel("ScoreBoard"); // contains the title of the view
 	private static final JLabel levelNumber = new JLabel("Level n°:"); // label that introduce the combobox
-	private JButton back = new JButton("Back"); // button to go back to the main menu
-	private JButton generalScoreRank = new JButton("GeneralRank"); // button to see the general ranking
-	private JButton levelScoreRank = new JButton("levelScoreRank"); // button to see the ranking of a certain level
-	private String[] lvls; // contains the number of levels as a string
-	private JComboBox<String> levelsList; // combobox to indicate which rank of level shows
 
-	protected Ranking(final Controller controller, final View view) {
+	private final JComboBox<String> levelsList; // combobox to indicate which rank of level shows
+
+	Ranking(final Controller controller, final View view) {
 		super(controller, view);
-		this.lvls = new String[controller.getNumLevels()];
-		JPanel scoreBoardPanel = new JPanel(new FlowLayout());
+		// contains the number of levels as a string
+		final String[] lvls = new String[controller.getNumLevels()];
+		final JPanel scoreBoardPanel = new JPanel(new FlowLayout());
 		this.add(scoreBoardPanel);
 		for (int i = 0; i < lvls.length; i++) {
-			lvls[i] = "" + (i + 1);
+			lvls[i] = String.valueOf(i + 1);
 		}
 		levelsList = new JComboBox<>(lvls);
 
 		// add labels and buttons to the main panel
 		scoreBoardPanel.add(titleLabel, BorderLayout.NORTH);
+		// button to see the general ranking
+		final JButton generalScoreRank = new JButton("GeneralRank");
 		scoreBoardPanel.add(generalScoreRank);
 		scoreBoardPanel.add(levelNumber);
 		scoreBoardPanel.add(levelsList);
+
+		// button to see the ranking of a certain level
+		final JButton levelScoreRank = new JButton("levelScoreRank");
 		scoreBoardPanel.add(levelScoreRank);
+
+		// button to go back to the main menu
+		final JButton back = new JButton("Back");
 		scoreBoardPanel.add(back);
 
 		// event on back button
@@ -76,7 +86,7 @@ public final class Ranking extends GUI {
 					controller,
 					view,
 					controller.getRankByLevelScore(levelsList.getSelectedIndex() + 1),
-					("Level " + levelsList.getSelectedItem().toString())));
+					("Level " + Objects.requireNonNull(levelsList.getSelectedItem()))));
 			controller.getSound().playSound("button_press");
 		});
 

@@ -39,7 +39,7 @@ public final class ShapeCoordinates {
 		}
 
 		// Converting sequence of integers into list p.
-		coords = new ArrayList<Point2D>();
+		coords = new ArrayList<>();
 		for (int i = 0; i < cord.length; i += 2) {
 			coords.add(new Point2D(cord[i], cord[i + 1]));
 		}
@@ -65,8 +65,8 @@ public final class ShapeCoordinates {
 	 *
 	 * @return List<Point2D> of coordinates.
 	 */
-	public final List<Point2D> getRelativeCoordinates() {
-		return new ArrayList<Point2D>(this.coords);
+	public List<Point2D> getRelativeCoordinates() {
+		return new ArrayList<>(this.coords);
 	}
 
 	/**
@@ -74,13 +74,13 @@ public final class ShapeCoordinates {
 	 *
 	 * @return One new {@link ShapeCoordinates} with rotated coordinates.
 	 */
-	public final ShapeCoordinates getNextRotatedCandyCoordinates() {
-		List<Point2D> rotated = new ArrayList<>();
+	public ShapeCoordinates getNextRotatedCandyCoordinates() {
+		final List<Point2D> rotated = new ArrayList<>();
 
 		// Every coordinate must be treated different based on his position.
 		this.coords.forEach((point) -> {
-			var x = point.getX();
-			var y = point.getY();
+			final int x = point.x();
+			final int y = point.y();
 
 			if (x < 0) { // If at top, goes right.
 				rotated.add(new Point2D(y, -x));
@@ -100,24 +100,23 @@ public final class ShapeCoordinates {
 	 * Retrieves a list filled with coordinates of all possible shape 1 move away from the {@link ShapeCoordinates}
 	 * passed, if it is possible to obtain shpC moving 1 candy.
 	 *
-	 * @param shpC The original {@link Shapes} to be reached.
 	 * @return A list of {@link ShapeCoordinates}.
 	 */
-	public final List<ShapeCoordinates> getNearCoordinateShapes() {
-		List<ShapeCoordinates> shpLst = new ArrayList<>();
+	public List<ShapeCoordinates> getNearCoordinateShapes() {
+		final List<ShapeCoordinates> shpLst = new ArrayList<>();
 		// Four direction neighbor ( up, down, right, left).
-		List<Point2D> rNeighList =
+		final List<Point2D> rNeighList =
 				Arrays.asList(new Point2D(-1, 0), new Point2D(1, 0), new Point2D(0, 1), new Point2D(0, -1));
 
 		// Adding implicit coordinate 0, 0.
-		List<Point2D> coordsWithImplicit = new ArrayList<>(this.coords);
+		final List<Point2D> coordsWithImplicit = new ArrayList<>(this.coords);
 		coordsWithImplicit.add(new Point2D(0, 0));
 
 		// For every coordinate check if it has a non already present neighbor.
 		coordsWithImplicit.forEach((crd) -> {
 			// Every neighbor.
 			rNeighList.forEach((direction) -> {
-				Point2D neirCrd = new Point2D(crd.getX() + direction.getX(), crd.getY() + direction.getY());
+				final Point2D neirCrd = new Point2D(crd.x() + direction.x(), crd.y() + direction.y());
 				// If non already in shpC.
 				if (!coordsWithImplicit.contains(neirCrd)) {
 					// Creating this possible shape (removing considered coordinate, adding the new one).

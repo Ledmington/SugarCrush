@@ -43,9 +43,12 @@ public interface Objective {
 		DEF_WRAPPED(2),
 		DEF_FRECKLES(1);
 
-		private int value;
+		private final int value;
 
-		private Values(final int value) {
+		Values(final int value) {
+			if (value < 1) {
+				throw new IllegalArgumentException(String.format("%,d is an invalid value for a Candy.", value));
+			}
 			this.value = value;
 		}
 

@@ -42,9 +42,12 @@ public enum GameResult {
 	/** Happens when the level is not ended */
 	STILL_PLAYING(null);
 
-	private String description;
+	private final String description;
 
-	private GameResult(final String desc) {
+	GameResult(final String desc) {
+		if (desc != null && desc.isBlank()) {
+			throw new IllegalArgumentException("Empty description.");
+		}
 		this.description = desc;
 	}
 

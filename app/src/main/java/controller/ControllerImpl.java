@@ -87,7 +87,8 @@ public final class ControllerImpl implements Controller {
 
 	public final Optional<Integer> getCurrentLevel() {
 		if (this.currentLevel.isPresent()) {
-			if (this.currentLevel.get() < 0 || this.currentLevel.get() > ControllerImpl.model.getNumLevels()) {
+			if (this.currentLevel.orElseThrow() < 0
+					|| this.currentLevel.orElseThrow() > ControllerImpl.model.getNumLevels()) {
 				throw new IllegalStateException("Current level is invalid number.");
 			}
 		}
@@ -100,7 +101,7 @@ public final class ControllerImpl implements Controller {
 	}
 
 	public final String getCurrentPlayer() {
-		return this.currentPlayer.get();
+		return this.currentPlayer.orElseThrow();
 	}
 
 	public final int getRemainingMoves() {
@@ -184,7 +185,7 @@ public final class ControllerImpl implements Controller {
 		final boolean result = isStageEnded() && !ControllerImpl.model.hasNextStage();
 		if (result) {
 			setPlayerStats(
-					getCurrentPlayer(), getCurrentScore(), getCurrentLevel().get());
+					getCurrentPlayer(), getCurrentScore(), getCurrentLevel().orElseThrow());
 		}
 		return result;
 	}
@@ -200,7 +201,7 @@ public final class ControllerImpl implements Controller {
 
 	public final String getResult() {
 		final GameResult result = ControllerImpl.model.getResult();
-		if (getCurrentLevel().get() != 0) {
+		if (getCurrentLevel().orElseThrow() != 0) {
 			// If game won, it completes the level calling complete in Status
 			if (result.equals(GameResult.MIN_SCORE_REACHED) || result.equals(GameResult.CHALLENGE_COMPLETED)) {
 				sound.playSound("level_completed");
@@ -215,7 +216,7 @@ public final class ControllerImpl implements Controller {
 	public final Map<String, Object> getCurrentPlayerMap(final FileTypes type) {
 		Map<String, Object> player = null;
 		for (Map<String, Object> map : ControllerImpl.model.getPlayers(type)) {
-			if (map.get(playerName).toString().equals("\"" + this.currentPlayer.get() + "\"")) {
+			if (map.get(playerName).toString().equals("\"" + this.currentPlayer.orElseThrow() + "\"")) {
 				player = map;
 				break;
 			}
@@ -266,7 +267,7 @@ public final class ControllerImpl implements Controller {
 		if (level != 0) {
 			final Map<String, Object> pl = this.getCurrentPlayerMap(FileTypes.STATS);
 			final boolean check =
-					Integer.parseInt(pl.get("level" + this.getCurrentLevel().get() + "Score")
+					Integer.parseInt(pl.get("level" + this.getCurrentLevel().orElseThrow() + "Score")
 									.toString())
 							== 0;
 			status.isFirstTime(check);
@@ -287,8 +288,8 @@ public final class ControllerImpl implements Controller {
 		final Set<Point2D> grid = ControllerImpl.model.getGrid().keySet();
 
 		for (Point2D p : grid) {
-			int cx = p.getX();
-			int cy = p.getY();
+			int cx = p.x();
+			int cy = p.y();
 			if (cx < minX) minX = cx;
 			if (cx > maxX) maxX = cx;
 			if (cy < minY) minY = cy;
@@ -340,7 +341,7 @@ public final class ControllerImpl implements Controller {
 			return 100;
 		}
 
-		final Challenge c = model.getObjective().getChallenge().get();
+		final Challenge c = model.getObjective().getChallenge().orElseThrow();
 		final Status s = model.getCurrentScore();
 		double done = 0;
 		final double total = c.getBlueToDestroy()
@@ -437,7 +438,7 @@ public final class ControllerImpl implements Controller {
 		if (ct == CandyTypes.FRECKLES) {
 			cc = CandyColors.FRECKLES;
 		} else {
-			cc = model.getGrid().get(position).get().getColor();
+			cc = model.getGrid().get(position).orElseThrow().getColor();
 		}
 		final Candy candy = new CandyBuilderImpl().setColor(cc).setType(ct).build();
 		model.mutateCandy(position, candy);

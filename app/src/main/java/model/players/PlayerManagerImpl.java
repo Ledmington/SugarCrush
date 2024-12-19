@@ -59,7 +59,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 		}
 	};
 
-	public final void addPlayer(final String name) {
+	public void addPlayer(final String name) {
 		Objects.requireNonNull(name);
 		this.stringCheck(name);
 		final Map<FileTypes, JsonObject> obMap = new HashMap<>();
@@ -67,57 +67,57 @@ public final class PlayerManagerImpl implements PlayerManager {
 		obMap.put(BOOSTS, new JsonObject());
 		this.initializeProperties(obMap.get(STATS), obMap.get(BOOSTS), name);
 		this.createFiles(
-				this.filesMap.get(STATS).getY(), this.filesMap.get(BOOSTS).getY());
+				this.filesMap.get(STATS).second(), this.filesMap.get(BOOSTS).second());
+
 		// for every file type, it adds the player
 		Stream.of(FileTypes.values()).forEach(type -> {
-			if (filesMap.get(type).getY().length() != 0) {
+			if (filesMap.get(type).second().length() != 0) {
 				final JsonParser parser = new JsonParser();
-				try (final FileReader reader = new FileReader(filesMap.get(type).getX())) {
+				try (final FileReader reader = new FileReader(filesMap.get(type).first())) {
 					filesMap.put(
 							type,
 							new Triple<>(
-									filesMap.get(type).getX(),
-									filesMap.get(type).getY(),
+									filesMap.get(type).first(),
+									filesMap.get(type).second(),
 									(JsonArray) parser.parse(reader)));
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (final IOException e) {
+					throw new RuntimeException(e);
 				}
 			}
-			if (!filesMap.get(type).getZ().contains(obMap.get(type))) {
-				filesMap.get(type).getZ().add(obMap.get(type));
+			if (!filesMap.get(type).third().contains(obMap.get(type))) {
+				filesMap.get(type).third().add(obMap.get(type));
 				try (final FileWriter fileName =
-						new FileWriter(filesMap.get(type).getX())) {
-					fileName.write(filesMap.get(type).getZ().toString());
+						new FileWriter(filesMap.get(type).first())) {
+					fileName.write(filesMap.get(type).third().toString());
 					fileName.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (final IOException e) {
+					throw new RuntimeException(e);
 				}
 			}
 		});
 	}
 
-	public final void setStat(final String name, final Status status, final int level) {
+	public void setStat(final String name, final Status status, final int level) {
 		Objects.requireNonNull(name);
 		Objects.requireNonNull(status);
-		Objects.requireNonNull(level);
 		this.levelCheck(level);
 		this.stringCheck(name);
-		final String lev = new String("level" + level + "Score");
+		final String lev = "level" + level + "Score";
 		this.createFiles(
-				this.filesMap.get(STATS).getY(), this.filesMap.get(BOOSTS).getY());
+				this.filesMap.get(STATS).second(), this.filesMap.get(BOOSTS).second());
 		final JsonParser parser = new JsonParser();
-		try (final FileReader reader = new FileReader(this.filesMap.get(STATS).getX())) {
+		try (final FileReader reader = new FileReader(this.filesMap.get(STATS).first())) {
 			this.filesMap.put(
 					STATS,
 					new Triple<>(
-							this.filesMap.get(STATS).getX(),
-							this.filesMap.get(STATS).getY(),
+							this.filesMap.get(STATS).first(),
+							this.filesMap.get(STATS).second(),
 							(JsonArray) parser.parse(reader)));
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
 		}
 		// put every single information in the JsonObject
-		this.filesMap.get(STATS).getZ().forEach(jse -> {
+		this.filesMap.get(STATS).third().forEach(jse -> {
 			if (((JsonObject) jse).get(playerName).getAsString().equals(name)) {
 				final JsonObject jso = (JsonObject) jse;
 				Stream.of(CandyColors.values())
@@ -154,11 +154,11 @@ public final class PlayerManagerImpl implements PlayerManager {
 			}
 		});
 		// writes in stats.json
-		try (final FileWriter fileName = new FileWriter(this.filesMap.get(STATS).getX())) {
-			fileName.write(this.filesMap.get(STATS).getZ().toString());
+		try (final FileWriter fileName = new FileWriter(this.filesMap.get(STATS).first())) {
+			fileName.write(this.filesMap.get(STATS).third().toString());
 			fileName.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -178,8 +178,8 @@ public final class PlayerManagerImpl implements PlayerManager {
 			});
 			jse.add(jso);
 		});
-		// Writes in the correct file, depending by the file typs passed as parameter
-		try (final FileWriter fileName = new FileWriter(filesMap.get(type).getX())) {
+		// Writes in the correct file, depending by the file types passed as parameter
+		try (final FileWriter fileName = new FileWriter(filesMap.get(type).first())) {
 			fileName.write(jse.toString());
 			fileName.flush();
 		} catch (final IOException e) {
@@ -187,26 +187,26 @@ public final class PlayerManagerImpl implements PlayerManager {
 		}
 	}
 
-	public  List<Map<String, Object>> getPlayers(final FileTypes type) {
+	public List<Map<String, Object>> getPlayers(final FileTypes type) {
 		Objects.requireNonNull(type);
 		final List<Map<String, Object>> list = new LinkedList<>();
 		this.createFiles(
-				this.filesMap.get(STATS).getY(), this.filesMap.get(BOOSTS).getY());
+				this.filesMap.get(STATS).second(), this.filesMap.get(BOOSTS).second());
 		// Initializes the list checking the correct file type
-		if (filesMap.get(type).getY().length() != 0) {
+		if (filesMap.get(type).second().length() != 0) {
 			final JsonParser parser = new JsonParser();
-			try (final FileReader reader = new FileReader(filesMap.get(type).getX())) {
+			try (final FileReader reader = new FileReader(filesMap.get(type).first())) {
 				filesMap.put(
 						type,
 						new Triple<>(
-								filesMap.get(type).getX(), filesMap.get(type).getY(), (JsonArray)
+								filesMap.get(type).first(), filesMap.get(type).second(), (JsonArray)
 										parser.parse(reader)));
 			} catch (final IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 		// adds every map to the list
-		filesMap.get(type).getZ().forEach(jse -> {
+		filesMap.get(type).third().forEach(jse -> {
 			final Map<String, Object> map = new HashMap<>();
 			((JsonObject) jse).keySet().forEach(s -> map.put(s, ((JsonObject) jse).get(s)));
 			list.add(map);
@@ -220,38 +220,38 @@ public final class PlayerManagerImpl implements PlayerManager {
 		// Removes the player in every file
 		Stream.of(FileTypes.values()).forEach(type -> {
 			JsonElement el = null;
-			if (filesMap.get(type).getY().length() != 0) {
+			if (filesMap.get(type).second().length() != 0) {
 				final JsonParser parser = new JsonParser();
-				try (final FileReader reader = new FileReader(filesMap.get(type).getX())) {
+				try (final FileReader reader = new FileReader(filesMap.get(type).first())) {
 					filesMap.put(
 							type,
 							new Triple<>(
-									filesMap.get(type).getX(),
-									filesMap.get(type).getY(),
+									filesMap.get(type).first(),
+									filesMap.get(type).second(),
 									(JsonArray) parser.parse(reader)));
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (final IOException e) {
+					throw new RuntimeException(e);
 				}
 			}
-			for (JsonElement jse : filesMap.get(type).getZ()) {
+			for (final JsonElement jse : filesMap.get(type).third()) {
 				if (((JsonObject) jse).get(playerName).toString().equals("\"" + name + "\"")) {
 					el = jse;
 				}
 			}
 			if (el != null) {
-				filesMap.get(type).getZ().remove(el);
+				filesMap.get(type).third().remove(el);
 			}
-			try (final FileWriter fileName = new FileWriter(filesMap.get(type).getX())) {
-				fileName.write(filesMap.get(type).getZ().toString());
+			try (final FileWriter fileName = new FileWriter(filesMap.get(type).first())) {
+				fileName.write(filesMap.get(type).third().toString());
 				fileName.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (final IOException e) {
+				throw new RuntimeException(e);
 			}
 		});
 	}
 
 	// Initializes stats and boost
-	private final void initializeProperties(final JsonObject player, final JsonObject boosts, final String name) {
+	private void initializeProperties(final JsonObject player, final JsonObject boosts, final String name) {
 		player.addProperty(playerName, name);
 		boosts.addProperty(playerName, name);
 		Stream.of(StatsTypes.values()).forEach(type -> player.addProperty(type.name(), 0));
@@ -259,13 +259,13 @@ public final class PlayerManagerImpl implements PlayerManager {
 	}
 
 	// Creates the files (if they don't exist)
-	private final void createFiles(final File st, final File boo) {
+	private void createFiles(final File st, final File boo) {
 		folder.mkdir();
 		try {
 			st.createNewFile();
 			boo.createNewFile();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		} catch (final IOException e1) {
+			throw new RuntimeException(e1);
 		}
 	}
 

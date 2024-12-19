@@ -72,7 +72,7 @@ public final class GridManagerImpl implements GridManager {
 		if (jelly) {
 			this.jelly = Optional.of(new HashMap<>());
 			this.grid.forEach((crd, cnd) -> {
-				this.jelly.get().put(crd, 2);
+				this.jelly.orElseThrow().put(crd, 2);
 			});
 		}
 	}
@@ -89,12 +89,12 @@ public final class GridManagerImpl implements GridManager {
 			return false;
 		}
 		// Coordinates near.
-		if (Math.abs(cndA.getX() - cndB.getX()) + Math.abs(cndA.getY() - cndB.getY()) != 1) {
+		if (Math.abs(cndA.x() - cndB.x()) + Math.abs(cndA.y() - cndB.y()) != 1) {
 			return false;
 		}
 		// Candies type (chocolate can't be moved).
-		if (this.grid.get(cndA).get().getType() == CandyTypes.CHOCOLATE
-				|| this.grid.get(cndB).get().getType() == CandyTypes.CHOCOLATE) {
+		if (this.grid.get(cndA).orElseThrow().getType() == CandyTypes.CHOCOLATE
+				|| this.grid.get(cndB).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
 			return false;
 		}
 
@@ -145,7 +145,7 @@ public final class GridManagerImpl implements GridManager {
 			return false;
 		}
 		// Coordinates near.
-		if (Math.abs(cndA.getX() - cndB.getX()) + Math.abs(cndA.getY() - cndB.getY()) != 1) {
+		if (Math.abs(cndA.x() - cndB.x()) + Math.abs(cndA.y() - cndB.y()) != 1) {
 			return false;
 		}
 
@@ -178,7 +178,7 @@ public final class GridManagerImpl implements GridManager {
 			return false;
 		}
 		// Chocolate can't be mutated.
-		if (this.grid.get(cord).get().getType() == CandyTypes.CHOCOLATE) {
+		if (this.grid.get(cord).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
 			return false;
 		}
 
@@ -203,7 +203,7 @@ public final class GridManagerImpl implements GridManager {
 			return false;
 		}
 
-		if (this.grid.get(cord).get().getType() == CandyTypes.CHOCOLATE) {
+		if (this.grid.get(cord).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
 			this.chocolateNeedUpdate = false;
 		}
 
@@ -211,12 +211,12 @@ public final class GridManagerImpl implements GridManager {
 		List<Point2D> cndDestroy = new ArrayList<>();
 
 		// Different behavior for each candy.
-		switch (this.grid.get(cord).get().getType()) {
+		switch (this.grid.get(cord).orElseThrow().getType()) {
 			case STRIPED_VERTICAL:
 				controller.getSound().playSound("line_blast1");
 				this.grid.forEach((crd, cnd) -> {
 					// Same column.
-					if (crd.getY() == cord.getY()) {
+					if (crd.y() == cord.y()) {
 						cndDestroy.add(crd);
 					}
 				});
@@ -225,7 +225,7 @@ public final class GridManagerImpl implements GridManager {
 				controller.getSound().playSound("line_blast1");
 				this.grid.forEach((crd, cnd) -> {
 					// Same row.
-					if (crd.getX() == cord.getX()) {
+					if (crd.x() == cord.x()) {
 						cndDestroy.add(crd);
 					}
 				});
@@ -234,8 +234,8 @@ public final class GridManagerImpl implements GridManager {
 				controller.getSound().playSound("bomb_sound1");
 				this.grid.forEach((crd, cnd) -> {
 					// Contour (even diagonally).
-					if ((Math.abs(crd.getX() - cord.getX()) == 0 || Math.abs(crd.getX() - cord.getX()) == 1)
-							&& (Math.abs(crd.getY() - cord.getY()) == 0 || Math.abs(crd.getY() - cord.getY()) == 1)) {
+					if ((Math.abs(crd.x() - cord.x()) == 0 || Math.abs(crd.x() - cord.x()) == 1)
+							&& (Math.abs(crd.y() - cord.y()) == 0 || Math.abs(crd.y() - cord.y()) == 1)) {
 						cndDestroy.add(crd);
 					}
 				});
@@ -246,7 +246,8 @@ public final class GridManagerImpl implements GridManager {
 					// Candy not already destroyed.
 					if (this.grid.get(crd).isPresent()) {
 						// Same color.
-						if (cnd.get().getColor() == this.grid.get(cord).get().getColor()) {
+						if (cnd.orElseThrow().getColor()
+								== this.grid.get(cord).orElseThrow().getColor()) {
 							cndDestroy.add(crd);
 						}
 					}
@@ -254,7 +255,7 @@ public final class GridManagerImpl implements GridManager {
 				break;
 			case CHOCOLATE:
 				// Inform score that chocolate has been destroyed.
-				this.score.update(this.grid.get(cord).get());
+				this.score.update(this.grid.get(cord).orElseThrow());
 				this.grid.put(cord, Optional.empty());
 				return true;
 			default:
@@ -262,14 +263,14 @@ public final class GridManagerImpl implements GridManager {
 		}
 		// Inform score that this candy has been destroyed.
 		if (this.updateScore) {
-			this.score.update(this.grid.get(cord).get());
+			this.score.update(this.grid.get(cord).orElseThrow());
 		}
 		// Destroy main candy.
 		this.grid.put(cord, Optional.empty());
 
 		// Update jelly on this candy.
 		if (this.jelly.isPresent()) {
-			this.jelly.get().put(cord, Math.max(this.jelly.get().get(cord) - 1, 0));
+			this.jelly.orElseThrow().put(cord, Math.max(this.jelly.orElseThrow().get(cord) - 1, 0));
 		}
 
 		//	if (!this.controller.isStageEnded()) {
@@ -312,8 +313,8 @@ public final class GridManagerImpl implements GridManager {
 										tmpList.set(
 												i,
 												new Point2D(
-														tmpList.get(i).getX() + crd.getX(),
-														tmpList.get(i).getY() + crd.getY()));
+														tmpList.get(i).x() + crd.x(),
+														tmpList.get(i).y() + crd.y()));
 									}
 									// We return this list as a tip.
 									return tmpList;
@@ -342,13 +343,13 @@ public final class GridManagerImpl implements GridManager {
 			Point2D tmp;
 			do {
 				tmp = this.pickRandomCandy();
-			} while (this.grid.get(tmp).get().getType() != CandyTypes.NORMAL);
+			} while (this.grid.get(tmp).orElseThrow().getType() != CandyTypes.NORMAL);
 
 			// Mutate the candy, same color but different type.
 			this.mutateCandy(
 					tmp,
 					new CandyBuilderImpl()
-							.setColor(this.grid.get(tmp).get().getColor())
+							.setColor(this.grid.get(tmp).orElseThrow().getColor())
 							.setType(spawnable.get(rnd.nextInt(spawnable.size())))
 							.build());
 		}
@@ -359,7 +360,7 @@ public final class GridManagerImpl implements GridManager {
 			anotherFound = false;
 			for (var crd : this.grid.keySet()) {
 				if (this.grid.get(crd).isPresent()) {
-					var cnd = this.grid.get(crd).get();
+					var cnd = this.grid.get(crd).orElseThrow();
 					if (cnd.getType() != CandyTypes.NORMAL && cnd.getType() != CandyTypes.CHOCOLATE) {
 						// Special candy found, destroy that.
 						this.destroyCandy(crd);
@@ -388,7 +389,7 @@ public final class GridManagerImpl implements GridManager {
 				for (var crd : this.grid.keySet()) {
 					// If candy is present.
 					if (this.grid.get(crd).isPresent()) {
-						CandyColors cndCol = this.grid.get(crd).get().getColor();
+						CandyColors cndCol = this.grid.get(crd).orElseThrow().getColor();
 						// If shape is found we destroy the shape.
 						if (this.findShape(shpCrd, crd, false)) {
 							shpFound = true;
@@ -399,7 +400,7 @@ public final class GridManagerImpl implements GridManager {
 							// For each coordinate in shape we destroy candy.
 							for (var relCrd : shpCrd.getRelativeCoordinates()) {
 								// Destroying candies in shape.
-								this.destroyCandy(new Point2D(crd.getX() + relCrd.getX(), crd.getY() + relCrd.getY()));
+								this.destroyCandy(new Point2D(crd.x() + relCrd.x(), crd.y() + relCrd.y()));
 							}
 							// Adding special candy if needed.
 							switch (shp.getCandyType()) {
@@ -452,19 +453,17 @@ public final class GridManagerImpl implements GridManager {
 					// If found a candy on top of it, bring it down, else generate a new one.
 					Optional<Candy> tmp = Optional.empty();
 					boolean found = false;
-					for (int i = 1; i <= crd.getX(); i++) {
-						if (this.grid.containsKey(new Point2D(crd.getX() - i, crd.getY()))) {
+					for (int i = 1; i <= crd.x(); i++) {
+						if (this.grid.containsKey(new Point2D(crd.x() - i, crd.y()))) {
 							// If candy is empty we don't need to drop that one.
-							if (this.grid
-									.get(new Point2D(crd.getX() - i, crd.getY()))
-									.isEmpty()) {
+							if (this.grid.get(new Point2D(crd.x() - i, crd.y())).isEmpty()) {
 								found = true;
 								break;
 							}
 							// Candy found.
-							tmp = this.grid.get(new Point2D(crd.getX() - i, crd.getY()));
+							tmp = this.grid.get(new Point2D(crd.x() - i, crd.y()));
 							// Here upper candy disappear.
-							this.grid.put(new Point2D(crd.getX() - i, crd.getY()), Optional.empty());
+							this.grid.put(new Point2D(crd.x() - i, crd.y()), Optional.empty());
 							found = true;
 							break;
 						}
@@ -494,16 +493,16 @@ public final class GridManagerImpl implements GridManager {
 				new Point2D(-1, 0), new Point2D(1, 0), new Point2D(0, -1), new Point2D(0, 1));
 		Point2D tmp;
 		for (var rel : relMov) {
-			tmp = new Point2D(cord.getX() + rel.getX(), cord.getY() + rel.getY());
+			tmp = new Point2D(cord.x() + rel.x(), cord.y() + rel.y());
 			// Coordinates in grid.
 			if (this.grid.containsKey(tmp)) {
 				// Is not empty.
 				if (this.grid.get(tmp).isPresent()) {
 					// Is chocolate.
-					if (this.grid.get(tmp).get().getType() == CandyTypes.CHOCOLATE) {
+					if (this.grid.get(tmp).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
 						this.chocolateNeedUpdate = false;
 						// Inform score that chocolate has been destroyed.
-						this.score.update(this.grid.get(tmp).get());
+						this.score.update(this.grid.get(tmp).orElseThrow());
 						// Destroy the chocolate.
 						this.destroyCandy(tmp);
 						controller.getSound().playSound("chocolate_removed");
@@ -521,7 +520,7 @@ public final class GridManagerImpl implements GridManager {
 		Optional<Point2D> last = Optional.empty();
 		// For each relative coordinate we check if candy is the same as original one.
 		for (var relCrd : shc.getRelativeCoordinates()) {
-			Point2D relCord = new Point2D(crd.getX() + relCrd.getX(), crd.getY() + relCrd.getY());
+			Point2D relCord = new Point2D(crd.x() + relCrd.x(), crd.y() + relCrd.y());
 
 			// The first one can be checked by it self.
 			if (last.isEmpty()) {
@@ -537,11 +536,11 @@ public final class GridManagerImpl implements GridManager {
 				return false;
 			}
 			// Not chocolate.
-			if (this.grid.get(relCord).get().getType() == CandyTypes.CHOCOLATE) {
+			if (this.grid.get(relCord).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
 				return false;
 			}
 			// Not freckles.
-			if (this.grid.get(relCord).get().getType() == CandyTypes.FRECKLES) {
+			if (this.grid.get(relCord).orElseThrow().getType() == CandyTypes.FRECKLES) {
 				return false;
 			}
 			// Same color.
@@ -550,10 +549,10 @@ public final class GridManagerImpl implements GridManager {
 			// Else
 			// We check for the match of colors with original one.
 			if ((near)
-					? this.grid.get(last.get()).get().getColor()
-							!= this.grid.get(relCord).get().getColor()
-					: this.grid.get(crd).get().getColor()
-							!= this.grid.get(relCord).get().getColor()) {
+					? this.grid.get(last.orElseThrow()).orElseThrow().getColor()
+							!= this.grid.get(relCord).orElseThrow().getColor()
+					: this.grid.get(crd).orElseThrow().getColor()
+							!= this.grid.get(relCord).orElseThrow().getColor()) {
 				return false;
 			}
 		}
@@ -570,18 +569,18 @@ public final class GridManagerImpl implements GridManager {
 			// Not empty.
 			if (this.grid.get(crd).isPresent()) {
 				// Is chocolate.
-				if (this.grid.get(crd).get().getType() == CandyTypes.CHOCOLATE) {
+				if (this.grid.get(crd).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
 					// Has non chocolate neighbor.
 					boolean onlyChocolate = true;
 					Point2D tmp;
 					for (var rel : relMov) {
-						tmp = new Point2D(crd.getX() + rel.getX(), crd.getY() + rel.getY());
+						tmp = new Point2D(crd.x() + rel.x(), crd.y() + rel.y());
 						// Coordinates inside grid.
 						if (this.grid.containsKey(tmp)) {
 							// Not empty.
 							if (this.grid.get(tmp).isPresent()) {
 								// Is non chocolate.
-								if (this.grid.get(tmp).get().getType() != CandyTypes.CHOCOLATE) {
+								if (this.grid.get(tmp).orElseThrow().getType() != CandyTypes.CHOCOLATE) {
 									onlyChocolate = false;
 								}
 							}
@@ -604,11 +603,11 @@ public final class GridManagerImpl implements GridManager {
 		do {
 			int rndInd = rnd.nextInt(relMov.size());
 			crdToChocolize = new Point2D(
-					crdRandom.getX() + relMov.get(rndInd).getX(),
-					crdRandom.getY() + relMov.get(rndInd).getY());
+					crdRandom.x() + relMov.get(rndInd).x(),
+					crdRandom.y() + relMov.get(rndInd).y());
 		} while ((!this.grid.containsKey(crdToChocolize))
 				|| this.grid.get(crdToChocolize).isEmpty()
-				|| this.grid.get(crdToChocolize).get().getType() == CandyTypes.CHOCOLATE);
+				|| this.grid.get(crdToChocolize).orElseThrow().getType() == CandyTypes.CHOCOLATE);
 		// Found non chocolate neighbor.
 		// CHOCOLIZE IT!!!!
 		this.grid.put(crdToChocolize, Optional.of(cndFac.getChocolate()));
@@ -627,10 +626,10 @@ public final class GridManagerImpl implements GridManager {
 			Point2D a, b;
 			do {
 				a = pickRandomCandy();
-			} while (this.grid.get(a).get().getType() != CandyTypes.NORMAL);
+			} while (this.grid.get(a).orElseThrow().getType() != CandyTypes.NORMAL);
 			do {
 				b = pickRandomCandy();
-			} while (this.grid.get(b).get().getType() != CandyTypes.NORMAL);
+			} while (this.grid.get(b).orElseThrow().getType() != CandyTypes.NORMAL);
 
 			times--;
 
@@ -661,8 +660,8 @@ public final class GridManagerImpl implements GridManager {
 	}
 
 	private final boolean mergeTwoCandies(final Point2D a, final Point2D b) {
-		CandyTypes aT = this.grid.get(a).get().getType();
-		CandyTypes bT = this.grid.get(b).get().getType();
+		CandyTypes aT = this.grid.get(a).orElseThrow().getType();
+		CandyTypes bT = this.grid.get(b).orElseThrow().getType();
 		// In case they are the same.
 		if (aT == bT
 				|| (aT == CandyTypes.STRIPED_HORIZONTAL && bT == CandyTypes.STRIPED_VERTICAL)
@@ -684,7 +683,7 @@ public final class GridManagerImpl implements GridManager {
 					// Destroy candies near (24 around) (grid 5x5).
 					this.grid.forEach((crd, cnd) -> {
 						// If enough near.
-						if (Math.abs(crd.getX() - b.getX()) <= 2 && Math.abs(crd.getY() - b.getY()) <= 2) {
+						if (Math.abs(crd.x() - b.x()) <= 2 && Math.abs(crd.y() - b.y()) <= 2) {
 							toDestroy.add(crd);
 						}
 					});
@@ -699,7 +698,7 @@ public final class GridManagerImpl implements GridManager {
 					// Destroy all candies in same row or same column.
 					this.grid.forEach((crd, cnd) -> {
 						// If same row or same column.
-						if (crd.getX() == b.getX() || crd.getY() == b.getY()) {
+						if (crd.x() == b.x() || crd.y() == b.y()) {
 							toDestroy.add(crd);
 						}
 					});
@@ -716,8 +715,8 @@ public final class GridManagerImpl implements GridManager {
 
 		// If they are different, checks are easier with a map.
 		Map<CandyTypes, Point2D> types = new HashMap<>();
-		types.put(this.grid.get(a).get().getType(), a);
-		types.put(this.grid.get(b).get().getType(), b);
+		types.put(this.grid.get(a).orElseThrow().getType(), a);
+		types.put(this.grid.get(b).orElseThrow().getType(), b);
 
 		// No chocolate allowed.
 		if (types.containsKey(CandyTypes.CHOCOLATE)) {
@@ -729,22 +728,22 @@ public final class GridManagerImpl implements GridManager {
 			// Remove freckles one.
 			Point2D freckCord = types.get(CandyTypes.FRECKLES);
 			types.remove(CandyTypes.FRECKLES);
-			var tmp = this.grid.get(types.values().iterator().next()).get();
+			var tmp = this.grid.get(types.values().iterator().next()).orElseThrow();
 
 			List<Point2D> toDestroy = new ArrayList<>();
 
 			// Mutate normal candies into other type candy.
 			for (var cnd : this.grid.entrySet()) {
 				// Same colors.
-				if (cnd.getValue().get().getColor() == tmp.getColor()) {
+				if (cnd.getValue().orElseThrow().getColor() == tmp.getColor()) {
 					toDestroy.add(cnd.getKey());
 					// If normal candy gets mutated.
-					if (cnd.getValue().get().getType() == CandyTypes.NORMAL) {
+					if (cnd.getValue().orElseThrow().getType() == CandyTypes.NORMAL) {
 						// Mutate candy, same color but different type.
 						this.mutateCandy(
 								cnd.getKey(),
 								new CandyBuilderImpl()
-										.setColor(cnd.getValue().get().getColor())
+										.setColor(cnd.getValue().orElseThrow().getColor())
 										.setType(tmp.getType())
 										.build());
 					}
@@ -766,13 +765,13 @@ public final class GridManagerImpl implements GridManager {
 			List<Point2D> toDestroy = new ArrayList<>();
 
 			// If merged with striped.
-			if (this.grid.get(tmp).get().getType() == CandyTypes.STRIPED_HORIZONTAL
-					|| this.grid.get(tmp).get().getType() == CandyTypes.STRIPED_VERTICAL) {
+			if (this.grid.get(tmp).orElseThrow().getType() == CandyTypes.STRIPED_HORIZONTAL
+					|| this.grid.get(tmp).orElseThrow().getType() == CandyTypes.STRIPED_VERTICAL) {
 				// Destroy all candies in the same row or column (Thick of 3).
 				this.grid.forEach((crd, cnd) -> {
 					// If in same column or row (Thick of 3).
-					if ((crd.getX() >= b.getX() - 1 && crd.getX() <= b.getX() + 1)
-							|| (crd.getY() >= b.getY() - 1 && crd.getY() <= b.getY() + 1)) {
+					if ((crd.x() >= b.x() - 1 && crd.x() <= b.x() + 1)
+							|| (crd.y() >= b.y() - 1 && crd.y() <= b.y() + 1)) {
 						toDestroy.add(crd);
 					}
 				});
@@ -793,7 +792,7 @@ public final class GridManagerImpl implements GridManager {
 		// Adding implicit coordinate 0, 0.
 		lstCrd.add(new Point2D(0, 0));
 		for (Point2D cord : lstCrd) {
-			relCrd = new Point2D(cord.getX() + crd.getX(), cord.getY() + crd.getY());
+			relCrd = new Point2D(cord.x() + crd.x(), cord.y() + crd.y());
 			// Not inside the grid.
 			if (!this.grid.containsKey(relCrd)) {
 				return false;
@@ -803,7 +802,7 @@ public final class GridManagerImpl implements GridManager {
 				return false;
 			}
 			// Is chocolate.
-			if (this.grid.get(relCrd).get().getType() == CandyTypes.CHOCOLATE) {
+			if (this.grid.get(relCrd).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
 				return false;
 			}
 		}

@@ -78,7 +78,11 @@ public final class GoalBuilderImpl implements GoalBuilder {
 			throw new NullPointerException("Controller not set.");
 		}
 		this.isBuilt = true;
-		return new Goal(this.controller.get(), this.title.get(), this.descr.get(), this.method.get());
+		return new Goal(
+				this.controller.orElseThrow(),
+				this.title.orElseThrow(),
+				this.descr.orElseThrow(),
+				this.method.orElseThrow());
 	}
 
 	@Override

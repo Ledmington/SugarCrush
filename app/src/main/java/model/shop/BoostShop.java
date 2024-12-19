@@ -36,19 +36,16 @@ public final class BoostShop {
 	private static final int FRECKLESPRICE = 1000; // price of Freckles candies
 	private static final int WRAPPEDPRICE = 750; // price of Wrapped candies
 	private static final int STRIPEDPRICE = 500; // price of Striped candies
-	private CandyColors color; // variable for the random color
-	private Candy candy; // boost to add at the shop
+
 	private final List<Boost> boosts = new ArrayList<>(); // contains the boost to sell
-	private boolean flag; // if true, the candy have type=chocolate or normal
 	private final PlayerManagerImpl pm = new PlayerManagerImpl(); // variable to get the list of players
 
 	/** generate the items sold in the shop */
-	public final void generateShop() {
+	public void generateShop() {
 		boosts.removeAll(boosts);
 		for (int i = 0; i < MAXELEMSHOP; i++) {
 			generateBoost();
 		}
-		return;
 	}
 
 	/**
@@ -56,39 +53,45 @@ public final class BoostShop {
 	 *
 	 * @return a candy item
 	 */
-	private final void generateBoost() {
+	private void generateBoost() {
 		Random rnd = new Random();
+		// variable for the random color
+		CandyColors color;
 		do {
-			this.color = CandyColors.values()[rnd.nextInt(CandyColors.values().length)];
-		} while (this.color == CandyColors.CHOCOLATE || this.color == CandyColors.FRECKLES);
+			color = CandyColors.values()[rnd.nextInt(CandyColors.values().length)];
+		} while (color == CandyColors.CHOCOLATE || color == CandyColors.FRECKLES);
 
+		// if true, the candy have type=chocolate or normal
+		boolean flag;
 		do {
+			Candy candy;
 			switch (rnd.nextInt(CandyTypes.values().length)) {
 				case 0:
-					this.flag = false;
-					this.candy = new CandyFactoryImpl().getFreckles();
-					this.boosts.add(new Boost(CandyTypes.FRECKLES.name(), FRECKLESPRICE, this.candy));
+					flag = false;
+					// boost to add at the shop
+					candy = new CandyFactoryImpl().getFreckles();
+					this.boosts.add(new Boost(CandyTypes.FRECKLES.name(), FRECKLESPRICE, candy));
 
 					break;
 				case 1:
-					this.flag = false;
-					this.candy = new CandyFactoryImpl().getHorizontalStriped(color);
-					this.boosts.add(new Boost(CandyTypes.STRIPED_HORIZONTAL.name(), STRIPEDPRICE, this.candy));
+					flag = false;
+					candy = new CandyFactoryImpl().getHorizontalStriped(color);
+					this.boosts.add(new Boost(CandyTypes.STRIPED_HORIZONTAL.name(), STRIPEDPRICE, candy));
 					break;
 				case 2:
-					this.flag = false;
-					this.candy = new CandyFactoryImpl().getVerticalStripedCandy(color);
-					this.boosts.add(new Boost(CandyTypes.STRIPED_VERTICAL.name(), STRIPEDPRICE, this.candy));
+					flag = false;
+					candy = new CandyFactoryImpl().getVerticalStripedCandy(color);
+					this.boosts.add(new Boost(CandyTypes.STRIPED_VERTICAL.name(), STRIPEDPRICE, candy));
 					break;
 				case 3:
-					this.flag = false;
-					this.candy = new CandyFactoryImpl().getWrapped(color);
-					this.boosts.add(new Boost(CandyTypes.WRAPPED.name(), WRAPPEDPRICE, this.candy));
+					flag = false;
+					candy = new CandyFactoryImpl().getWrapped(color);
+					this.boosts.add(new Boost(CandyTypes.WRAPPED.name(), WRAPPEDPRICE, candy));
 					break;
 				default:
 					flag = true;
 			}
-		} while (this.flag);
+		} while (flag);
 	}
 
 	/**

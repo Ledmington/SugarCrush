@@ -41,6 +41,7 @@ import javax.swing.SwingUtilities;
 import controller.Controller;
 import controller.image.ImageManager;
 import controller.image.ImageManagerImpl;
+import model.game.grid.candies.Candy;
 import utils.Point2D;
 import view.View;
 
@@ -60,7 +61,7 @@ public final class Game extends GUI {
 	private final JLabel progrLabel = new JLabel("0%");
 	private final transient Map<JButton, Point2D> buttons = new HashMap<>();
 	private final transient ImageManager im = new ImageManagerImpl();
-	private boolean slowShow = false;
+	private final boolean slowShow;
 	private final JPanel gameGrid = new JPanel();
 	private final JPanel mainPanel;
 	private final transient Map<String, Integer> playerBoosts = controller.getObtatinedBoosts();
@@ -69,11 +70,11 @@ public final class Game extends GUI {
 	private transient Optional<String> boostSelected = Optional.empty();
 	private final JLabel currentBoost = new JLabel();
 	private final transient ActionListener candyAL = (e) -> {
-		JButton bt = (JButton) e.getSource();
+		final JButton bt = (JButton) e.getSource();
 
 		// If clicked after having selected a boost
 		if (boostSelected.isPresent()) {
-			final String name = boostSelected.get();
+			final String name = boostSelected.orElseThrow();
 			controller.useBoost(name, buttons.get(bt));
 
 			// Decrementing boost counter
@@ -91,9 +92,9 @@ public final class Game extends GUI {
 				tmpCandy = Optional.of(bt);
 				bt.setBackground(Color.YELLOW);
 			} else {
-				tmpCandy.get().setBackground(Color.WHITE);
-				Thread thr = new Thread(() -> {
-					controller.move(buttons.get(tmpCandy.get()), buttons.get(bt));
+				tmpCandy.orElseThrow().setBackground(Color.WHITE);
+				final Thread thr = new Thread(() -> {
+					controller.move(buttons.get(tmpCandy.orElseThrow()), buttons.get(bt));
 					tmpCandy = Optional.empty();
 				});
 				thr.start();
@@ -101,7 +102,7 @@ public final class Game extends GUI {
 		}
 	};
 
-	protected Game(final Controller controller, final View view) {
+	Game(final Controller controller, final View view) {
 		super(controller, view);
 
 		// Main panel of jframe
@@ -119,8 +120,7 @@ public final class Game extends GUI {
 		movesLabel.setText(String.valueOf(controller.getRemainingMoves()));
 		labelsPanel.add(new JLabel("Score : "));
 		labelsPanel.add(scoreLabel);
-		labelsPanel.add(
-				new JLabel("/ " + String.valueOf(controller.getObjective().getMaxScore()) + " "));
+		labelsPanel.add(new JLabel("/ " + controller.getObjective().getMaxScore() + " "));
 		labelsPanel.add(new JLabel("Rem. moves : "));
 		labelsPanel.add(movesLabel);
 
@@ -130,14 +130,14 @@ public final class Game extends GUI {
 		mainPanel.add(westPanel, BorderLayout.WEST);
 
 		// Checking that at least one boost is available
-		if (playerBoosts.keySet().stream().mapToInt(s -> playerBoosts.get(s)).sum() > 0) {
+		if (playerBoosts.keySet().stream().mapToInt(playerBoosts::get).sum() > 0) {
 
 			// 'Boosts' title label
 			final JLabel boosts = new JLabel("Boosts");
 			westPanel.add(boosts);
 
 			// Adding usable boosts
-			for (String s : playerBoosts.keySet()) {
+			for (final String s : playerBoosts.keySet()) {
 				if (playerBoosts.get(s) > 0) {
 					final JButton boost = new JButton(s + " (" + playerBoosts.get(s) + ")");
 					westPanel.add(boost);
@@ -163,48 +163,41 @@ public final class Game extends GUI {
 
 		// Objective button
 		final JButton objectiveButton = new JButton("Objective");
-		objectiveButton.addActionListener(e -> {
-			JOptionPane.showMessageDialog(null, controller.getObjective().objectiveText());
-		});
+		objectiveButton.addActionListener(e ->
+				JOptionPane.showMessageDialog(null, controller.getObjective().objectiveText()));
 		northPanel.add(objectiveButton, BorderLayout.EAST);
 
 		if (controller.getObjective().getChallenge().isPresent()
-				&& !controller.getObjective().getChallenge().get().isJellyToDestroy()) {
+				&& !controller.getObjective().getChallenge().orElseThrow().isJellyToDestroy()) {
 			labelsPanel.add(new JLabel("Progression: "));
 			labelsPanel.add(progrLabel);
 		}
 
 		// Hint button.
 		final JButton hintButton = new JButton("Hint");
-		hintButton.addActionListener(e -> {
-			new Thread(() -> {
-						var cords = controller.getHint();
-						SwingUtilities.invokeLater(() -> {
-							buttons.forEach((btn, crd) -> {
-								if (cords.contains(crd)) {
-									btn.setBackground(Color.CYAN);
-								}
-							});
-						});
-
-						try {
-							Thread.sleep(3000);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
+		hintButton.addActionListener(e -> new Thread(() -> {
+					final List<Point2D> cords = controller.getHint();
+					SwingUtilities.invokeLater(() -> buttons.forEach((btn, crd) -> {
+						if (cords.contains(crd)) {
+							btn.setBackground(Color.CYAN);
 						}
+					}));
 
-						SwingUtilities.invokeLater(() -> {
-							buttons.forEach((btn, crd) -> {
-								if (cords.contains(crd)) {
-									if (btn.getBackground() == Color.CYAN) {
-										btn.setBackground(Color.WHITE);
-									}
-								}
-							});
-						});
-					})
-					.start();
-		});
+					try {
+						Thread.sleep(3000);
+					} catch (final InterruptedException ex) {
+						throw new RuntimeException(ex);
+					}
+
+					SwingUtilities.invokeLater(() -> buttons.forEach((btn, crd) -> {
+						if (cords.contains(crd)) {
+							if (btn.getBackground() == Color.CYAN) {
+								btn.setBackground(Color.WHITE);
+							}
+						}
+					}));
+				})
+				.start());
 		northPanel.add(hintButton, BorderLayout.WEST);
 
 		slowShow = true;
@@ -227,9 +220,9 @@ public final class Game extends GUI {
 		pack();
 	}
 
-	private final void updateBoostsButtons() {
+	private void updateBoostsButtons() {
 		final Iterator<String> it = playerBoosts.keySet().iterator();
-		for (JButton jb : boostsBtn) {
+		for (final JButton jb : boostsBtn) {
 			final String boostName = it.next();
 			jb.setText(boostName + " (" + playerBoosts.get(boostName) + ")");
 			if (playerBoosts.get(boostName) == 0) {
@@ -238,26 +231,25 @@ public final class Game extends GUI {
 		}
 	}
 
-	private final void initializeGrid() {
-
+	private void initializeGrid() {
 		// Eliminating the previous grid
 		gameGrid.removeAll();
-		buttons.keySet().stream().forEach(jb -> jb.setVisible(false));
+		buttons.keySet().forEach(jb -> jb.setVisible(false));
 		buttons.clear();
 
 		// Visualizing starting message
 		if (controller.getStartingMessage().isPresent()) {
-			JOptionPane.showMessageDialog(null, controller.getStartingMessage().get());
+			JOptionPane.showMessageDialog(null, controller.getStartingMessage().orElseThrow());
 		}
 
 		// Central grid of candies.
 		final Point2D gridSize = controller.getGridSize();
 		final Set<Point2D> positions = controller.getGrid().keySet();
-		gameGrid.setLayout(new GridLayout(gridSize.getX(), gridSize.getY()));
+		gameGrid.setLayout(new GridLayout(gridSize.x(), gridSize.y()));
 
 		// For each coordinate
-		for (int x = 0; x < gridSize.getX(); x++) {
-			for (int y = 0; y < gridSize.getY(); y++) {
+		for (int x = 0; x < gridSize.x(); x++) {
+			for (int y = 0; y < gridSize.y(); y++) {
 				final JButton jb = new JButton();
 				jb.setBorderPainted(false);
 				jb.setFocusPainted(false);
@@ -284,31 +276,28 @@ public final class Game extends GUI {
 		pack();
 	}
 
-	private final void updateImages() {
-		var grid = controller.getGrid();
+	private void updateImages() {
+		final Map<Point2D, Optional<Candy>> grid = controller.getGrid();
 		buttons.forEach((jbt, crd) -> {
 			if (grid.get(crd).isPresent()) {
-				jbt.setIcon(im.getCandyImage(grid.get(crd).get()));
+				jbt.setIcon(im.getCandyImage(grid.get(crd).orElseThrow()));
 			} else {
 				jbt.setIcon(null);
 			}
 		});
 
-		var jelly = controller.getJelly();
+		final Optional<Map<Point2D, Integer>> jelly = controller.getJelly();
 		if (jelly.isPresent()) {
 			buttons.forEach((jbt, crd) -> {
 				if (jbt.getBackground() != Color.YELLOW) {
-					switch (jelly.get().get(crd)) {
-						case 2:
-							jbt.setBackground(Color.GRAY);
-							break;
-						case 1:
-							jbt.setBackground(Color.LIGHT_GRAY);
-							break;
-						case 0:
-							jbt.setBackground(Color.WHITE);
-							break;
-					}
+					jbt.setBackground(
+							switch (jelly.orElseThrow().get(crd)) {
+								case 2 -> Color.GRAY;
+								case 1 -> Color.LIGHT_GRAY;
+								case 0 -> Color.WHITE;
+								default -> throw new IllegalStateException("Unexpected value: "
+										+ jelly.orElseThrow().get(crd));
+							});
 				}
 			});
 		} else {
@@ -320,12 +309,12 @@ public final class Game extends GUI {
 		}
 	}
 
-	public final void updateGrid() {
+	public void updateGrid() {
 		updateImages();
 
 		scoreLabel.setText(String.format("%04d", controller.getCurrentScore().getScore()));
 		movesLabel.setText(String.valueOf(controller.getRemainingMoves()));
-		progrLabel.setText(Integer.toString((int) controller.getPercent()) + "%");
+		progrLabel.setText((int) controller.getPercent() + "%");
 
 		if (!SwingUtilities.isEventDispatchThread()) {
 			try {
@@ -333,31 +322,31 @@ public final class Game extends GUI {
 					revalidate();
 					repaint();
 				});
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} catch (final Exception ex) {
+				throw new RuntimeException(ex);
 			}
 		}
 		if (slowShow) {
 			try {
 				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			} catch (final InterruptedException e) {
+				throw new RuntimeException(e);
 			}
 		}
 	}
 
-	public final void nextStage() {
+	public void nextStage() {
 		initializeGrid();
 	}
 
-	public final void stageEnd() {
+	public void stageEnd() {
 		JOptionPane.showMessageDialog(null, controller.getResult());
 		if (controller.getEndingMessage().isPresent()) {
-			JOptionPane.showMessageDialog(null, controller.getEndingMessage().get());
+			JOptionPane.showMessageDialog(null, controller.getEndingMessage().orElseThrow());
 		}
 	}
 
-	public final void levelEnd() {
+	public void levelEnd() {
 		load(new Levels(controller, view));
 	}
 }

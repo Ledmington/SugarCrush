@@ -17,6 +17,8 @@
  */
 package controller.files;
 
+import java.util.Objects;
+
 /**
  * Enum of all the stats types, with their description to show in the view
  *
@@ -46,9 +48,13 @@ public enum StatsTypes {
 	level9Score("Level 9 top score"),
 	level10Score("Level 10 top score");
 
-	private String description;
+	private final String description;
 
-	private StatsTypes(final String desc) {
+	StatsTypes(final String desc) {
+		Objects.requireNonNull(desc);
+		if (desc.isBlank()) {
+			throw new IllegalArgumentException("Empty description.");
+		}
 		this.description = desc;
 	}
 
