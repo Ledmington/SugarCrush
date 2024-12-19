@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,21 +39,24 @@ import view.View;
 /** @author Davide Degli Esposti */
 public final class Shop extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = -5474639315359936325L;
+
 	private static final int MAX_ITEMS_SHOP = 4; // is the max number of boost on sale in the shop
 	private static final JLabel titleLabel = new JLabel("SHOP", SwingConstants.CENTER); // title of the view
+
 	private final JPanel mainPanel =
 			new JPanel(new BorderLayout()); // the panel that contain all the element of the view
 	private final JPanel shopPanel = new JPanel(); // panel that contain the item on sale
 	private final JButton back = new JButton("Back"); // the button for turn back on main menu
-	private final List<JButton> itemBtns =
+	private final transient List<JButton> itemBtns =
 			new ArrayList<JButton>(); // list of buttons that represents the boost on sale
-	private final ImageManager im = new ImageManagerImpl(); // variable to get the image of the candy
+	private final transient ImageManager im = new ImageManagerImpl(); // variable to get the image of the candy
 	private int btnNotEnable = 4; // represents the number of button not enable
 	private final JLabel moneyLabel =
 			new JLabel("Money: " + controller.getCurrentMoney()); // show the current amount of money of the player
 
-	protected Shop(final Controller controller, final View view) {
+	Shop(final Controller controller, final View view) {
 		super(controller, view);
 
 		// initialize and add elements on the frame
@@ -101,12 +105,8 @@ public final class Shop extends GUI {
 		this.pack();
 	}
 
-	/**
-	 * create the view for the shop
-	 *
-	 * @param shopPanel the panel where will create the shop
-	 */
-	private final void createShopView() {
+	/** create the view for the shop */
+	private void createShopView() {
 		shopPanel.setLayout(new GridLayout(2, MAX_ITEMS_SHOP));
 		for (int i = 0; i < controller.getBoostOnSale().size(); i++) {
 			itemBtns.add(new JButton());

@@ -17,15 +17,15 @@
  */
 package test;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import controller.Controller;
 import controller.ControllerImpl;
@@ -49,8 +49,8 @@ public final class TestStageBuilder {
 
 	public TestStageBuilder() {}
 
-	@Before
-	public final void prepare() {
+	@BeforeEach
+	public void prepare() {
 		sb = new StageBuilderImpl();
 		cf = new CandyFactoryImpl();
 		of = new ObjectiveFactoryImpl();
@@ -58,189 +58,154 @@ public final class TestStageBuilder {
 	}
 
 	@Test
-	public final void zeroOrNegativeDimensions() {
+	public void zeroOrNegativeDimensions() {
 		final String msg = "Zero or negative values shouldn't be passed as grid dimensions.";
-		try {
-			sb.setDimensions(5, 0);
-			fail(msg);
-		} catch (IllegalArgumentException e) {
-		}
 
-		try {
-			sb.setDimensions(0, 2);
-			fail(msg);
-		} catch (IllegalArgumentException e) {
-		}
+		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(5, 0));
 
-		try {
-			sb.setDimensions(-1, -1);
-			fail(msg);
-		} catch (IllegalArgumentException e) {
-		}
-	}
+		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(0, 2));
 
-	@Test(expected = NullPointerException.class)
-	public final void nullEmptyCells() {
-		sb.setEmptyCells(null);
-		fail("Null pointer shouldn't be passed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void emptyCellsWithoutGrid() {
-		final Set<Point2D> s = new HashSet<>();
-		s.add(new Point2D(1, 1));
-		sb.setEmptyCells(s);
-		fail("Setting empty cells shouldn't be allowed before creating grid.");
-	}
-
-	@Test(expected = NullPointerException.class)
-	public final void nullObjective() {
-		sb.setObjective(null);
-		fail("Null pointer shouldn't be passed.");
-	}
-
-	@Test(expected = NullPointerException.class)
-	public final void nullChocolate() {
-		sb.addChocolatePosition(null);
-		fail("Null pointer shouldn't be passed.");
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void chocolateNotInGrid() {
-		sb.setDimensions(3, 3).addChocolatePosition(new Point2D(4, 4));
-		fail("Setting chocolate outside grid shouldn't be allowed.");
-	}
-
-	@Test(expected = NullPointerException.class)
-	public final void nullColor() {
-		sb.addAvailableColor(null);
-		fail("Null pointer shouldn't be passed.");
-	}
-
-	@Test(expected = NullPointerException.class)
-	public final void nullCandies() {
-		sb.setCandies(null);
-		fail("Null pointer shouldn't be passed.");
+		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(-1, -1));
 	}
 
 	@Test
-	public final void candiesNotInGrid() {
+	public void nullEmptyCells() {
+		assertThrows(NullPointerException.class, () -> sb.setEmptyCells(null));
+	}
+
+	@Test
+	public void emptyCellsWithoutGrid() {
+		final Set<Point2D> s = new HashSet<>();
+		s.add(new Point2D(1, 1));
+		assertThrows(IllegalStateException.class, () -> sb.setEmptyCells(s));
+	}
+
+	@Test
+	public void nullObjective() {
+		assertThrows(NullPointerException.class, () -> sb.setObjective(null));
+	}
+
+	@Test
+	public void nullChocolate() {
+		assertThrows(NullPointerException.class, () -> sb.addChocolatePosition(null));
+	}
+
+	@Test
+	public void chocolateNotInGrid() {
+		sb.setDimensions(3, 3);
+		assertThrows(IllegalArgumentException.class, () -> sb.addChocolatePosition(new Point2D(4, 4)));
+	}
+
+	@Test
+	public void nullColor() {
+		assertThrows(NullPointerException.class, () -> sb.addAvailableColor(null));
+	}
+
+	@Test
+	public void nullCandies() {
+		assertThrows(NullPointerException.class, () -> sb.setCandies(null));
+	}
+
+	@Test
+	public void candiesNotInGrid() {
 		final String msg = "Setting candies in unexisting positions shouldn't be allowed.";
 		final Map<Point2D, Candy> m = new HashMap<>();
 		m.put(new Point2D(3, 3), cf.getFreckles());
 
 		// Setting candies without map
-		try {
-			sb.setCandies(m);
-			fail(msg);
-		} catch (IllegalArgumentException e) {
-		}
+		assertThrows(IllegalArgumentException.class, () -> sb.setCandies(m));
 
 		// Setting candies with map
-		try {
-			sb.setDimensions(2, 2).setCandies(m);
-			fail(msg);
-		} catch (IllegalArgumentException e) {
-		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void twoCandiesInSamePosition() {
-		final Map<Point2D, Candy> m = new HashMap<>();
-		m.put(new Point2D(3, 3), cf.getFreckles());
-
-		sb.setDimensions(5, 5).setCandies(m).setCandies(m);
-
-		fail("Setting twice the same position shouldn't be allowed.");
-	}
-
-	@Test(expected = NullPointerException.class)
-	public final void emptyCandies() {
-		final Map<Point2D, Candy> m = new HashMap<>();
-		m.put(new Point2D(1, 1), null);
-
-		sb.setDimensions(5, 5).setCandies(m);
-		fail("Passed map of candies shouldn't contain null values.");
-	}
-
-	@Test(expected = NullPointerException.class)
-	public final void nullStartingMessage() {
-		sb.setStartingMessage(null);
-		fail("Passing null pointers shouldn't be allowed.");
-	}
-
-	@Test(expected = NullPointerException.class)
-	public final void nullEndingMessage() {
-		sb.setEndingMessage(null);
-		fail("Passing null pointers shouldn't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void cantBuildTwice() {
-		sb.setDimensions(5, 5)
-				.addAvailableColor(CandyColors.BLUE)
-				.addAvailableColor(CandyColors.GREEN)
-				.addAvailableColor(CandyColors.ORANGE)
-				.addAvailableColor(CandyColors.YELLOW)
-				.addAvailableColor(CandyColors.RED)
-				.setObjective(of.explode())
-				.setController(controller)
-				.build();
-		sb.build();
-		fail("Building same stage twice shouldn't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void cantBuildWithoutGrid() {
-		sb.build();
-		fail("Building the stage without grid shouldn't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void cantBuildWithoutColors() {
-		sb.setDimensions(5, 5).build();
-		fail("Building the stage without colors shouldn't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void gridOnlyChocolate() {
-		sb.setDimensions(1, 1)
-				.addAvailableColor(CandyColors.BLUE)
-				.addChocolatePosition(new Point2D(0, 0))
-				.build();
-		fail("Setting the whole grid to be chocolate shouldn't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void chocolateAndJelly() {
-		sb.setDimensions(5, 5)
-				.addAvailableColor(CandyColors.BLUE)
-				.addChocolatePosition(new Point2D(2, 2))
-				.addJelly()
-				.build();
-		fail("Having chocolate and jelly in the same stage shouldn't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void chocolateAndCandyInSamePosition() {
-		final Map<Point2D, Candy> m = new HashMap<>();
-		m.put(new Point2D(2, 2), cf.getVerticalStripedCandy(CandyColors.BLUE));
-
-		sb.setDimensions(5, 5)
-				.setCandies(m)
-				.addChocolatePosition(new Point2D(2, 2))
-				.build();
-		fail("Having a candy and chocolate in the same position shouldn't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void buildWithoutObjective() {
-		sb.setDimensions(5, 5).addAvailableColor(CandyColors.BLUE).build();
-		fail("Building without objective shouldn't be allowed.");
+		assertThrows(
+				IllegalArgumentException.class, () -> sb.setDimensions(2, 2).setCandies(m));
 	}
 
 	@Test
-	public final void cantDoAnythingAfterBuilding() {
+	public void twoCandiesInSamePosition() {
+		final Map<Point2D, Candy> m = new HashMap<>();
+		m.put(new Point2D(3, 3), cf.getFreckles());
+
+		sb.setDimensions(5, 5).setCandies(m);
+		assertThrows(IllegalArgumentException.class, () -> sb.setCandies(m));
+	}
+
+	@Test
+	public void emptyCandies() {
+		final Map<Point2D, Candy> m = new HashMap<>();
+		m.put(new Point2D(1, 1), null);
+		sb.setDimensions(5, 5);
+		assertThrows(NullPointerException.class, () -> sb.setCandies(m));
+	}
+
+	@Test
+	public void nullStartingMessage() {
+		assertThrows(NullPointerException.class, () -> sb.setStartingMessage(null));
+	}
+
+	@Test
+	public void nullEndingMessage() {
+		assertThrows(NullPointerException.class, () -> sb.setEndingMessage(null));
+	}
+
+	@Test
+	public void cantBuildTwice() {
+		sb.setDimensions(5, 5)
+				.addAvailableColor(CandyColors.BLUE)
+				.addAvailableColor(CandyColors.GREEN)
+				.addAvailableColor(CandyColors.ORANGE)
+				.addAvailableColor(CandyColors.YELLOW)
+				.addAvailableColor(CandyColors.RED)
+				.setObjective(of.explode())
+				.setController(controller)
+				.build();
+		assertThrows(IllegalStateException.class, () -> sb.build());
+	}
+
+	@Test
+	public void cantBuildWithoutGrid() {
+		assertThrows(IllegalStateException.class, () -> sb.build());
+	}
+
+	@Test
+	public void cantBuildWithoutColors() {
+		sb.setDimensions(5, 5);
+		assertThrows(IllegalStateException.class, () -> sb.build());
+	}
+
+	@Test
+	public void gridOnlyChocolate() {
+		sb.setDimensions(1, 1).addAvailableColor(CandyColors.BLUE).addChocolatePosition(new Point2D(0, 0));
+		assertThrows(IllegalStateException.class, () -> sb.build());
+	}
+
+	@Test
+	public void chocolateAndJelly() {
+		sb.setDimensions(5, 5)
+				.addAvailableColor(CandyColors.BLUE)
+				.addChocolatePosition(new Point2D(2, 2))
+				.addJelly();
+
+		assertThrows(IllegalStateException.class, () -> sb.build());
+	}
+
+	@Test
+	public void chocolateAndCandyInSamePosition() {
+		final Map<Point2D, Candy> m = new HashMap<>();
+		m.put(new Point2D(2, 2), cf.getVerticalStripedCandy(CandyColors.BLUE));
+
+		sb.setDimensions(5, 5).setCandies(m).addChocolatePosition(new Point2D(2, 2));
+
+		assertThrows(IllegalStateException.class, () -> sb.build());
+	}
+
+	@Test
+	public void buildWithoutObjective() {
+		sb.setDimensions(5, 5).addAvailableColor(CandyColors.BLUE);
+		assertThrows(IllegalStateException.class, () -> sb.build());
+	}
+
+	@Test
+	public void cantDoAnythingAfterBuilding() {
 		sb.setDimensions(5, 5)
 				.addAvailableColor(CandyColors.BLUE)
 				.addAvailableColor(CandyColors.GREEN)
@@ -251,58 +216,14 @@ public final class TestStageBuilder {
 				.setController(controller)
 				.build();
 
-		try {
-			sb.setDimensions(3, 3);
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
-
-		try {
-			sb.addAvailableColor(CandyColors.BLUE);
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
-
-		try {
-			sb.addChocolatePosition(new Point2D(2, 2));
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
-
-		try {
-			sb.addJelly();
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
-
-		try {
-			sb.setCandies(new HashMap<Point2D, Candy>());
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
-
-		try {
-			sb.setEmptyCells(new HashSet<Point2D>());
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
-
-		try {
-			sb.setEndingMessage("Bye");
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
-
-		try {
-			sb.setStartingMessage("Hello");
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
-
-		try {
-			sb.setObjective(of.lineParty());
-			fail("Calling methods after building shouldn't be allowed.");
-		} catch (IllegalStateException e) {
-		}
+		assertThrows(IllegalStateException.class, () -> sb.setDimensions(3, 3));
+		assertThrows(IllegalStateException.class, () -> sb.addAvailableColor(CandyColors.BLUE));
+		assertThrows(IllegalStateException.class, () -> sb.addChocolatePosition(new Point2D(2, 2)));
+		assertThrows(IllegalStateException.class, () -> sb.addJelly());
+		assertThrows(IllegalStateException.class, () -> sb.setCandies(new HashMap<>()));
+		assertThrows(IllegalStateException.class, () -> sb.setEmptyCells(new HashSet<>()));
+		assertThrows(IllegalStateException.class, () -> sb.setEndingMessage("Bye"));
+		assertThrows(IllegalStateException.class, () -> sb.setStartingMessage("Hello"));
+		assertThrows(IllegalStateException.class, () -> sb.setObjective(of.lineParty()));
 	}
 }

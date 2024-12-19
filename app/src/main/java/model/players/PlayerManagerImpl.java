@@ -43,9 +43,6 @@ public final class PlayerManagerImpl implements PlayerManager {
 	final File folder = new File(System.getProperty("user.home"), ".sugarcrush");
 	// a map that keeps a filetype as key, and a triple of <path, file, jsonArray> as value
 	private final Map<FileTypes, Triple<String, File, JsonArray>> filesMap = new HashMap<>() {
-
-		private static final long serialVersionUID = 4005599295388840133L;
-
 		{
 			put(
 					STATS,
@@ -165,7 +162,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 		}
 	}
 
-	public final void update(final List<Map<String, Object>> list, final FileTypes type) {
+	public void update(final List<Map<String, Object>> list, final FileTypes type) {
 		Objects.requireNonNull(list);
 		Objects.requireNonNull(type);
 		final JsonArray jse = new JsonArray();
@@ -185,12 +182,12 @@ public final class PlayerManagerImpl implements PlayerManager {
 		try (final FileWriter fileName = new FileWriter(filesMap.get(type).getX())) {
 			fileName.write(jse.toString());
 			fileName.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	public final List<Map<String, Object>> getPlayers(final FileTypes type) {
+	public  List<Map<String, Object>> getPlayers(final FileTypes type) {
 		Objects.requireNonNull(type);
 		final List<Map<String, Object>> list = new LinkedList<>();
 		this.createFiles(
@@ -204,8 +201,8 @@ public final class PlayerManagerImpl implements PlayerManager {
 						new Triple<>(
 								filesMap.get(type).getX(), filesMap.get(type).getY(), (JsonArray)
 										parser.parse(reader)));
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (final IOException e) {
+				throw new RuntimeException(e);
 			}
 		}
 		// adds every map to the list
@@ -217,7 +214,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 		return list;
 	}
 
-	public final void removePlayer(final String name) {
+	public void removePlayer(final String name) {
 		Objects.requireNonNull(name);
 		this.stringCheck(name);
 		// Removes the player in every file

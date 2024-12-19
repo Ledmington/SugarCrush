@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -51,21 +52,23 @@ import view.View;
  */
 public final class Game extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = 6519600363046645690L;
+
 	private final JLabel scoreLabel = new JLabel();
 	private final JLabel movesLabel = new JLabel();
 	private final JLabel progrLabel = new JLabel("0%");
-	private final Map<JButton, Point2D> buttons = new HashMap<>();
-	private final ImageManager im = new ImageManagerImpl();
+	private final transient Map<JButton, Point2D> buttons = new HashMap<>();
+	private final transient ImageManager im = new ImageManagerImpl();
 	private boolean slowShow = false;
-	private JPanel gameGrid = new JPanel();
+	private final JPanel gameGrid = new JPanel();
 	private final JPanel mainPanel;
-	private final Map<String, Integer> playerBoosts = controller.getObtatinedBoosts();
-	private final List<JButton> boostsBtn = new LinkedList<>();
-	private Optional<JButton> tmpCandy = Optional.empty();
-	private Optional<String> boostSelected = Optional.empty();
+	private final transient Map<String, Integer> playerBoosts = controller.getObtatinedBoosts();
+	private final transient List<JButton> boostsBtn = new LinkedList<>();
+	private transient Optional<JButton> tmpCandy = Optional.empty();
+	private transient Optional<String> boostSelected = Optional.empty();
 	private final JLabel currentBoost = new JLabel();
-	private final ActionListener candyAL = (e) -> {
+	private final transient ActionListener candyAL = (e) -> {
 		JButton bt = (JButton) e.getSource();
 
 		// If clicked after having selected a boost

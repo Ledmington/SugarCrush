@@ -17,10 +17,10 @@
  */
 package test;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import controller.Controller;
 import controller.ControllerImpl;
@@ -36,42 +36,19 @@ public final class TestLevelBuilder {
 	private LevelBuilder lb;
 	private Controller controller;
 
-	public TestLevelBuilder() {}
-
-	@Before
-	public final void prepare() {
+	@BeforeEach
+	public void prepare() {
 		lb = new LevelBuilderImpl();
 		controller = new ControllerImpl();
 	}
 
-	@Test(expected = NullPointerException.class)
-	public final void nullStage() {
-		lb.addStage(null);
-		fail("Passing null pointers shoudln't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void cantBuildTwice() {
-		lb.addStage(new StageBuilderImpl()
-						.setDimensions(3, 3)
-						.addAvailableColor(CandyColors.BLUE)
-						.addAvailableColor(CandyColors.GREEN)
-						.addAvailableColor(CandyColors.RED)
-						.setObjective(new ObjectiveFactoryImpl().explode())
-						.build())
-				.build();
-		lb.build();
-		fail("Building the same Level twice shouldn't be allowed.");
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public final void emptyStages() {
-		lb.build();
-		fail("Building a Level with no Stages inside shouldn't be allowed.");
+	@Test
+	public void nullStage() {
+		assertThrows(NullPointerException.class, () -> lb.addStage(null));
 	}
 
 	@Test
-	public final void cantCallMethodsAfterBuilding() {
+	public void cantBuildTwice() {
 		lb.addStage(new StageBuilderImpl()
 						.setDimensions(3, 3)
 						.addAvailableColor(CandyColors.BLUE)
@@ -82,25 +59,38 @@ public final class TestLevelBuilder {
 						.build())
 				.setController(controller)
 				.build();
-		final String msg = "Calling methods after building shouldn't be allowed.";
+		assertThrows(IllegalStateException.class, () -> lb.build());
+	}
 
-		try {
-			lb.addStage(new StageBuilderImpl()
-					.setDimensions(3, 3)
-					.addAvailableColor(CandyColors.BLUE)
-					.addAvailableColor(CandyColors.GREEN)
-					.addAvailableColor(CandyColors.RED)
-					.setObjective(new ObjectiveFactoryImpl().explode())
-					.setController(controller)
-					.build());
-			fail(msg);
-		} catch (IllegalStateException e) {
-		}
+	@Test
+	public void emptyStages() {
+		assertThrows(IllegalStateException.class, () -> lb.build());
+	}
 
-		try {
-			lb.setController(controller);
-			fail(msg);
-		} catch (IllegalStateException e) {
-		}
+	@Test
+	public void cantCallMethodsAfterBuilding() {
+		lb.addStage(new StageBuilderImpl()
+						.setDimensions(3, 3)
+						.addAvailableColor(CandyColors.BLUE)
+						.addAvailableColor(CandyColors.GREEN)
+						.addAvailableColor(CandyColors.RED)
+						.setObjective(new ObjectiveFactoryImpl().explode())
+						.setController(controller)
+						.build())
+				.setController(controller)
+				.build();
+
+		assertThrows(
+				IllegalStateException.class,
+				() -> lb.addStage(new StageBuilderImpl()
+						.setDimensions(3, 3)
+						.addAvailableColor(CandyColors.BLUE)
+						.addAvailableColor(CandyColors.GREEN)
+						.addAvailableColor(CandyColors.RED)
+						.setObjective(new ObjectiveFactoryImpl().explode())
+						.setController(controller)
+						.build()));
+
+		assertThrows(IllegalStateException.class, () -> lb.setController(controller));
 	}
 }

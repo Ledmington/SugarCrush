@@ -17,8 +17,10 @@
  */
 package test;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import controller.Controller;
 import controller.ControllerImpl;
@@ -30,55 +32,55 @@ public final class TestGoalBuilder {
 	private GoalBuilder gb;
 	private Controller ctrl;
 
-	@Before
-	public final void prepare() {
+	@BeforeEach
+	public void prepare() {
 		this.gb = new GoalBuilderImpl();
 		this.ctrl = new ControllerImpl();
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public final void titleCantBeAVoidString() {
-		this.gb.setTitle("");
+	@Test
+	public void titleCantBeAVoidString() {
+		assertThrows(IllegalStateException.class, () -> this.gb.setTitle(""));
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public final void descrCantBeAVoidString() {
-		this.gb.setDescr("");
+	@Test
+	public void descrCantBeAVoidString() {
+		assertThrows(IllegalStateException.class, () -> this.gb.setDescr(""));
 	}
 
-	@Test(expected = NullPointerException.class)
-	public final void methodCantBeNull() {
-		this.gb.setMethod(null);
+	@Test
+	public void methodCantBeNull() {
+		assertThrows(NullPointerException.class, () -> this.gb.setMethod(null));
 	}
 
-	@Test(expected = NullPointerException.class)
-	public final void titleNeedToBeSet() {
+	@Test
+	public void titleNeedToBeSet() {
 		this.gb.setDescr("prova descrizione");
 		this.gb.setMethod(e -> false);
-		gb.build();
+		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
-	@Test(expected = NullPointerException.class)
-	public final void descrNeedToBeSet() {
+	@Test
+	public void descrNeedToBeSet() {
 		this.gb.setTitle("prova titolo");
 		this.gb.setMethod(e -> true);
-		gb.build();
+		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
-	@Test(expected = NullPointerException.class)
-	public final void methodNeedToBeSet() {
+	@Test
+	public void methodNeedToBeSet() {
 		this.gb.setDescr("prova descrizione");
 		this.gb.setTitle("prova titolo");
-		gb.build();
+		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public final void cantBuiltTwice() {
+	@Test
+	public void cantBuildTwice() {
 		this.gb.setDescr("prova descrizione");
 		this.gb.setTitle("prova titolo");
 		this.gb.setMethod(e -> false);
 		this.gb.setController(ctrl);
 		gb.build();
-		gb.build();
+		assertThrows(IllegalStateException.class, () -> gb.build());
 	}
 }

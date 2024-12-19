@@ -17,43 +17,39 @@
  */
 package test;
 
-import static controller.Controller.playerName;
-import static controller.files.FileTypes.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import controller.Controller;
 import controller.ControllerImpl;
-import controller.files.*;
 import controller.files.FileTypes;
+import controller.files.StatsTypes;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyFactoryImpl;
 import model.game.grid.shapes.Shapes;
-import model.players.*;
-import model.score.*;
+import model.players.PlayerManager;
+import model.players.PlayerManagerImpl;
+import model.score.Status;
 import model.score.Status.Ratios;
+import model.score.StatusImpl;
 
-/**
- * Tests {@link PlayerManager}, {@link Score} and {@link Status}
- *
- * @author Emanuele Lamagna
- */
+/** @author Emanuele Lamagna */
 public final class TestPlayerManager {
 
 	private final Controller controller = new ControllerImpl();
 	private PlayerManager pm;
-	Optional<Map<String, Object>> mapP;
-	Optional<Map<String, Object>> mapB;
+	private Optional<Map<String, Object>> mapP;
+	private Optional<Map<String, Object>> mapB;
 
 	/** Prepare the tests */
-	@Before
-	public final void prepare() {
+	@BeforeEach
+	public void prepare() {
 		pm = new PlayerManagerImpl();
 		mapP = Optional.empty();
 		mapB = Optional.empty();
@@ -62,28 +58,30 @@ public final class TestPlayerManager {
 
 	/** Creates a new player, modifies some informations and then remove it */
 	@Test
-	public final void testStats() {
+	public void testStats() {
 		// create player
 		pm.addPlayer("tmpPlayer");
-		mapP = check(STATS);
-		mapB = check(BOOSTS);
+		mapP = check(FileTypes.STATS);
+		mapB = check(FileTypes.BOOSTS);
 
-		assertEquals(mapP.get().get(playerName).toString(), ("\"tmpPlayer\""));
-		assertEquals(mapB.get().get(playerName).toString(), ("\"tmpPlayer\""));
+		assertEquals(
+				"\"tmpPlayer\"", mapP.orElseThrow().get(Controller.playerName).toString());
+		assertEquals(
+				"\"tmpPlayer\"", mapB.orElseThrow().get(Controller.playerName).toString());
 
 		// modifiy all stats with score and status
-		Status status = new StatusImpl(controller);
+		final Status status = new StatusImpl(controller);
 		status.update(new CandyFactoryImpl().getNormalCandy(CandyColors.PURPLE));
 		status.update(new CandyFactoryImpl().getWrapped(CandyColors.BLUE));
 		status.update(Shapes.LINE_FIVE);
 		status.complete();
 		pm.setStat("tmpPlayer", status, 3);
-		pm.getPlayers(STATS).stream()
-				.filter(map -> map.get(playerName).toString().equals("\"tmpPlayer\""))
+		pm.getPlayers(FileTypes.STATS).stream()
+				.filter(map -> map.get(Controller.playerName).toString().equals("\"tmpPlayer\""))
 				.forEach(map -> {
-					assertEquals(map.get(StatsTypes.PURPLE.name()).toString(), "1");
-					assertEquals(map.get(StatsTypes.BLUE.name()).toString(), "1");
-					assertEquals(map.get(StatsTypes.FRECKLES.name()).toString(), "1");
+					assertEquals("1", map.get(StatsTypes.PURPLE.name()).toString());
+					assertEquals("1", map.get(StatsTypes.BLUE.name()).toString());
+					assertEquals("1", map.get(StatsTypes.FRECKLES.name()).toString());
 					assertEquals(
 							map.get(StatsTypes.level3Score.name()).toString(),
 							Integer.toString((Ratios.WRAPPED.get() + Ratios.DEF.get() * 5)));
@@ -92,35 +90,35 @@ public final class TestPlayerManager {
 							map.get(StatsTypes.totalScore.name()).toString());
 				});
 		// modify a stat with update
-		int moneyGained = 20;
+		final int moneyGained = 20;
 		int moneyHold = 0;
-		List<Map<String, Object>> list = pm.getPlayers(STATS);
-		for (var map : list) {
-			if (map.get(playerName).toString().equals("\"tmpPlayer\"")) {
+		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
+		for (final Map<String, Object> map : list) {
+			if (map.get(Controller.playerName).toString().equals("\"tmpPlayer\"")) {
 				moneyHold = Integer.parseInt(map.get(StatsTypes.money.name()).toString());
 				map.put(
 						StatsTypes.money.name(),
 						Integer.parseInt(map.get(StatsTypes.money.name()).toString()) + moneyGained);
 			}
 		}
-		pm.update(list, STATS);
-		for (var map : pm.getPlayers(STATS)) {
-			if (map.get(playerName).toString().equals("\"tmpPlayer\"")) {
+		pm.update(list, FileTypes.STATS);
+		for (final Map<String, Object> map : pm.getPlayers(FileTypes.STATS)) {
+			if (map.get(Controller.playerName).toString().equals("\"tmpPlayer\"")) {
 				assertEquals(map.get(StatsTypes.money.name()).toString(), Integer.toString(moneyHold + moneyGained));
 			}
 		}
 		// remove the player
 		pm.removePlayer("tmpPlayer");
-		mapP = check(STATS);
-		mapB = check(BOOSTS);
+		mapP = check(FileTypes.STATS);
+		mapB = check(FileTypes.BOOSTS);
 
 		assertEquals(mapP, Optional.empty());
 		assertEquals(mapB, Optional.empty());
 	}
 
-	private final Optional<Map<String, Object>> check(final FileTypes type) {
-		for (var map : pm.getPlayers(type)) {
-			if (map.get(playerName).toString().equals(("\"tmpPlayer\""))) {
+	private Optional<Map<String, Object>> check(final FileTypes type) {
+		for (final Map<String, Object> map : pm.getPlayers(type)) {
+			if (map.get(Controller.playerName).toString().equals(("\"tmpPlayer\""))) {
 				return Optional.of(map);
 			}
 		}

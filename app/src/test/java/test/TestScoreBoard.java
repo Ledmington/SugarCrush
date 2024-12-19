@@ -17,21 +17,21 @@
  */
 package test;
 
-import static controller.Controller.playerName;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import controller.files.*;
+import controller.Controller;
 import controller.files.FileTypes;
+import controller.files.StatsTypes;
 import model.players.PlayerManagerImpl;
 import model.rank.ScoreBoard;
-import utils.*;
+import utils.Pair;
 
 /** @author Davide Degli Esposti */
 public final class TestScoreBoard {
@@ -40,8 +40,8 @@ public final class TestScoreBoard {
 	private ScoreBoard sb;
 	private List<Pair<String, Integer>> testList;
 
-	@Before
-	public final void prepare() {
+	@BeforeEach
+	public void prepare() {
 		sb = new ScoreBoard();
 		pm = new PlayerManagerImpl();
 		testList = new ArrayList<>();
@@ -50,11 +50,11 @@ public final class TestScoreBoard {
 		testList.add(new Pair<>("\"samuele\"", 0));
 	}
 
-	public final void addPlayerAndScore(final String name, final Integer score) {
+	public void addPlayerAndScore(final String name, final Integer score) {
 		pm.addPlayer(name);
-		List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
-		for (Map<String, Object> map : list) {
-			if (map.get(playerName).toString().equals("\"" + name + "\"")) {
+		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
+		for (final Map<String, Object> map : list) {
+			if (map.get(Controller.playerName).toString().equals("\"" + name + "\"")) {
 				map.put(
 						StatsTypes.totalScore.name(),
 						Integer.parseInt(map.get(StatsTypes.totalScore.name()).toString()) + score);
@@ -63,11 +63,11 @@ public final class TestScoreBoard {
 		pm.update(list, FileTypes.STATS);
 	}
 
-	public final void addPlayerAndLvlScore(final String name, final Integer score) {
+	public void addPlayerAndLvlScore(final String name, final Integer score) {
 		pm.addPlayer(name);
-		List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
-		for (Map<String, Object> map : list) {
-			if (map.get(playerName).toString().equals("\"" + name + "\"")) {
+		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
+		for (final Map<String, Object> map : list) {
+			if (map.get(Controller.playerName).toString().equals("\"" + name + "\"")) {
 				map.put(
 						StatsTypes.level3Score.name(),
 						Integer.parseInt(map.get(StatsTypes.level3Score.name()).toString()) + score);
@@ -77,7 +77,7 @@ public final class TestScoreBoard {
 	}
 
 	@Test
-	public final void testGeneralScore() {
+	public void testGeneralScore() {
 		addPlayerAndScore("filippo", 90);
 		addPlayerAndScore("samuele", 0);
 		addPlayerAndScore("davide", 138);
@@ -88,7 +88,7 @@ public final class TestScoreBoard {
 	}
 
 	@Test
-	public final void testScoreByLevel() {
+	public void testScoreByLevel() {
 		addPlayerAndLvlScore("filippo", 90);
 		addPlayerAndLvlScore("samuele", 0);
 		addPlayerAndLvlScore("davide", 138);

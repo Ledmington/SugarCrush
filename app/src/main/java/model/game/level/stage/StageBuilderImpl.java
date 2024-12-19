@@ -17,6 +17,7 @@
  */
 package model.game.level.stage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import controller.Controller;
 import model.game.grid.GridManagerImpl;
@@ -160,16 +160,16 @@ public final class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	private final void check(final boolean condition, final String msg) {
+	private void check(final boolean condition, final String msg) {
 		if (condition) {
 			throw new IllegalStateException(msg);
 		}
 	}
 
-	public final Stage build() {
+	public Stage build() {
 		check(alreadyBuilt, "Can't build the same Stage twice.");
 
-		check(grid.keySet().isEmpty(), "Stage grid empty.");
+		check(grid.isEmpty(), "Stage grid empty.");
 
 		check(colors.isEmpty(), "No colors set.");
 
@@ -188,7 +188,7 @@ public final class StageBuilderImpl implements StageBuilder {
 
 		alreadyBuilt = true;
 
-		List<CandyColors> colorList = colors.stream().collect(Collectors.toList());
+		List<CandyColors> colorList = new ArrayList<>(colors);
 
 		CandyFactory cf = new CandyFactoryImpl();
 
@@ -196,58 +196,42 @@ public final class StageBuilderImpl implements StageBuilder {
 		chocolate.forEach(p -> grid.put(p, Optional.of(cf.getChocolate())));
 
 		return new StageImpl(
-				new GridManagerImpl(controller.get(), grid, new StatusImpl(controller.get()), colorList, jelly),
-				objective.get(),
+				new GridManagerImpl(controller.orElseThrow(), grid, new StatusImpl(controller.get()), colorList, jelly),
+				objective.orElseThrow(),
 				startingMessage,
 				endingMessage);
 	}
 
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + (alreadyBuilt ? 1231 : 1237);
-		result = prime * result + ((chocolate == null) ? 0 : chocolate.hashCode());
-		result = prime * result + ((colors == null) ? 0 : colors.hashCode());
-		result = prime * result + ((controller == null) ? 0 : controller.hashCode());
-		result = prime * result + ((endingMessage == null) ? 0 : endingMessage.hashCode());
-		result = prime * result + ((grid == null) ? 0 : grid.hashCode());
-		result = prime * result + (jelly ? 1231 : 1237);
-		result = prime * result + ((objective == null) ? 0 : objective.hashCode());
-		result = prime * result + ((startingMessage == null) ? 0 : startingMessage.hashCode());
-		return result;
+		int h = 1;
+		h = prime * h + (alreadyBuilt ? 1 : 0);
+		h = prime * h + chocolate.hashCode();
+		h = prime * h + colors.hashCode();
+		h = prime * h + controller.hashCode();
+		h = prime * h + endingMessage.hashCode();
+		h = prime * h + grid.hashCode();
+		h = prime * h + (jelly ? 1 : 0);
+		h = prime * h + objective.hashCode();
+		h = prime * h + startingMessage.hashCode();
+		return h;
 	}
 
 	@Override
-	public final boolean equals(final Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		StageBuilderImpl other = (StageBuilderImpl) obj;
-		if (alreadyBuilt != other.alreadyBuilt) return false;
-		if (chocolate == null) {
-			if (other.chocolate != null) return false;
-		} else if (!chocolate.equals(other.chocolate)) return false;
-		if (colors == null) {
-			if (other.colors != null) return false;
-		} else if (!colors.equals(other.colors)) return false;
-		if (controller == null) {
-			if (other.controller != null) return false;
-		} else if (!controller.equals(other.controller)) return false;
-		if (endingMessage == null) {
-			if (other.endingMessage != null) return false;
-		} else if (!endingMessage.equals(other.endingMessage)) return false;
-		if (grid == null) {
-			if (other.grid != null) return false;
-		} else if (!grid.equals(other.grid)) return false;
-		if (jelly != other.jelly) return false;
-		if (objective == null) {
-			if (other.objective != null) return false;
-		} else if (!objective.equals(other.objective)) return false;
-		if (startingMessage == null) {
-			if (other.startingMessage != null) return false;
-		} else if (!startingMessage.equals(other.startingMessage)) return false;
-		return true;
+	public boolean equals(final Object other) {
+		if (!(other instanceof final StageBuilderImpl sbi)) {
+			return false;
+		}
+		return jelly == sbi.jelly
+				&& alreadyBuilt == sbi.alreadyBuilt
+				&& Objects.equals(grid, sbi.grid)
+				&& Objects.equals(colors, sbi.colors)
+				&& Objects.equals(chocolate, sbi.chocolate)
+				&& Objects.equals(objective, sbi.objective)
+				&& Objects.equals(startingMessage, sbi.startingMessage)
+				&& Objects.equals(endingMessage, sbi.endingMessage)
+				&& Objects.equals(controller, sbi.controller);
 	}
 
 	@Override

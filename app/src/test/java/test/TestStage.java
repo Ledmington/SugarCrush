@@ -17,14 +17,14 @@
  */
 package test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import controller.Controller;
 import controller.ControllerImpl;
@@ -42,18 +42,15 @@ import utils.Point2D;
 public final class TestStage {
 
 	private Stage s;
-	private CandyFactory cf;
-	private ObjectiveFactory of;
 	private final Map<Point2D, Candy> m = new HashMap<>();
-	private Controller controller;
 
 	public TestStage() {}
 
-	@Before
-	public final void prepare() {
-		cf = new CandyFactoryImpl();
-		of = new ObjectiveFactoryImpl();
-		controller = new ControllerImpl();
+	@BeforeEach
+	public void prepare() {
+		final CandyFactory cf = new CandyFactoryImpl();
+		final ObjectiveFactory of = new ObjectiveFactoryImpl();
+		final Controller controller = new ControllerImpl();
 
 		m.put(new Point2D(0, 0), cf.getNormalCandy(CandyColors.BLUE));
 		m.put(new Point2D(0, 1), cf.getNormalCandy(CandyColors.RED));
@@ -74,10 +71,10 @@ public final class TestStage {
 	}
 
 	@Test
-	public final void gridConsistency() {
+	public void gridConsistency() {
 		final Map<Point2D, Candy> m2 = new HashMap<>();
 		final Map<Point2D, Optional<Candy>> grid = s.getGrid();
-		grid.keySet().forEach(p -> m2.put(p, grid.get(p).get()));
+		grid.keySet().forEach(p -> m2.put(p, grid.get(p).orElseThrow()));
 		assertEquals(m2, m);
 	}
 }

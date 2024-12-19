@@ -17,11 +17,12 @@
  */
 package test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import controller.Controller;
 import controller.ControllerImpl;
@@ -38,10 +39,8 @@ public final class TestLevel {
 
 	private Level l;
 
-	public TestLevel() {}
-
-	@Before
-	public final void prepare() {
+	@BeforeEach
+	public void prepare() {
 		final Controller controller = new ControllerImpl();
 		final Stage s1 = new StageBuilderImpl()
 				.setDimensions(3, 3)
@@ -69,12 +68,12 @@ public final class TestLevel {
 	}
 
 	@Test
-	public final void checkResult() {
-		assertTrue(l.getResult() == GameResult.STILL_PLAYING);
+	public void checkResult() {
+		assertSame(GameResult.STILL_PLAYING, l.getResult());
 	}
 
 	@Test
-	public final void stageIterationCorrect() {
+	public void stageIterationCorrect() {
 		assertTrue(l.hasNextStage());
 		l.nextStage();
 		assertFalse(l.hasNextStage());

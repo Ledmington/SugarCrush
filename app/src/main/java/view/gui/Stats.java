@@ -23,6 +23,7 @@ import static controller.files.FileTypes.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -40,10 +41,12 @@ import view.View;
  */
 public final class Stats extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = -6538372787351542506L;
-	private Map<String, Object> player = new HashMap<>();
 
-	protected Stats(final Controller controller, final View view) {
+	private transient Map<String, Object> player = new HashMap<>();
+
+	Stats(final Controller controller, final View view) {
 		super(controller, view);
 		// initialize the map
 		controller.getPlayers(STATS).stream()

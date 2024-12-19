@@ -17,13 +17,21 @@
  */
 package test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import model.objectives.*;
+import model.objectives.Challenge;
+import model.objectives.ChallengeBuilder;
+import model.objectives.ChallengeBuilderImpl;
+import model.objectives.Objective;
+import model.objectives.ObjectiveBuilder;
+import model.objectives.ObjectiveBuilderImpl;
+import model.objectives.ObjectiveFactoryImpl;
 
 /**
  * A class that tests the right operation of the {@link Objective} creation
@@ -38,54 +46,56 @@ public final class TestObjective {
 
 	/** Creates a normal {@link Objective} */
 	@Test
-	public final void testNormalObjective() {
+	public void testNormalObjective() {
 		ob = new ObjectiveFactoryImpl().normal();
-		assertTrue(ob.getChallenge().equals(Optional.empty()));
+		assertEquals(ob.getChallenge(), Optional.empty());
 	}
 
 	/** Creates an explode {@link Objective} */
 	@Test
-	public final void testExplodeObjective() {
+	public void testExplodeObjective() {
 		ob = new ObjectiveFactoryImpl().explode();
-		assertTrue(!ob.getChallenge().equals(Optional.empty()));
-		assertTrue(ob.getChallenge().get().getWrappedToFarm() == Objective.Values.DEF_WRAPPED.getValue());
-		assertTrue(ob.getChallenge().get().getFrecklesToFarm() == 0);
+		assertNotEquals(ob.getChallenge(), Optional.empty());
+		assertEquals(ob.getChallenge().orElseThrow().getWrappedToFarm(), Objective.Values.DEF_WRAPPED.getValue());
+		assertEquals(0, ob.getChallenge().orElseThrow().getFrecklesToFarm());
 	}
 
 	/** Test if an {@link Objective} can be built twice */
-	@Test(expected = IllegalStateException.class)
-	public final void testDoubleBuildObjective() {
+	@Test
+	public void testDoubleBuildObjective() {
 		obb = new ObjectiveBuilderImpl();
 		obb.setMaxScore(10000).setMaxMoves(20).build();
-		obb.build();
+		assertThrows(IllegalStateException.class, () -> obb.build());
 	}
 
 	/** Test if an {@link Objective} can have an empty string */
-	@Test(expected = IllegalArgumentException.class)
-	public final void testStringNotEmpty() {
+	@Test
+	public void testStringNotEmpty() {
 		obb = new ObjectiveBuilderImpl();
-		obb.setMaxScore(10000).setMaxMoves(20).setObjectiveText("").build();
+		obb.setMaxScore(10000).setMaxMoves(20);
+		assertThrows(IllegalArgumentException.class, () -> obb.setObjectiveText(""));
 	}
 
 	/** Test if an {@link Objective} can have a negative parameter */
-	@Test(expected = IllegalArgumentException.class)
-	public final void testNotNegativeObjective() {
+	@Test
+	public void testNotNegativeObjective() {
 		obb = new ObjectiveBuilderImpl();
-		obb.setMaxScore(-1).setMaxMoves(20).build();
+		assertThrows(IllegalArgumentException.class, () -> obb.setMaxScore(-1));
 	}
 
 	/** Test if a {@link Challenge} can be built twice */
-	@Test(expected = IllegalStateException.class)
-	public final void testDoubleBuildChallenge() {
+	@Test
+	public void testDoubleBuildChallenge() {
 		ch = new ChallengeBuilderImpl();
 		ch.setBlue(10).setRed(10).setYellow(10).build();
-		ch.build();
+		assertThrows(IllegalStateException.class, () -> ch.build());
 	}
 
 	/** Test if an {@link Challenge} can have a negative parameter */
-	@Test(expected = IllegalArgumentException.class)
-	public final void testNotNegativeChallenge() {
+	@Test
+	public void testNotNegativeChallenge() {
 		ch = new ChallengeBuilderImpl();
-		ch.setBlue(10).setRed(10).setYellow(-4).build();
+		ch.setBlue(10).setRed(10);
+		assertThrows(IllegalArgumentException.class, () -> ch.setYellow(-4));
 	}
 }

@@ -17,7 +17,9 @@
  */
 package view.gui;
 
+import java.io.Serial;
 import java.net.URL;
+import java.util.Objects;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -32,16 +34,16 @@ import view.View;
  */
 public abstract class GUI extends JFrame {
 
+	@Serial
 	private static final long serialVersionUID = 7011873514281012033L;
-	protected View view;
-	protected final Controller controller;
+
+	protected transient View view;
+	protected final transient Controller controller;
 
 	protected GUI(final Controller controller, final View view) {
 		super();
-		this.controller = controller;
-		this.view = view;
-		final URL imageUrl = ClassLoader.getSystemResource("candyImages/FRECKLES_FRECKLES.jpeg");
-		this.setIconImage(new ImageIcon(imageUrl).getImage());
+		this.controller = Objects.requireNonNull(controller);
+		this.view = Objects.requireNonNull(view);
 	}
 
 	/**
@@ -54,5 +56,7 @@ public abstract class GUI extends JFrame {
 		gui.setLocation(this.view.getCurrentGUI().getLocation());
 		gui.setVisible(true);
 		this.view.setCurrentGUI(gui);
+		final URL imageUrl = ClassLoader.getSystemResource("candyImages/FRECKLES_FRECKLES.jpeg");
+		gui.setIconImage(new ImageIcon(imageUrl).getImage());
 	}
 }

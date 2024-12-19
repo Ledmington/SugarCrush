@@ -18,14 +18,16 @@
 package test;
 
 import static controller.Controller.playerName;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import controller.files.*;
+import controller.files.FileTypes;
+import controller.files.StatsTypes;
 import model.players.PlayerManagerImpl;
 import model.shop.BoostShop;
 
@@ -35,20 +37,20 @@ public final class TestBoostShop {
 	private BoostShop bs;
 	private PlayerManagerImpl pm;
 
-	@Before
-	public final void prepare() {
+	@BeforeEach
+	public void prepare() {
 		bs = new BoostShop();
 		pm = new PlayerManagerImpl();
 		bs.generateShop();
 	}
 
 	@Test
-	public final void enoughMoney() {
+	public void enoughMoney() {
 		pm.addPlayer("Player");
 
-		Integer moneyGained = 2000000;
-		List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
-		for (Map<String, Object> map : list) {
+		final int moneyGained = 2000000;
+		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
+		for (final Map<String, Object> map : list) {
 			if (map.get(playerName).toString().equals("\"Player\"")) {
 				map.put(
 						StatsTypes.money.name(),
@@ -57,15 +59,15 @@ public final class TestBoostShop {
 		}
 		pm.update(list, FileTypes.STATS);
 
-		bs.payment("Player", bs.getBoosts().get(0));
+		bs.payment("Player", bs.getBoosts().getFirst());
 		pm.removePlayer("Player");
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public final void notEnoughMoney() {
+	@Test
+	public void notEnoughMoney() {
 		pm.addPlayer("Player");
-		List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
-		for (Map<String, Object> map : list) {
+		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
+		for (final Map<String, Object> map : list) {
 			if (map.get(playerName).toString().equals("\"Player\"")) {
 				map.put(StatsTypes.money.name(), 0);
 				break;
@@ -73,12 +75,16 @@ public final class TestBoostShop {
 		}
 		pm.update(list, FileTypes.STATS);
 
-		bs.payment("Player", bs.getBoosts().get(1));
+		assertThrows(
+				IllegalStateException.class,
+				() -> bs.payment("Player", bs.getBoosts().get(1)));
 		pm.removePlayer("Player");
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public final void playerNotRegistered() {
-		bs.payment("notRegisteredPlayer", bs.getBoosts().get(1));
+	@Test
+	public void playerNotRegistered() {
+		assertThrows(
+				IllegalStateException.class,
+				() -> bs.payment("notRegisteredPlayer", bs.getBoosts().get(1)));
 	}
 }

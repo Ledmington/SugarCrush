@@ -18,10 +18,11 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import model.game.grid.shapes.ShapeCoordinates;
 import model.game.grid.shapes.Shapes;
@@ -32,18 +33,18 @@ public final class TestShapeCoordinates {
 
 	private ShapeCoordinates cc;
 
-	@Test(expected = IllegalStateException.class)
-	public final void cantBeOdd() {
-		cc = new ShapeCoordinates(1, 2, 3, 4, 5, 6, 7);
-	}
-
-	@Test(expected = NullPointerException.class)
-	public final void cantBeNull() {
-		cc = new ShapeCoordinates(Arrays.asList(new Point2D(1, 2), null));
+	@Test
+	public void cantBeOdd() {
+		assertThrows(IllegalStateException.class, () -> new ShapeCoordinates(1, 2, 3, 4, 5, 6, 7));
 	}
 
 	@Test
-	public final void correctRotation() {
+	public void cantBeNull() {
+		assertThrows(NullPointerException.class, () -> new ShapeCoordinates(Arrays.asList(new Point2D(1, 2), null)));
+	}
+
+	@Test
+	public void correctRotation() {
 		cc = new ShapeCoordinates(0, 1, 1, 0);
 		assertEquals(
 				Arrays.asList(new Point2D(1, 0), new Point2D(0, -1)),
@@ -51,7 +52,7 @@ public final class TestShapeCoordinates {
 	}
 
 	@Test
-	public final void stripedVertical() {
+	public void stripedVertical() {
 		cc = Shapes.LINE_FOUR_VERTICAL.getCoordinates();
 		assertEquals(Shapes.LINE_FOUR_VERTICAL.getCoordinates().getRelativeCoordinates(), cc.getRelativeCoordinates());
 	}
