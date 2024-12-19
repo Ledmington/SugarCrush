@@ -68,7 +68,6 @@ public final class Stats extends GUI {
 		Stream.of(stats.getComponents()).forEach(c -> ((JLabel) c).setHorizontalAlignment(JLabel.CENTER));
 
 		this.getContentPane().add(stats, BorderLayout.CENTER);
-		;
 
 		// set the back button
 		final JButton back = new JButton("BACK");

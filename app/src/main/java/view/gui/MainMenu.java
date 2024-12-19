@@ -19,6 +19,7 @@ package view.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.io.Serial;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -37,12 +38,14 @@ import view.View;
  */
 public final class MainMenu extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = 7023236724274367846L;
+
 	private static final JLabel titleLabel = new JLabel("Welcome in Sugar Crush", SwingConstants.CENTER);
 	private static final JLabel versionLabel = new JLabel("Version 1.1", SwingConstants.RIGHT);
 	private static Shop bstShop;
 
-	protected MainMenu(final Controller controller, final View view) {
+	MainMenu(final Controller controller, final View view) {
 		super(controller, view);
 		bstShop = new Shop(controller, view);
 

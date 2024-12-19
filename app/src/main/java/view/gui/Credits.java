@@ -20,6 +20,7 @@ package view.gui;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.io.Serial;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -36,9 +37,10 @@ import view.View;
  */
 public final class Credits extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = -4390892138366186444L;
 
-	protected Credits(final Controller controller, final View view) {
+	Credits(final Controller controller, final View view) {
 		super(controller, view);
 
 		// Main panel

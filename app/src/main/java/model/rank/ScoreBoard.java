@@ -34,7 +34,7 @@ public final class ScoreBoard {
 	private List<Pair<String, Integer>> rankPlayer; // list for represent certain rank of player
 
 	/** @return list of players sorted by general score */
-	public final List<Pair<String, Integer>> rankByGeneralScore() {
+	public List<Pair<String, Integer>> rankByGeneralScore() {
 		this.rankPlayer = new ArrayList<>();
 		pl.getPlayers(FileTypes.STATS).stream()
 				.sorted((a, b) -> Integer.valueOf((b.get(StatsTypes.totalScore.name())).toString())
@@ -51,7 +51,7 @@ public final class ScoreBoard {
 	 * @param lvlNumber the level to show the rank
 	 * @return list of players sorted by score in the given level
 	 */
-	public final List<Pair<String, Integer>> rankByScoreInLevel(final int lvlNumber) {
+	public List<Pair<String, Integer>> rankByScoreInLevel(final int lvlNumber) {
 		this.rankPlayer = new ArrayList<>();
 		pl.getPlayers(FileTypes.STATS).stream()
 				.sorted((a, b) -> Integer.valueOf((b.get("level" + lvlNumber + "Score")).toString())

@@ -27,7 +27,7 @@ public final class CandyBuilderImpl implements CandyBuilder {
 	private boolean built = false;
 
 	@Override
-	public final CandyBuilder setColor(final CandyColors cndCol) {
+	public CandyBuilder setColor(final CandyColors cndCol) {
 		if (this.built) {
 			throw new IllegalStateException("Candy already built");
 		}
@@ -36,7 +36,7 @@ public final class CandyBuilderImpl implements CandyBuilder {
 	}
 
 	@Override
-	public final CandyBuilder setType(final CandyTypes cndTyp) {
+	public CandyBuilder setType(final CandyTypes cndTyp) {
 		if (this.built) {
 			throw new IllegalStateException("Candy already built");
 		}
@@ -45,7 +45,7 @@ public final class CandyBuilderImpl implements CandyBuilder {
 	}
 
 	@Override
-	public final Candy build() {
+	public Candy build() {
 		if (this.built) {
 			throw new IllegalStateException("Candy can't be built twice");
 		}
@@ -56,17 +56,17 @@ public final class CandyBuilderImpl implements CandyBuilder {
 		return new Candy() {
 
 			@Override
-			public final CandyTypes getType() {
+			public CandyTypes getType() {
 				return cndTyp.orElseThrow();
 			}
 
 			@Override
-			public final CandyColors getColor() {
+			public CandyColors getColor() {
 				return cndCol.orElseThrow();
 			}
 
 			@Override
-			public final int hashCode() {
+			public int hashCode() {
 				final int prime = 31;
 				int result = 1;
 				result = prime * result + cndCol.hashCode();
@@ -75,7 +75,7 @@ public final class CandyBuilderImpl implements CandyBuilder {
 			}
 
 			@Override
-			public final boolean equals(final Object obj) {
+			public boolean equals(final Object obj) {
 				if (obj == null) {
 					return false;
 				}

@@ -36,7 +36,6 @@ public interface PlayerManager {
 	 * Adds a new player in the list of the players.
 	 *
 	 * @param name the name of the player
-	 * @throws IOException if there are problems with the files
 	 */
 	void addPlayer(final String name);
 
@@ -46,7 +45,6 @@ public interface PlayerManager {
 	 * @param name the name of the player
 	 * @param status the status of the current player
 	 * @param level the current level
-	 * @throws IOException if there are problems with the files
 	 */
 	void setStat(final String name, final Status status, final int level);
 
@@ -55,7 +53,6 @@ public interface PlayerManager {
 	 *
 	 * @param list the list of all the players (all as maps)
 	 * @param type the type of file to use
-	 * @throws IOException if there are problems with the files
 	 */
 	void update(final List<Map<String, Object>> list, final FileTypes type);
 
@@ -63,7 +60,6 @@ public interface PlayerManager {
 	 * Reads the right file to get all the players stats or boost (it depends by "type" parameter)
 	 *
 	 * @param type the type of file to use
-	 * @throws IOException if there are problems with the files
 	 * @return a list of all the players (as maps)
 	 */
 	List<Map<String, Object>> getPlayers(final FileTypes type);
@@ -72,7 +68,6 @@ public interface PlayerManager {
 	 * Removes a player from all the files
 	 *
 	 * @param name the name of the player
-	 * @throws IOException if there are problems with the files
 	 */
 	void removePlayer(final String name);
 }

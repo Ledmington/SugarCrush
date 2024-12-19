@@ -31,7 +31,7 @@ public final class CandyFactoryImpl implements CandyFactory {
 				.build();
 	}
 
-	public final Candy getVerticalStripedCandy(final CandyColors cndColor) {
+	public Candy getVerticalStripedCandy(final CandyColors cndColor) {
 		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
 			throw new IllegalStateException();
 		}
@@ -42,7 +42,7 @@ public final class CandyFactoryImpl implements CandyFactory {
 				.build();
 	}
 
-	public final Candy getHorizontalStriped(final CandyColors cndColor) {
+	public Candy getHorizontalStriped(final CandyColors cndColor) {
 		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
 			throw new IllegalStateException();
 		}
@@ -53,7 +53,7 @@ public final class CandyFactoryImpl implements CandyFactory {
 				.build();
 	}
 
-	public final Candy getWrapped(final CandyColors cndColor) {
+	public Candy getWrapped(final CandyColors cndColor) {
 		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
 			throw new IllegalStateException();
 		}
@@ -64,14 +64,14 @@ public final class CandyFactoryImpl implements CandyFactory {
 				.build();
 	}
 
-	public final Candy getFreckles() {
+	public Candy getFreckles() {
 		return new CandyBuilderImpl()
 				.setColor(CandyColors.FRECKLES)
 				.setType(CandyTypes.FRECKLES)
 				.build();
 	}
 
-	public final Candy getChocolate() {
+	public Candy getChocolate() {
 		return new CandyBuilderImpl()
 				.setColor(CandyColors.CHOCOLATE)
 				.setType(CandyTypes.CHOCOLATE)

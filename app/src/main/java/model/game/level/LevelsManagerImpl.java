@@ -154,7 +154,6 @@ public final class LevelsManagerImpl implements LevelsManager {
 					.build();
 
 			ob = new ObjectiveBuilderImpl();
-			cb = new ChallengeBuilderImpl();
 
 			final Stage s3 = new StageBuilderImpl()
 					.setDimensions(5, 4)
@@ -194,20 +193,18 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 * normal objective
 		 * 4 colors
 		 */
-		this.normalLevels.put(1, () -> {
-			return new LevelBuilderImpl()
-					.addStage(new StageBuilderImpl()
-							.setDimensions(6, 6)
-							.addAvailableColor(CandyColors.BLUE)
-							.addAvailableColor(CandyColors.RED)
-							.addAvailableColor(CandyColors.YELLOW)
-							.addAvailableColor(CandyColors.ORANGE)
-							.setObjective(of.normal())
-							.setController(controller)
-							.build())
-					.setController(controller)
-					.build();
-		});
+		this.normalLevels.put(1, () -> new LevelBuilderImpl()
+				.addStage(new StageBuilderImpl()
+						.setDimensions(6, 6)
+						.addAvailableColor(CandyColors.BLUE)
+						.addAvailableColor(CandyColors.RED)
+						.addAvailableColor(CandyColors.YELLOW)
+						.addAvailableColor(CandyColors.ORANGE)
+						.setObjective(of.normal())
+						.setController(controller)
+						.build())
+				.setController(controller)
+				.build());
 
 		/*
 		 * Level 2 :
@@ -270,21 +267,19 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 * 'jelly' objective
 		 * 4 colors
 		 */
-		this.normalLevels.put(4, () -> {
-			return new LevelBuilderImpl()
-					.addStage(new StageBuilderImpl()
-							.setDimensions(6, 8)
-							.addJelly()
-							.addAvailableColor(CandyColors.BLUE)
-							.addAvailableColor(CandyColors.RED)
-							.addAvailableColor(CandyColors.YELLOW)
-							.addAvailableColor(CandyColors.ORANGE)
-							.setObjective(of.jelly())
-							.setController(controller)
-							.build())
-					.setController(controller)
-					.build();
-		});
+		this.normalLevels.put(4, () -> new LevelBuilderImpl()
+				.addStage(new StageBuilderImpl()
+						.setDimensions(6, 8)
+						.addJelly()
+						.addAvailableColor(CandyColors.BLUE)
+						.addAvailableColor(CandyColors.RED)
+						.addAvailableColor(CandyColors.YELLOW)
+						.addAvailableColor(CandyColors.ORANGE)
+						.setObjective(of.jelly())
+						.setController(controller)
+						.build())
+				.setController(controller)
+				.build());
 
 		/*
 		 * Level 5 :
@@ -323,22 +318,20 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 * chocolate in bottom-left corner
 		 * 5 colors
 		 */
-		this.normalLevels.put(6, () -> {
-			return new LevelBuilderImpl()
-					.addStage(new StageBuilderImpl()
-							.setDimensions(6, 6)
-							.addChocolatePosition(new Point2D(5, 5))
-							.addAvailableColor(CandyColors.BLUE)
-							.addAvailableColor(CandyColors.RED)
-							.addAvailableColor(CandyColors.YELLOW)
-							.addAvailableColor(CandyColors.ORANGE)
-							.addAvailableColor(CandyColors.GREEN)
-							.setObjective(of.lineParty())
-							.setController(controller)
-							.build())
-					.setController(controller)
-					.build();
-		});
+		this.normalLevels.put(6, () -> new LevelBuilderImpl()
+				.addStage(new StageBuilderImpl()
+						.setDimensions(6, 6)
+						.addChocolatePosition(new Point2D(5, 5))
+						.addAvailableColor(CandyColors.BLUE)
+						.addAvailableColor(CandyColors.RED)
+						.addAvailableColor(CandyColors.YELLOW)
+						.addAvailableColor(CandyColors.ORANGE)
+						.addAvailableColor(CandyColors.GREEN)
+						.setObjective(of.lineParty())
+						.setController(controller)
+						.build())
+				.setController(controller)
+				.build());
 
 		/*
 		 * Level 7:
@@ -346,21 +339,19 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 * 'explode' objective
 		 * 5 colors
 		 */
-		this.normalLevels.put(7, () -> {
-			return new LevelBuilderImpl()
-					.addStage(new StageBuilderImpl()
-							.setDimensions(5, 5)
-							.addAvailableColor(CandyColors.BLUE)
-							.addAvailableColor(CandyColors.RED)
-							.addAvailableColor(CandyColors.YELLOW)
-							.addAvailableColor(CandyColors.ORANGE)
-							.addAvailableColor(CandyColors.GREEN)
-							.setObjective(of.explode())
-							.setController(controller)
-							.build())
-					.setController(controller)
-					.build();
-		});
+		this.normalLevels.put(7, () -> new LevelBuilderImpl()
+				.addStage(new StageBuilderImpl()
+						.setDimensions(5, 5)
+						.addAvailableColor(CandyColors.BLUE)
+						.addAvailableColor(CandyColors.RED)
+						.addAvailableColor(CandyColors.YELLOW)
+						.addAvailableColor(CandyColors.ORANGE)
+						.addAvailableColor(CandyColors.GREEN)
+						.setObjective(of.explode())
+						.setController(controller)
+						.build())
+				.setController(controller)
+				.build());
 
 		/*
 		 * Level 8:
@@ -369,23 +360,21 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 * 'lineParty' objective
 		 * 6 colors
 		 */
-		this.normalLevels.put(8, () -> {
-			return new LevelBuilderImpl()
-					.addStage(new StageBuilderImpl()
-							.setDimensions(8, 8)
-							.addAvailableColor(CandyColors.BLUE)
-							.addAvailableColor(CandyColors.RED)
-							.addAvailableColor(CandyColors.YELLOW)
-							.addAvailableColor(CandyColors.ORANGE)
-							.addAvailableColor(CandyColors.GREEN)
-							.addAvailableColor(CandyColors.PURPLE)
-							.addChocolatePosition(new Point2D(7, 2))
-							.setObjective(of.lineParty())
-							.setController(controller)
-							.build())
-					.setController(controller)
-					.build();
-		});
+		this.normalLevels.put(8, () -> new LevelBuilderImpl()
+				.addStage(new StageBuilderImpl()
+						.setDimensions(8, 8)
+						.addAvailableColor(CandyColors.BLUE)
+						.addAvailableColor(CandyColors.RED)
+						.addAvailableColor(CandyColors.YELLOW)
+						.addAvailableColor(CandyColors.ORANGE)
+						.addAvailableColor(CandyColors.GREEN)
+						.addAvailableColor(CandyColors.PURPLE)
+						.addChocolatePosition(new Point2D(7, 2))
+						.setObjective(of.lineParty())
+						.setController(controller)
+						.build())
+				.setController(controller)
+				.build());
 
 		/*
 		 * Level 9:
@@ -443,28 +432,26 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 * 'lineParty' objective
 		 * 6 colors
 		 */
-		this.normalLevels.put(10, () -> {
-			return new LevelBuilderImpl()
-					.addStage(new StageBuilderImpl()
-							.setDimensions(6, 6)
-							.addChocolatePosition(new Point2D(5, 0))
-							.addChocolatePosition(new Point2D(5, 1))
-							.addChocolatePosition(new Point2D(5, 2))
-							.addChocolatePosition(new Point2D(5, 3))
-							.addChocolatePosition(new Point2D(5, 4))
-							.addChocolatePosition(new Point2D(5, 5))
-							.addAvailableColor(CandyColors.BLUE)
-							.addAvailableColor(CandyColors.RED)
-							.addAvailableColor(CandyColors.YELLOW)
-							.addAvailableColor(CandyColors.ORANGE)
-							.addAvailableColor(CandyColors.GREEN)
-							.addAvailableColor(CandyColors.PURPLE)
-							.setObjective(of.lineParty())
-							.setController(controller)
-							.build())
-					.setController(controller)
-					.build();
-		});
+		this.normalLevels.put(10, () -> new LevelBuilderImpl()
+				.addStage(new StageBuilderImpl()
+						.setDimensions(6, 6)
+						.addChocolatePosition(new Point2D(5, 0))
+						.addChocolatePosition(new Point2D(5, 1))
+						.addChocolatePosition(new Point2D(5, 2))
+						.addChocolatePosition(new Point2D(5, 3))
+						.addChocolatePosition(new Point2D(5, 4))
+						.addChocolatePosition(new Point2D(5, 5))
+						.addAvailableColor(CandyColors.BLUE)
+						.addAvailableColor(CandyColors.RED)
+						.addAvailableColor(CandyColors.YELLOW)
+						.addAvailableColor(CandyColors.ORANGE)
+						.addAvailableColor(CandyColors.GREEN)
+						.addAvailableColor(CandyColors.PURPLE)
+						.setObjective(of.lineParty())
+						.setController(controller)
+						.build())
+				.setController(controller)
+				.build());
 	}
 
 	public Level getLevel(final int levelNumber) {

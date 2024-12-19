@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import model.game.grid.candies.Candy;
+import model.game.level.Level;
 import model.objectives.Objective;
 import model.score.Status;
 import utils.Point2D;

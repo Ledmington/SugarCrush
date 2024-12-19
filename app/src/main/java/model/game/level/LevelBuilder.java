@@ -19,6 +19,7 @@ package model.game.level;
 
 import controller.Controller;
 import model.game.level.stage.Stage;
+import model.score.Status;
 
 /**
  * An interface with builder pattern that allows an easier construction of a {@link Level} object. Each

@@ -48,11 +48,7 @@ public final class BoostShop {
 		}
 	}
 
-	/**
-	 * generate the boost to add at the shop
-	 *
-	 * @return a candy item
-	 */
+	/** generate the boost to add at the shop */
 	private void generateBoost() {
 		Random rnd = new Random();
 		// variable for the random color
@@ -100,7 +96,7 @@ public final class BoostShop {
 	 * @param name the name of the player
 	 * @param bst the boost bought by the player
 	 */
-	public final void payment(final String name, final Boost bst) {
+	public void payment(final String name, final Boost bst) {
 		final PlayerManagerImpl pl = new PlayerManagerImpl();
 		final List<Map<String, Object>> list = pl.getPlayers(FileTypes.STATS);
 		for (Map<String, Object> map : list) {
@@ -121,7 +117,7 @@ public final class BoostShop {
 	}
 
 	/** @return the list of boosts on sale */
-	public final List<Boost> getBoosts() {
+	public List<Boost> getBoosts() {
 		return this.boosts;
 	}
 
@@ -131,7 +127,7 @@ public final class BoostShop {
 	 * @param name the name of the player
 	 * @param bst the boost to add to the file
 	 */
-	private final void addBoostToPlayer(final String name, final Boost bst) {
+	private void addBoostToPlayer(final String name, final Boost bst) {
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.BOOSTS);
 		for (var map : list) {
 			if (map.get(playerName).toString().equals("\"" + name + "\"")) {

@@ -32,7 +32,7 @@ public final class SoundImpl implements Sound {
 
 	private boolean soundEnabled = true;
 
-	public final void playSound(String sound) {
+	public void playSound(String sound) {
 		if (this.soundEnabled) {
 			try {
 				final Clip clip = AudioSystem.getClip();
@@ -40,13 +40,13 @@ public final class SoundImpl implements Sound {
 				final AudioInputStream inputStream = AudioSystem.getAudioInputStream(soundUrl);
 				clip.open(inputStream);
 				clip.start();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (final Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 	}
 
-	public final void setSoundEnabled() {
+	public void setSoundEnabled() {
 		this.soundEnabled = !this.soundEnabled;
 	}
 }

@@ -57,17 +57,17 @@ public final class Goal {
 	}
 
 	/** @return the title of the goal */
-	public final String getTitle() {
+	public String getTitle() {
 		return this.title;
 	}
 
 	/** @return the description of the goal */
-	public final String getDescription() {
+	public String getDescription() {
 		return this.descr;
 	}
 
 	/** @return true if the goal is reached */
-	public final boolean isReached() {
+	public boolean isReached() {
 		return this.reached;
 	}
 
@@ -76,7 +76,7 @@ public final class Goal {
 	 *
 	 * @return true if is reached
 	 */
-	public final boolean checkIfReached() {
+	public boolean checkIfReached() {
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
 		for (var map : list) {
 			if (map.get(playerName).toString().equals("\"" + cntrlImpl.getCurrentPlayer() + "\"")) {

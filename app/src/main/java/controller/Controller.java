@@ -23,6 +23,8 @@ import java.util.Optional;
 
 import controller.files.FileTypes;
 import model.game.grid.candies.Candy;
+import model.game.level.Level;
+import model.game.level.stage.Stage;
 import model.objectives.Objective;
 import model.score.Status;
 import model.shop.Boost;
@@ -41,7 +43,7 @@ import view.sounds.Sound;
  */
 public interface Controller {
 
-	static final String playerName = "playerName";
+	String playerName = "playerName";
 
 	// About player(s)
 
@@ -62,7 +64,6 @@ public interface Controller {
 	/**
 	 * Getter of the map of the current player
 	 *
-	 * @param type
 	 * @return the map of the current player (for stats or boosts, depending by "type" parameter)
 	 */
 	Map<String, Object> getCurrentPlayerMap(final FileTypes type);
@@ -98,12 +99,12 @@ public interface Controller {
 	/**
 	 * Adds a new player in the list of the players.
 	 *
-	 * @param name the name of the player
+	 * @param playerName the name of the player
 	 */
-	void addPlayer(final String player);
+	void addPlayer(final String playerName);
 
 	/**
-	 * Updates the informations of the player, with the received list of maps
+	 * Updates the information of the player, with the received list of maps
 	 *
 	 * @param list the list of the players (as maps)
 	 * @param type the type of file to update (boosts or stats)
@@ -111,13 +112,13 @@ public interface Controller {
 	void updatePlayer(final List<Map<String, Object>> list, final FileTypes type);
 
 	/**
-	 * Checks the values in Status and refreshes the informations of that player
+	 * Checks the values in Status and refreshes the information of that player
 	 *
-	 * @param name the name of the player
+	 * @param playerName the name of the player
 	 * @param status the status of the current player
 	 * @param level the number of the actual level
 	 */
-	void setPlayerStats(final String player, final Status score, final int level);
+	void setPlayerStats(final String playerName, final Status status, final int level);
 
 	/** @return The number of currently available {@link Level}s. */
 	int getNumLevels();
@@ -241,10 +242,7 @@ public interface Controller {
 	/** @return the list of players sort by general score */
 	List<Pair<String, Integer>> getRankByGeneralScore();
 
-	/**
-	 * @param lvlNumber
-	 * @return the list of players sort by the score of the lvlNumber
-	 */
+	/** @return the list of players sort by the score of the lvlNumber */
 	List<Pair<String, Integer>> getRankByLevelScore(int lvlNumber);
 
 	/**
@@ -262,12 +260,7 @@ public interface Controller {
 	 */
 	Map<String, Integer> getObtatinedBoosts();
 
-	/**
-	 * make the payement for the selected item in the shop
-	 *
-	 * @param playerName
-	 * @param bst
-	 */
+	/** make the payement for the selected item in the shop */
 	void pay(final String playerName, final Boost bst);
 
 	/**

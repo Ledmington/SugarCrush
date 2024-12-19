@@ -43,25 +43,25 @@ public final class LevelBuilderImpl implements LevelBuilder {
 		super();
 	}
 
-	public final LevelBuilder addStage(final Stage newStage) {
+	public LevelBuilder addStage(final Stage newStage) {
 		check(alreadyBuilt, "Can't call any method if already built.");
 		stages.add(Objects.requireNonNull(newStage));
 		return this;
 	}
 
-	public final LevelBuilder setController(final Controller controller) {
+	public LevelBuilder setController(final Controller controller) {
 		check(alreadyBuilt, "Can't call any method if already built.");
 		this.controller = Optional.of(Objects.requireNonNull(controller));
 		return this;
 	}
 
-	private final void check(final boolean condition, final String msg) {
+	private void check(final boolean condition, final String msg) {
 		if (condition) {
 			throw new IllegalStateException(msg);
 		}
 	}
 
-	public final Level build() {
+	public Level build() {
 		check(alreadyBuilt, "Can't build the same Level twice.");
 
 		check(stages.isEmpty(), "Can't build Level without any Stage.");
@@ -85,33 +85,29 @@ public final class LevelBuilderImpl implements LevelBuilder {
 	}
 
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (alreadyBuilt ? 1231 : 1237);
-		result = prime * result + ((controller == null) ? 0 : controller.hashCode());
-		result = prime * result + ((stages == null) ? 0 : stages.hashCode());
+		result = prime * result + controller.hashCode();
+		result = prime * result + stages.hashCode();
 		return result;
 	}
 
 	@Override
-	public final boolean equals(final Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		LevelBuilderImpl other = (LevelBuilderImpl) obj;
+		if (!(obj instanceof final LevelBuilderImpl other)) return false;
 		if (alreadyBuilt != other.alreadyBuilt) return false;
-		if (controller == null) {
-			if (other.controller != null) return false;
+		if (controller.isEmpty()) {
+			if (other.controller.isPresent()) return false;
 		} else if (!controller.equals(other.controller)) return false;
-		if (stages == null) {
-			if (other.stages != null) return false;
-		} else if (!stages.equals(other.stages)) return false;
-		return true;
+		return stages.equals(other.stages);
 	}
 
 	@Override
-	public final String toString() {
+	public String toString() {
 		return "LevelBuilderImpl [stages=" + stages + ", controller="
 				+ controller + ", alreadyBuilt="
 				+ alreadyBuilt + "]";

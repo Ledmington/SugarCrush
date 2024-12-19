@@ -38,14 +38,14 @@ public final class ImageManagerImpl implements ImageManager {
 		super();
 	}
 
-	private final ImageIcon loadImage(final Candy cnd) {
+	private ImageIcon loadImage(final Candy cnd) {
 
 		final URL imageUrl = ClassLoader.getSystemResource(
 				"candyImages/" + cnd.getType().name() + "_" + cnd.getColor().name() + ".jpeg");
 		return new ImageIcon(imageUrl);
 	}
 
-	public final ImageIcon getCandyImage(final Candy candy) {
+	public ImageIcon getCandyImage(final Candy candy) {
 		// Lazy update
 		if (!this.candyImages.containsKey(candy)) {
 			this.candyImages.put(candy, this.loadImage(candy));
@@ -53,25 +53,21 @@ public final class ImageManagerImpl implements ImageManager {
 		return this.candyImages.get(candy);
 	}
 
-	public final int hashCode() {
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((candyImages == null) ? 0 : candyImages.hashCode());
+		result = prime * result + candyImages.hashCode();
 		return result;
 	}
 
-	public final boolean equals(final Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		ImageManagerImpl other = (ImageManagerImpl) obj;
-		if (candyImages == null) {
-			if (other.candyImages != null) return false;
-		} else if (!candyImages.equals(other.candyImages)) return false;
-		return true;
+		if (!(obj instanceof final ImageManagerImpl other)) return false;
+		return candyImages.equals(other.candyImages);
 	}
 
-	public final String toString() {
+	public String toString() {
 		return "CandyImageManager [candyImages=" + candyImages + "]";
 	}
 }

@@ -25,6 +25,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.Serial;
 import java.util.Map;
 
 import javax.swing.*;
@@ -40,6 +41,7 @@ import view.sounds.*;
  */
 public final class Login extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = -1392377673421616906L;
 
 	public Login(final Controller controller, final View view) {
@@ -57,9 +59,7 @@ public final class Login extends GUI {
 		final JLabel comment = new JLabel();
 		panel.add(comment);
 
-		final ActionListener al = (e) -> {
-			this.performAction(jtf, comment);
-		};
+		final ActionListener al = (e) -> this.performAction(jtf, comment);
 
 		final JButton bt = new JButton("ENTER");
 		bt.addActionListener(al);
@@ -80,11 +80,11 @@ public final class Login extends GUI {
 	}
 
 	// contains the action of the login (verify the name and access to the main menu)
-	private final void performAction(final JTextField jtf, final JLabel comment) {
+	private void performAction(final JTextField jtf, final JLabel comment) {
 		new SoundImpl().playSound("button_press");
-		if (!jtf.getText().equals("") && !jtf.getText().contains("\"")) {
+		if (!jtf.getText().isEmpty() && !jtf.getText().contains("\"")) {
 			boolean isPresent = false;
-			for (Map<String, Object> map : controller.getPlayers(STATS)) {
+			for (final Map<String, Object> map : controller.getPlayers(STATS)) {
 				if (map.get(playerName).toString().equals("\"" + jtf.getText() + "\"")) {
 					isPresent = true;
 					break;

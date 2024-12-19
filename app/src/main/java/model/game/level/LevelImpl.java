@@ -54,19 +54,19 @@ public final class LevelImpl implements Level {
 		this.currentStage = Optional.of(itStage.next());
 	}
 
-	private final void assertCurrentStageSet() {
+	private void assertCurrentStageSet() {
 		if (currentStage.isEmpty()) {
 			throw new IllegalStateException("No current state present.");
 		}
 	}
 
-	public final Objective getObjective() {
+	public Objective getObjective() {
 		assertCurrentStageSet();
 		return currentStage.orElseThrow().getObjective();
 	}
 
 	/** @author Emanuele Lamagna */
-	public final GameResult getResult() {
+	public GameResult getResult() {
 		assertCurrentStageSet();
 		Objective objective = getObjective();
 		final Status status = getCurrentScore();
@@ -83,7 +83,7 @@ public final class LevelImpl implements Level {
 		return GameResult.STILL_PLAYING;
 	}
 
-	private final boolean isCompleted() {
+	private boolean isCompleted() {
 		assertCurrentStageSet();
 		Objective objective = getObjective();
 		Challenge challenge = objective.getChallenge().orElseThrow();
@@ -98,11 +98,11 @@ public final class LevelImpl implements Level {
 						|| (controller.getJelly().isEmpty()));
 	}
 
-	public final boolean hasNextStage() {
+	public boolean hasNextStage() {
 		return itStage.hasNext();
 	}
 
-	public final void nextStage() {
+	public void nextStage() {
 		if (hasNextStage()) {
 			currentStage = Optional.of(itStage.next());
 		} else {
@@ -110,45 +110,45 @@ public final class LevelImpl implements Level {
 		}
 	}
 
-	public final boolean move(final Point2D first, final Point2D second) {
+	public boolean move(final Point2D first, final Point2D second) {
 		assertCurrentStageSet();
 		return currentStage.orElseThrow().move(first, second);
 	}
 
-	public final Status getCurrentScore() {
+	public Status getCurrentScore() {
 		assertCurrentStageSet();
 		return currentStage.orElseThrow().getCurrentScore();
 	}
 
-	public final Map<Point2D, Optional<Candy>> getGrid() {
+	public Map<Point2D, Optional<Candy>> getGrid() {
 		assertCurrentStageSet();
 		return currentStage.orElseThrow().getGrid();
 	}
 
-	public final List<Point2D> getHint() {
+	public List<Point2D> getHint() {
 		assertCurrentStageSet();
 		return currentStage.orElseThrow().getHint();
 	}
 
-	public final Optional<String> getStartingMessage() {
+	public Optional<String> getStartingMessage() {
 		assertCurrentStageSet();
 		return currentStage.orElseThrow().getStartingMessage();
 	}
 
-	public final Optional<String> getEndingMessage() {
+	public Optional<String> getEndingMessage() {
 		assertCurrentStageSet();
 		return currentStage.orElseThrow().getEndingMessage();
 	}
 
-	public final void consumeRemainingMoves() {
+	public void consumeRemainingMoves() {
 		currentStage.orElseThrow().consumeRemainingMoves();
 	}
 
-	public final Optional<Map<Point2D, Integer>> getJelly() {
+	public Optional<Map<Point2D, Integer>> getJelly() {
 		return currentStage.orElseThrow().getJelly();
 	}
 
-	public final boolean mutateCandy(final Point2D cord, final Candy cnd) {
+	public boolean mutateCandy(final Point2D cord, final Candy cnd) {
 		return currentStage.orElseThrow().mutateCandy(cord, cnd);
 	}
 }

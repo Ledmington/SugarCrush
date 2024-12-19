@@ -17,8 +17,6 @@
  */
 package model.objectives;
 
-import java.util.Objects;
-
 /**
  * Implementation of {@link ChallengeBuilder}
  *
@@ -39,151 +37,151 @@ public final class ChallengeBuilderImpl implements ChallengeBuilder {
 	private boolean built = false;
 
 	@Override
-	public final ChallengeBuilder setRed(final int num) {
+	public ChallengeBuilder setRed(final int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.red = Objects.requireNonNull(num);
+		this.red = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setYellow(final int num) {
+	public ChallengeBuilder setYellow(final int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.yellow = Objects.requireNonNull(num);
+		this.yellow = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setBlue(final int num) {
+	public ChallengeBuilder setBlue(final int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.blue = Objects.requireNonNull(num);
+		this.blue = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setGreen(final int num) {
+	public ChallengeBuilder setGreen(final int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.green = Objects.requireNonNull(num);
+		this.green = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setPurple(final int num) {
+	public ChallengeBuilder setPurple(final int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.purple = Objects.requireNonNull(num);
+		this.purple = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setOrange(final int num) {
+	public ChallengeBuilder setOrange(final int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.orange = Objects.requireNonNull(num);
+		this.orange = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setFreckles(final int num) {
+	public ChallengeBuilder setFreckles(final int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.freckles = Objects.requireNonNull(num);
+		this.freckles = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setStriped(int num) {
+	public ChallengeBuilder setStriped(int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.striped = Objects.requireNonNull(num);
+		this.striped = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setWrapped(final int num) {
+	public ChallengeBuilder setWrapped(final int num) {
 		check(!this.built);
 		assertNotNegative(num);
-		this.wrapped = Objects.requireNonNull(num);
+		this.wrapped = num;
 		return this;
 	}
 
 	@Override
-	public final ChallengeBuilder setDestroyJelly(final boolean bool) {
+	public ChallengeBuilder setDestroyJelly(final boolean bool) {
 		check(!this.built);
-		this.jelly = Objects.requireNonNull(bool);
+		this.jelly = bool;
 		return this;
 	}
 
 	@Override
-	public final Challenge build() {
+	public Challenge build() {
 		check(!this.built);
 		built = true;
 		return new Challenge() {
 
 			@Override
-			public final int getRedToDestroy() {
+			public int getRedToDestroy() {
 				return red;
 			}
 
 			@Override
-			public final int getYellowToDestroy() {
+			public int getYellowToDestroy() {
 				return yellow;
 			}
 
 			@Override
-			public final int getBlueToDestroy() {
+			public int getBlueToDestroy() {
 				return blue;
 			}
 
 			@Override
-			public final int getGreenToDestroy() {
+			public int getGreenToDestroy() {
 				return green;
 			}
 
 			@Override
-			public final int getPurpleToDestroy() {
+			public int getPurpleToDestroy() {
 				return purple;
 			}
 
 			@Override
-			public final int getOrangeToDestroy() {
+			public int getOrangeToDestroy() {
 				return orange;
 			}
 
 			@Override
-			public final int getFrecklesToFarm() {
+			public int getFrecklesToFarm() {
 				return freckles;
 			}
 
 			@Override
-			public final int getStripedToFarm() {
+			public int getStripedToFarm() {
 				return striped;
 			}
 
 			@Override
-			public final int getWrappedToFarm() {
+			public int getWrappedToFarm() {
 				return wrapped;
 			}
 
 			@Override
-			public final boolean isJellyToDestroy() {
+			public boolean isJellyToDestroy() {
 				return jelly;
 			}
 		};
 	}
 
 	// If is already built, throws an exception
-	private final void check(final boolean built) {
+	private void check(final boolean built) {
 		if (!built) {
 			throw new IllegalStateException("Can't build twice");
 		}
 	}
 
 	// If the number passed to set is negative, throws an exception
-	private final void assertNotNegative(final int num) {
+	private void assertNotNegative(final int num) {
 		if (num < 0) {
 			throw new IllegalArgumentException("The number must be positive");
 		}

@@ -49,7 +49,7 @@ public final class Shop extends GUI {
 			new JPanel(new BorderLayout()); // the panel that contain all the element of the view
 	private final JPanel shopPanel = new JPanel(); // panel that contain the item on sale
 	private final transient List<JButton> itemBtns =
-			new ArrayList<JButton>(); // list of buttons that represents the boost on sale
+			new ArrayList<>(); // list of buttons that represents the boost on sale
 	private final transient ImageManager im = new ImageManagerImpl(); // variable to get the image of the candy
 	private int btnNotEnable = 4; // represents the number of button not enable
 	private final JLabel moneyLabel =

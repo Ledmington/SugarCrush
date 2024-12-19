@@ -35,39 +35,39 @@ public final class ViewImpl implements View {
 		super();
 	}
 
-	public final void setCurrentGUI(final GUI gui) {
+	public void setCurrentGUI(final GUI gui) {
 		this.currentGUI = gui;
 	}
 
-	public final GUI getCurrentGUI() {
+	public GUI getCurrentGUI() {
 		return this.currentGUI;
 	}
 
-	public final void updateGrid() {
+	public void updateGrid() {
 		if (this.getCurrentGUI().getClass() == Game.class) {
 			((Game) this.getCurrentGUI()).updateGrid();
 		}
 	}
 
-	public final void levelEnd() {
+	public void levelEnd() {
 		if (this.currentGUI.getClass() == Game.class) {
 			((Game) this.getCurrentGUI()).levelEnd();
 		}
 	}
 
-	public final void stageEnd() {
+	public void stageEnd() {
 		if (this.currentGUI.getClass() == Game.class) {
 			((Game) this.getCurrentGUI()).stageEnd();
 		}
 	}
 
-	public final void nextStage() {
+	public void nextStage() {
 		if (this.currentGUI.getClass() == Game.class) {
 			((Game) this.getCurrentGUI()).nextStage();
 		}
 	}
 
-	public final void achievementUnlocked(final String text) {
+	public void achievementUnlocked(final String text) {
 		JOptionPane.showMessageDialog(null, text);
 	}
 }

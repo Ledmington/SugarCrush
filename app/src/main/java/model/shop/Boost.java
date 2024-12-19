@@ -22,9 +22,9 @@ import model.game.grid.candies.*;
 /** @author Davide Degli Esposti */
 public final class Boost {
 
-	private String boostName; // the name of the boost (wrapped,freckles,etc)
-	private int price; // the price of the boost in the shop
-	private Candy candy; // the type of boost
+	private final String boostName; // the name of the boost (wrapped,freckles,etc)
+	private final int price; // the price of the boost in the shop
+	private final Candy candy; // the type of boost
 
 	/**
 	 * the constructor of the object Boost
@@ -39,16 +39,16 @@ public final class Boost {
 	}
 
 	/** @return the name of the boost */
-	public final String getName() {
+	public String getName() {
 		return this.boostName;
 	}
 	/** @return the price of the boost */
-	public final Integer getPrice() {
+	public Integer getPrice() {
 		return this.price;
 	}
 
 	/** @return the type of the boost */
-	public final Candy getCandy() {
+	public Candy getCandy() {
 		return this.candy;
 	}
 }

@@ -28,7 +28,7 @@ import java.util.Optional;
  */
 public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 
-	public final Objective normal() {
+	public Objective normal() {
 		return new ObjectiveBuilderImpl()
 				.setMaxScore(DEF_SCORE.getValue())
 				.setObjectiveText(
@@ -36,7 +36,7 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 				.build();
 	}
 
-	public final Objective primary() {
+	public Objective primary() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(new ChallengeBuilderImpl()
 						.setRed(DEF_RED.getValue())
@@ -51,7 +51,7 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 	}
 
 	@Override
-	public final Objective lineParty() {
+	public Objective lineParty() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(new ChallengeBuilderImpl()
 						.setStriped(DEF_STRIPED.getValue())
@@ -62,7 +62,7 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 	}
 
 	@Override
-	public final Objective explode() {
+	public Objective explode() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(new ChallengeBuilderImpl()
 						.setWrapped(DEF_WRAPPED.getValue())
@@ -73,7 +73,7 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 	}
 
 	@Override
-	public final Objective multiBombs() {
+	public Objective multiBombs() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(new ChallengeBuilderImpl()
 						.setFreckles(DEF_FRECKLES.getValue())
@@ -84,7 +84,7 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 	}
 
 	@Override
-	public final Objective jelly() {
+	public Objective jelly() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(
 						new ChallengeBuilderImpl().setDestroyJelly(true).build()))

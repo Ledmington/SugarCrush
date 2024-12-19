@@ -25,6 +25,7 @@ import controller.files.FileTypes;
 import model.game.GameResult;
 import model.game.grid.candies.Candy;
 import model.game.level.Level;
+import model.game.level.stage.Stage;
 import model.goals.Goal;
 import model.objectives.Objective;
 import model.score.Status;
@@ -185,11 +186,8 @@ public interface Model {
 	/** @return the list of players sort by general score */
 	List<Pair<String, Integer>> getGeneralScoreRank();
 
-	/**
-	 * @param lvlNumber
-	 * @return the list of players sort by the score of the lvlNumber
-	 */
-	List<Pair<String, Integer>> getLevelScoreRank(int lvlNumber);
+	/** @return the list of players sort by the score of the lvlNumber */
+	List<Pair<String, Integer>> getLevelScoreRank(final int lvlNumber);
 
 	/**
 	 * Change a candy with another candy in determined coordinates.
@@ -198,18 +196,13 @@ public interface Model {
 	 * @param cnd The new candy to be mutated into.
 	 * @return False if mutation wasn't possible.
 	 */
-	boolean mutateCandy(Point2D cord, Candy cnd);
+	boolean mutateCandy(final Point2D cord, final Candy cnd);
 
 	/** @return the list of the boost on sale in the shop */
 	List<Boost> getBoostsList();
 
-	/**
-	 * make the player do the payment for the boost selected
-	 *
-	 * @param name
-	 * @param bst
-	 */
-	void makePayment(String name, Boost bst);
+	/** make the player do the payment for the boost selected */
+	void makePayment(final String name, final Boost bst);
 
 	/** refresh the shop */
 	void resetShop();

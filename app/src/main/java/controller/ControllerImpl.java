@@ -78,14 +78,14 @@ public final class ControllerImpl implements Controller {
 		ControllerImpl.view.setCurrentGUI(new Login(this, ControllerImpl.view));
 	}
 
-	public final void setCurrentLevel(final int level) {
+	public void setCurrentLevel(final int level) {
 		if (level < 0 || level > ControllerImpl.model.getNumLevels()) {
 			throw new IllegalArgumentException("Invalid level number.");
 		}
 		this.currentLevel = Optional.of(level);
 	}
 
-	public final Optional<Integer> getCurrentLevel() {
+	public Optional<Integer> getCurrentLevel() {
 		if (this.currentLevel.isPresent()) {
 			if (this.currentLevel.orElseThrow() < 0
 					|| this.currentLevel.orElseThrow() > ControllerImpl.model.getNumLevels()) {
@@ -95,24 +95,24 @@ public final class ControllerImpl implements Controller {
 		return this.currentLevel;
 	}
 
-	public final void setCurrentPlayer(final String player) {
+	public void setCurrentPlayer(final String player) {
 		this.currentPlayer = Optional.of(Objects.requireNonNull(player));
 		model.resetGoals();
 	}
 
-	public final String getCurrentPlayer() {
+	public String getCurrentPlayer() {
 		return this.currentPlayer.orElseThrow();
 	}
 
-	public final int getRemainingMoves() {
+	public int getRemainingMoves() {
 		return ControllerImpl.model.getRemainingMoves();
 	}
 
-	public final Status getCurrentScore() {
+	public Status getCurrentScore() {
 		return ControllerImpl.model.getCurrentScore();
 	}
 
-	public final boolean move(final Point2D first, final Point2D second) {
+	public boolean move(final Point2D first, final Point2D second) {
 
 		final boolean ris = ControllerImpl.model.move(first, second);
 
@@ -139,11 +139,11 @@ public final class ControllerImpl implements Controller {
 		return ris;
 	}
 
-	public final int getNumLevels() {
+	public int getNumLevels() {
 		return ControllerImpl.model.getNumLevels();
 	}
 
-	public final int getLastLevelUnlocked() {
+	public int getLastLevelUnlocked() {
 		for (int i = 1; i <= 10; i++) {
 			if (Integer.parseInt(getCurrentPlayerMap(FileTypes.STATS)
 							.get("level" + i + "Score")
@@ -155,33 +155,33 @@ public final class ControllerImpl implements Controller {
 		return 10;
 	}
 
-	public final Map<Point2D, Optional<Candy>> getGrid() {
+	public Map<Point2D, Optional<Candy>> getGrid() {
 		return ControllerImpl.model.getGrid();
 	}
 
-	public final void startTutorial() {
+	public void startTutorial() {
 		ControllerImpl.model.startNewGame(Optional.empty());
 		setCurrentLevel(0);
 	}
 
-	public final void startLevel(final int levelNumber) {
+	public void startLevel(final int levelNumber) {
 		ControllerImpl.model.startNewGame(Optional.of(levelNumber));
 		setCurrentLevel(levelNumber);
 	}
 
-	public final Optional<String> getStartingMessage() {
+	public Optional<String> getStartingMessage() {
 		return ControllerImpl.model.getStartingMessage();
 	}
 
-	public final Optional<String> getEndingMessage() {
+	public Optional<String> getEndingMessage() {
 		return ControllerImpl.model.getEndingMessage();
 	}
 
-	public final boolean isStageEnded() {
+	public boolean isStageEnded() {
 		return ControllerImpl.model.getResult() != GameResult.STILL_PLAYING;
 	}
 
-	public final boolean isLevelEnded() {
+	public boolean isLevelEnded() {
 		final boolean result = isStageEnded() && !ControllerImpl.model.hasNextStage();
 		if (result) {
 			setPlayerStats(
@@ -190,16 +190,16 @@ public final class ControllerImpl implements Controller {
 		return result;
 	}
 
-	public final boolean hasNextStage() {
+	public boolean hasNextStage() {
 		return ControllerImpl.model.hasNextStage();
 	}
 
-	public final void nextStage() {
+	public void nextStage() {
 		ControllerImpl.model.nextStage();
 		view.nextStage();
 	}
 
-	public final String getResult() {
+	public String getResult() {
 		final GameResult result = ControllerImpl.model.getResult();
 		if (getCurrentLevel().orElseThrow() != 0) {
 			// If game won, it completes the level calling complete in Status
@@ -213,7 +213,7 @@ public final class ControllerImpl implements Controller {
 		return result.getDescription();
 	}
 
-	public final Map<String, Object> getCurrentPlayerMap(final FileTypes type) {
+	public Map<String, Object> getCurrentPlayerMap(final FileTypes type) {
 		Map<String, Object> player = null;
 		for (Map<String, Object> map : ControllerImpl.model.getPlayers(type)) {
 			if (map.get(playerName).toString().equals("\"" + this.currentPlayer.orElseThrow() + "\"")) {
@@ -228,7 +228,7 @@ public final class ControllerImpl implements Controller {
 	}
 
 	// returns the list of the maps of the players, according to the file type
-	public final List<Map<String, Object>> getPlayers(final FileTypes type) {
+	public List<Map<String, Object>> getPlayers(final FileTypes type) {
 		Objects.requireNonNull(type);
 		for (FileTypes ft : FileTypes.values()) {
 			if (ft.equals(type)) {
@@ -239,30 +239,29 @@ public final class ControllerImpl implements Controller {
 	}
 
 	// removes a player
-	public final void removePlayer(final String name) {
+	public void removePlayer(final String name) {
 		Objects.requireNonNull(name);
 		ControllerImpl.model.removePlayer(name);
 		this.currentPlayer = Optional.empty();
 	}
 
 	// adds a player
-	public final void addPlayer(final String player) {
+	public void addPlayer(final String player) {
 		Objects.requireNonNull(player);
 		ControllerImpl.model.addPlayer(player);
 	}
 
 	// update the infos about the players
-	public final void updatePlayer(final List<Map<String, Object>> list, final FileTypes type) {
+	public void updatePlayer(final List<Map<String, Object>> list, final FileTypes type) {
 		Objects.requireNonNull(list);
 		Objects.requireNonNull(type);
 		ControllerImpl.model.updatePlayer(list, type);
 	}
 
 	// sets the stats of a player
-	public final void setPlayerStats(final String player, final Status status, final int level) {
+	public void setPlayerStats(final String player, final Status status, final int level) {
 		Objects.requireNonNull(player);
 		Objects.requireNonNull(status);
-		Objects.requireNonNull(level);
 		// No need to update stats in tutorial
 		if (level != 0) {
 			final Map<String, Object> pl = this.getCurrentPlayerMap(FileTypes.STATS);
@@ -276,11 +275,11 @@ public final class ControllerImpl implements Controller {
 	}
 
 	// returns an objective
-	public final Objective getObjective() {
+	public Objective getObjective() {
 		return ControllerImpl.model.getObjective();
 	}
 
-	public final Point2D getGridSize() {
+	public Point2D getGridSize() {
 		int minX = Integer.MAX_VALUE;
 		int maxX = Integer.MIN_VALUE;
 		int minY = Integer.MAX_VALUE;
@@ -299,28 +298,28 @@ public final class ControllerImpl implements Controller {
 		return new Point2D(maxX - minX + 1, maxY - minY + 1);
 	}
 
-	public final void updateGrid() {
+	public void updateGrid() {
 		view.updateGrid();
 	}
 
-	public final Optional<Map<Point2D, Integer>> getJelly() {
+	public Optional<Map<Point2D, Integer>> getJelly() {
 		return model.getJelly();
 	}
 
-	public final List<Point2D> getHint() {
+	public List<Point2D> getHint() {
 		return ControllerImpl.model.getHint();
 	}
 
-	public final void levelEnd() {
+	public void levelEnd() {
 		view.levelEnd();
 		model.end();
 	}
 
-	public final void stageEnd() {
+	public void stageEnd() {
 		view.stageEnd();
 	}
 
-	public final List<Triple<String, String, Boolean>> getAchievements() {
+	public List<Triple<String, String, Boolean>> getAchievements() {
 		final List<Triple<String, String, Boolean>> dataAchievement = new ArrayList<>();
 		for (Goal g : model.getAchievement()) {
 			dataAchievement.add(new Triple<>(g.getTitle(), g.getDescription(), g.checkIfReached()));
@@ -328,15 +327,15 @@ public final class ControllerImpl implements Controller {
 		return dataAchievement;
 	}
 
-	public final List<Pair<String, Integer>> getRankByGeneralScore() {
+	public List<Pair<String, Integer>> getRankByGeneralScore() {
 		return model.getGeneralScoreRank();
 	}
 
-	public final List<Pair<String, Integer>> getRankByLevelScore(final int lvlNumber) {
+	public List<Pair<String, Integer>> getRankByLevelScore(final int lvlNumber) {
 		return model.getLevelScoreRank(lvlNumber);
 	}
 
-	public final double getPercent() {
+	public double getPercent() {
 		if (model.getObjective().getChallenge().isEmpty()) {
 			return 100;
 		}
@@ -406,14 +405,13 @@ public final class ControllerImpl implements Controller {
 		return (done / total) * 100;
 	}
 
-	public final List<Boost> getBoostOnSale() {
+	public List<Boost> getBoostOnSale() {
 		return model.getBoostsList();
 	}
 
-	public final Map<String, Integer> getObtatinedBoosts() {
+	public Map<String, Integer> getObtatinedBoosts() {
 		final Map<String, Integer> map = new HashMap<>();
-		final Map<String, Object> m = new HashMap<>();
-		m.putAll(getCurrentPlayerMap(FileTypes.BOOSTS));
+		final Map<String, Object> m = new HashMap<>(getCurrentPlayerMap(FileTypes.BOOSTS));
 		m.remove(playerName);
 
 		m.keySet().stream()
@@ -422,14 +420,14 @@ public final class ControllerImpl implements Controller {
 		return map;
 	}
 
-	public final void pay(final String playerName, final Boost bst) {
+	public void pay(final String playerName, final Boost bst) {
 		model.makePayment(playerName, bst);
 	}
 
-	public final void useBoost(final String candyType, final Point2D position) {
+	public void useBoost(final String candyType, final Point2D position) {
 		CandyTypes ct = null;
-		for (CandyTypes c : CandyTypes.values()) {
-			if (c.name().toLowerCase().equals(candyType.toLowerCase())) {
+		for (final CandyTypes c : CandyTypes.values()) {
+			if (c.name().equalsIgnoreCase(candyType)) {
 				ct = c;
 				break;
 			}
@@ -444,7 +442,7 @@ public final class ControllerImpl implements Controller {
 		model.mutateCandy(position, candy);
 
 		final List<Map<String, Object>> l = getPlayers(FileTypes.BOOSTS);
-		for (var map : l) {
+		for (final Map<String, Object> map : l) {
 			if (map.get(playerName).toString().equals("\"" + getCurrentPlayer() + "\"")) {
 				map.put(ct.name(), Integer.parseInt(map.get(ct.name()).toString()) - 1);
 			}
@@ -452,15 +450,15 @@ public final class ControllerImpl implements Controller {
 		updatePlayer(l, FileTypes.BOOSTS);
 	}
 
-	public final void resetShop() {
+	public void resetShop() {
 		model.resetShop();
 	}
 
-	public final Sound getSound() {
+	public Sound getSound() {
 		return this.sound;
 	}
 
-	public final int getCurrentMoney() {
+	public int getCurrentMoney() {
 		return Integer.parseInt(getCurrentPlayerMap(FileTypes.STATS)
 				.get(StatsTypes.money.name())
 				.toString());

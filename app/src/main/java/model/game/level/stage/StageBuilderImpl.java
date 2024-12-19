@@ -58,7 +58,7 @@ public final class StageBuilderImpl implements StageBuilder {
 		super();
 	}
 
-	public final StageBuilder setDimensions(final int width, final int height) {
+	public StageBuilder setDimensions(final int width, final int height) {
 		check(alreadyBuilt, "This stage has already been built.");
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException("Level's height and width must be at least one.");
@@ -73,12 +73,12 @@ public final class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public final StageBuilder setController(final Controller controller) {
+	public StageBuilder setController(final Controller controller) {
 		this.controller = Optional.of(Objects.requireNonNull(controller));
 		return this;
 	}
 
-	public final StageBuilder setEmptyCells(final Set<Point2D> positions) {
+	public StageBuilder setEmptyCells(final Set<Point2D> positions) {
 		check(alreadyBuilt, "This stage has already been built.");
 		if (positions == null) {
 			throw new NullPointerException("Given Set of points cannot be null.");
@@ -94,14 +94,14 @@ public final class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public final StageBuilder setObjective(final Objective newObjective) {
+	public StageBuilder setObjective(final Objective newObjective) {
 		check(alreadyBuilt, "This stage has already been built.");
 		this.objective = Optional.of(Objects.requireNonNull(newObjective));
 
 		return this;
 	}
 
-	public final StageBuilder addChocolatePosition(final Point2D chocolatePosition) {
+	public StageBuilder addChocolatePosition(final Point2D chocolatePosition) {
 		check(alreadyBuilt, "This stage has already been built.");
 		Objects.requireNonNull(chocolatePosition);
 		if (this.grid.containsKey(chocolatePosition) == false) {
@@ -113,14 +113,14 @@ public final class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public final StageBuilder addJelly() {
+	public StageBuilder addJelly() {
 		check(alreadyBuilt, "This stage has already been built.");
 		this.jelly = true;
 
 		return this;
 	}
 
-	public final StageBuilder addAvailableColor(final CandyColors newColor) {
+	public StageBuilder addAvailableColor(final CandyColors newColor) {
 		check(alreadyBuilt, "This stage has already been built.");
 		Objects.requireNonNull(newColor);
 
@@ -129,7 +129,7 @@ public final class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public final StageBuilder setCandies(final Map<Point2D, Candy> candies) {
+	public StageBuilder setCandies(final Map<Point2D, Candy> candies) {
 		check(alreadyBuilt, "This stage has already been built.");
 		Objects.requireNonNull(candies);
 
@@ -148,13 +148,13 @@ public final class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public final StageBuilder setStartingMessage(final String startMsg) {
+	public StageBuilder setStartingMessage(final String startMsg) {
 		check(alreadyBuilt, "This stage has already been built.");
 		this.startingMessage = Optional.of(Objects.requireNonNull(startMsg));
 		return this;
 	}
 
-	public final StageBuilder setEndingMessage(final String endMsg) {
+	public StageBuilder setEndingMessage(final String endMsg) {
 		check(alreadyBuilt, "This stage has already been built.");
 		this.endingMessage = Optional.of(Objects.requireNonNull(endMsg));
 		return this;
@@ -236,7 +236,7 @@ public final class StageBuilderImpl implements StageBuilder {
 	}
 
 	@Override
-	public final String toString() {
+	public String toString() {
 		return "StageBuilderImpl [grid=" + grid + ", colors="
 				+ colors + ", chocolate="
 				+ chocolate + ", jelly="

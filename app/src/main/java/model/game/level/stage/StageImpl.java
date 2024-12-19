@@ -47,43 +47,43 @@ public final class StageImpl implements Stage {
 		this.endingMessage = Objects.requireNonNull(endMsg);
 	}
 
-	public final Optional<String> getStartingMessage() {
+	public Optional<String> getStartingMessage() {
 		return this.startingMessage;
 	}
 
-	public final Map<Point2D, Optional<Candy>> getGrid() {
+	public Map<Point2D, Optional<Candy>> getGrid() {
 		return this.manager.getGrid();
 	}
 
-	public final Optional<String> getEndingMessage() {
+	public Optional<String> getEndingMessage() {
 		return this.endingMessage;
 	}
 
-	public final Objective getObjective() {
+	public Objective getObjective() {
 		return this.objective;
 	}
 
-	public final List<Point2D> getHint() {
+	public List<Point2D> getHint() {
 		return this.manager.getHint();
 	}
 
-	public final boolean move(final Point2D first, final Point2D second) {
+	public boolean move(final Point2D first, final Point2D second) {
 		return this.manager.move(first, second);
 	}
 
-	public final Status getCurrentScore() {
+	public Status getCurrentScore() {
 		return this.manager.getCurrentScore();
 	}
 
-	public final void consumeRemainingMoves() {
+	public void consumeRemainingMoves() {
 		this.manager.consumeRemainingMoves();
 	}
 
-	public final Optional<Map<Point2D, Integer>> getJelly() {
+	public Optional<Map<Point2D, Integer>> getJelly() {
 		return this.manager.getJelly();
 	}
 
-	public final boolean mutateCandy(final Point2D cord, final Candy cnd) {
+	public boolean mutateCandy(final Point2D cord, final Candy cnd) {
 		return manager.mutateCandy(cord, cnd);
 	}
 }

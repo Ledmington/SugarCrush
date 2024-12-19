@@ -37,7 +37,7 @@ public abstract class GUI extends JFrame {
 	@Serial
 	private static final long serialVersionUID = 7011873514281012033L;
 
-	protected transient View view;
+	protected final transient View view;
 	protected final transient Controller controller;
 
 	protected GUI(final Controller controller, final View view) {

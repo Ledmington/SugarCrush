@@ -227,7 +227,7 @@ public final class GoalManager {
 	}
 
 	/** Tells the {@link GoalManager} to reset the internal data about current player. */
-	public final void resetPlayerMap() {
+	public void resetPlayerMap() {
 		for (var map : pm.getPlayers(FileTypes.STATS)) {
 			if (map.get(playerName).toString().equals("\"" + cntrlImpl.getCurrentPlayer() + "\"")) {
 				mapCurrentPlayer = map;
@@ -237,7 +237,7 @@ public final class GoalManager {
 	}
 
 	/** @return the list of achievements of the player */
-	public final List<Goal> getAchievement() {
+	public List<Goal> getAchievement() {
 		return this.achievement;
 	}
 }

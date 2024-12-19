@@ -20,6 +20,7 @@ package view.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.io.Serial;
 
 import javax.swing.*;
 
@@ -33,10 +34,12 @@ import view.View;
  */
 public final class Settings extends GUI {
 
+	@Serial
 	private static final long serialVersionUID = 1938134059666408806L;
+
 	private boolean soundActivated = true;
 
-	protected Settings(final Controller controller, final View view) {
+	Settings(final Controller controller, final View view) {
 		super(controller, view);
 
 		this.setLayout(new BorderLayout());

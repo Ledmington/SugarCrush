@@ -47,15 +47,11 @@ public final class PlayerManagerImpl implements PlayerManager {
 			put(
 					STATS,
 					new Triple<>(
-							folder.toString() + File.separator + "stats.json",
-							new File(folder, "stats.json"),
-							new JsonArray()));
+							folder + File.separator + "stats.json", new File(folder, "stats.json"), new JsonArray()));
 			put(
 					BOOSTS,
 					new Triple<>(
-							folder.toString() + File.separator + "boosts.json",
-							new File(folder, "boosts.json"),
-							new JsonArray()));
+							folder + File.separator + "boosts.json", new File(folder, "boosts.json"), new JsonArray()));
 		}
 	};
 
@@ -270,7 +266,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 	}
 
 	// Checks if the string is a number
-	private final boolean isNumber(final String s) {
+	private boolean isNumber(final String s) {
 		for (int i = 0; i < s.length(); i++) {
 			if (!Character.isDigit(s.charAt(i))) {
 				return false;
@@ -280,15 +276,15 @@ public final class PlayerManagerImpl implements PlayerManager {
 	}
 
 	// If the number of the level is < 1 or > 10, throws an exception
-	private final void levelCheck(final int lev) {
+	private void levelCheck(final int lev) {
 		if (lev < 1 || lev > 10) {
 			throw new IllegalArgumentException("Level must be between 1 and 10");
 		}
 	}
 
 	// If the string is empty or contains '\', throws an exception
-	private final void stringCheck(final String name) {
-		if (name.equals("") || name.contains("\"")) {
+	private void stringCheck(final String name) {
+		if (name.isEmpty() || name.contains("\"")) {
 			throw new IllegalArgumentException("Invalid name");
 		}
 	}

@@ -17,6 +17,7 @@
  */
 package view;
 
+import model.goals.Goal;
 import view.gui.GUI;
 
 /** @author Filippo Barbari */

@@ -35,8 +35,8 @@ public final class GoalBuilderImpl implements GoalBuilder {
 	private Optional<Controller> controller = Optional.empty();
 
 	@Override
-	public final GoalBuilder setTitle(final String title) {
-		if (title == null || title.equals("")) {
+	public GoalBuilder setTitle(final String title) {
+		if (title == null || title.isEmpty()) {
 			throw new IllegalStateException("Title can't be null");
 		}
 		this.title = Optional.of(title);
@@ -44,33 +44,33 @@ public final class GoalBuilderImpl implements GoalBuilder {
 	}
 
 	@Override
-	public final GoalBuilder setDescr(final String descr) {
-		if (descr == null || descr.equals("")) {
+	public GoalBuilder setDescr(final String descr) {
+		if (descr == null || descr.isEmpty()) {
 			throw new IllegalStateException("Description can't be null");
 		}
 		this.descr = Optional.of(descr);
 		return this;
 	}
 
-	public final GoalBuilder setController(final Controller controller) {
+	public GoalBuilder setController(final Controller controller) {
 		this.controller = Optional.of(Objects.requireNonNull(controller));
 		return this;
 	}
 
 	@Override
-	public final Goal build() {
+	public Goal build() {
 		if (this.isBuilt) {
 			throw new IllegalStateException("Can't build the same achievement twice.");
 		}
-		if (this.title == null) {
+		if (this.title.isEmpty()) {
 			throw new NullPointerException("Title not set.");
 		}
 
-		if (this.descr == null) {
+		if (this.descr.isEmpty()) {
 			throw new NullPointerException("Description not set.");
 		}
 
-		if (this.method == null) {
+		if (this.method.isEmpty()) {
 			throw new NullPointerException("Method not set.");
 		}
 
@@ -86,7 +86,7 @@ public final class GoalBuilderImpl implements GoalBuilder {
 	}
 
 	@Override
-	public final GoalBuilder setMethod(final Predicate<Map<String, Object>> method) {
+	public GoalBuilder setMethod(final Predicate<Map<String, Object>> method) {
 		if (method == null) {
 			throw new NullPointerException("The method can't be null ");
 		}

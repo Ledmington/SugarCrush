@@ -71,19 +71,17 @@ public final class GridManagerImpl implements GridManager {
 		this.updateScore = true;
 		if (jelly) {
 			this.jelly = Optional.of(new HashMap<>());
-			this.grid.forEach((crd, cnd) -> {
-				this.jelly.orElseThrow().put(crd, 2);
-			});
+			this.grid.forEach((crd, cnd) -> this.jelly.orElseThrow().put(crd, 2));
 		}
 	}
 
 	@Override
-	public final Map<Point2D, Optional<Candy>> getGrid() {
+	public Map<Point2D, Optional<Candy>> getGrid() {
 		return new HashMap<>(this.grid);
 	}
 
 	@Override
-	public final boolean move(final Point2D cndA, final Point2D cndB) {
+	public boolean move(final Point2D cndA, final Point2D cndB) {
 		// Presence of coordinates.
 		if ((!this.grid.containsKey(cndA)) || (!this.grid.containsKey(cndB))) {
 			return false;
@@ -139,7 +137,7 @@ public final class GridManagerImpl implements GridManager {
 	}
 
 	@Override
-	public final boolean forceMove(final Point2D cndA, final Point2D cndB) {
+	public boolean forceMove(final Point2D cndA, final Point2D cndB) {
 		// Presence of coordinates.
 		if ((!this.grid.containsKey(cndA)) || (!this.grid.containsKey(cndB))) {
 			return false;
@@ -172,7 +170,7 @@ public final class GridManagerImpl implements GridManager {
 	}
 
 	@Override
-	public final boolean mutateCandy(final Point2D cord, final Candy cnd) {
+	public boolean mutateCandy(final Point2D cord, final Candy cnd) {
 		// Presence of coordinates.
 		if (!this.grid.containsKey(cord)) {
 			return false;
@@ -193,7 +191,7 @@ public final class GridManagerImpl implements GridManager {
 	}
 
 	@Override
-	public final boolean destroyCandy(final Point2D cord) {
+	public boolean destroyCandy(final Point2D cord) {
 		// Coordinates not contained in grid.
 		if (!this.grid.containsKey(cord)) {
 			return false;
@@ -233,9 +231,11 @@ public final class GridManagerImpl implements GridManager {
 			case WRAPPED:
 				controller.getSound().playSound("bomb_sound1");
 				this.grid.forEach((crd, cnd) -> {
+					final int dx = Math.abs(crd.x() - cord.x());
+					final int dy = Math.abs(crd.y() - cord.y());
+
 					// Contour (even diagonally).
-					if ((Math.abs(crd.x() - cord.x()) == 0 || Math.abs(crd.x() - cord.x()) == 1)
-							&& (Math.abs(crd.y() - cord.y()) == 0 || Math.abs(crd.y() - cord.y()) == 1)) {
+					if ((dx == 0 || dx == 1) && (dy == 0 || dy == 1)) {
 						cndDestroy.add(crd);
 					}
 				});
@@ -286,12 +286,12 @@ public final class GridManagerImpl implements GridManager {
 		return true;
 	}
 
-	public final Optional<Map<Point2D, Integer>> getJelly() {
+	public Optional<Map<Point2D, Integer>> getJelly() {
 		// A simple getter of jelly.
 		return this.jelly;
 	}
 
-	public final List<Point2D> getHint() {
+	public List<Point2D> getHint() {
 		// Every shape in order of importance.
 		for (Shapes shp : Shapes.values()) {
 			var curShp = shp.getCoordinates();
@@ -309,13 +309,8 @@ public final class GridManagerImpl implements GridManager {
 								if (this.findShape(nearShp, crd, true)) {
 									var tmpList = nearShp.getRelativeCoordinates();
 									// We move relative coordinates based on crd.
-									for (int i = 0; i < tmpList.size(); i++) {
-										tmpList.set(
-												i,
-												new Point2D(
-														tmpList.get(i).x() + crd.x(),
-														tmpList.get(i).y() + crd.y()));
-									}
+									tmpList.replaceAll(
+											point2D -> new Point2D(point2D.x() + crd.x(), point2D.y() + crd.y()));
 									// We return this list as a tip.
 									return tmpList;
 								}
@@ -329,7 +324,7 @@ public final class GridManagerImpl implements GridManager {
 		return null;
 	}
 
-	public final void consumeRemainingMoves() {
+	public void consumeRemainingMoves() {
 		List<CandyTypes> spawnable =
 				Arrays.asList(CandyTypes.WRAPPED, CandyTypes.STRIPED_HORIZONTAL, CandyTypes.STRIPED_VERTICAL);
 
@@ -368,17 +363,17 @@ public final class GridManagerImpl implements GridManager {
 					}
 				}
 			}
-			;
+
 			// Make candies drop, search for shape, repeat until no special candies found.
 			this.dropCandies();
 		} while (anotherFound);
 	}
 
-	public final Status getCurrentScore() {
+	public Status getCurrentScore() {
 		return this.score;
 	}
 
-	private final boolean searchDestroyShapes() {
+	private boolean searchDestroyShapes() {
 		boolean shpFound = false;
 		// For each shape (ordered) we search for corresponds.
 		for (Shapes shp : Shapes.values()) {
@@ -446,7 +441,7 @@ public final class GridManagerImpl implements GridManager {
 		return shpFound;
 	}
 
-	private final void dropCandies() {
+	private void dropCandies() {
 		while (this.grid.containsValue(Optional.empty())) {
 			this.grid.forEach((crd, cnd) -> {
 				if (cnd.isEmpty()) {
@@ -454,16 +449,18 @@ public final class GridManagerImpl implements GridManager {
 					Optional<Candy> tmp = Optional.empty();
 					boolean found = false;
 					for (int i = 1; i <= crd.x(); i++) {
-						if (this.grid.containsKey(new Point2D(crd.x() - i, crd.y()))) {
+						final Point2D p = new Point2D(crd.x() - i, crd.y());
+
+						if (this.grid.containsKey(p)) {
 							// If candy is empty we don't need to drop that one.
-							if (this.grid.get(new Point2D(crd.x() - i, crd.y())).isEmpty()) {
+							if (this.grid.get(p).isEmpty()) {
 								found = true;
 								break;
 							}
 							// Candy found.
-							tmp = this.grid.get(new Point2D(crd.x() - i, crd.y()));
+							tmp = this.grid.get(p);
 							// Here upper candy disappear.
-							this.grid.put(new Point2D(crd.x() - i, crd.y()), Optional.empty());
+							this.grid.put(p, Optional.empty());
 							found = true;
 							break;
 						}
@@ -488,11 +485,11 @@ public final class GridManagerImpl implements GridManager {
 		this.searchDestroyShapes();
 	}
 
-	private final void destroyChocolateAround(final Point2D cord) {
-		List<Point2D> relMov = Arrays.asList( // Up - Down - Left - Right
+	private void destroyChocolateAround(final Point2D cord) {
+		final List<Point2D> relMov = Arrays.asList( // Up - Down - Left - Right
 				new Point2D(-1, 0), new Point2D(1, 0), new Point2D(0, -1), new Point2D(0, 1));
 		Point2D tmp;
-		for (var rel : relMov) {
+		for (final Point2D rel : relMov) {
 			tmp = new Point2D(cord.x() + rel.x(), cord.y() + rel.y());
 			// Coordinates in grid.
 			if (this.grid.containsKey(tmp)) {
@@ -515,7 +512,7 @@ public final class GridManagerImpl implements GridManager {
 		//	}
 	}
 
-	private final boolean findShape(final ShapeCoordinates shc, final Point2D crd, final boolean near) {
+	private boolean findShape(final ShapeCoordinates shc, final Point2D crd, final boolean near) {
 		// Saving last relative coordinates checked.
 		Optional<Point2D> last = Optional.empty();
 		// For each relative coordinate we check if candy is the same as original one.
@@ -559,7 +556,7 @@ public final class GridManagerImpl implements GridManager {
 		return true;
 	}
 
-	private final void updateChocolate() {
+	private void updateChocolate() {
 		List<Point2D> relMov = Arrays.asList( // Up - Down - Left - Right
 				new Point2D(-1, 0), new Point2D(1, 0), new Point2D(0, -1), new Point2D(0, 1));
 		// Choose a random chocolate candy.
@@ -593,7 +590,7 @@ public final class GridManagerImpl implements GridManager {
 				}
 			}
 		}
-		if (chcList.size() == 0) {
+		if (chcList.isEmpty()) {
 			return;
 		}
 		// Select random chocolate.
@@ -618,7 +615,7 @@ public final class GridManagerImpl implements GridManager {
 		//	}
 	}
 
-	private final void shuffle() {
+	private void shuffle() {
 		// Random number of times (200 may be enough?).
 		int times = rnd.nextInt(200);
 		while (times > 0) {
@@ -645,7 +642,7 @@ public final class GridManagerImpl implements GridManager {
 		//	}
 	}
 
-	private final Point2D pickRandomCandy() {
+	private Point2D pickRandomCandy() {
 		// Iterate a random number of times in the map.
 		// Random pos.
 		int pos = rnd.nextInt(this.grid.size());
@@ -659,22 +656,20 @@ public final class GridManagerImpl implements GridManager {
 		return it.next();
 	}
 
-	private final boolean mergeTwoCandies(final Point2D a, final Point2D b) {
+	private boolean mergeTwoCandies(final Point2D a, final Point2D b) {
 		CandyTypes aT = this.grid.get(a).orElseThrow().getType();
 		CandyTypes bT = this.grid.get(b).orElseThrow().getType();
 		// In case they are the same.
 		if (aT == bT
 				|| (aT == CandyTypes.STRIPED_HORIZONTAL && bT == CandyTypes.STRIPED_VERTICAL)
 				|| (aT == CandyTypes.STRIPED_VERTICAL && bT == CandyTypes.STRIPED_HORIZONTAL)) {
-			List<Point2D> toDestroy = new ArrayList<>();
+			final List<Point2D> toDestroy = new ArrayList<>();
 			switch (aT) {
 				case FRECKLES:
 					// Just destroy every candy.
-					this.grid.forEach((crd, cnd) -> {
-						toDestroy.add(crd);
-					});
+					this.grid.forEach((crd, cnd) -> toDestroy.add(crd));
 					// Destroy all candies.
-					for (var x : toDestroy) {
+					for (final Point2D x : toDestroy) {
 						this.destroyCandy(x);
 					}
 					return true;
@@ -786,7 +781,7 @@ public final class GridManagerImpl implements GridManager {
 		return false;
 	}
 
-	private final boolean shapePossible(final ShapeCoordinates shp, final Point2D crd) {
+	private boolean shapePossible(final ShapeCoordinates shp, final Point2D crd) {
 		Point2D relCrd;
 		List<Point2D> lstCrd = shp.getRelativeCoordinates();
 		// Adding implicit coordinate 0, 0.

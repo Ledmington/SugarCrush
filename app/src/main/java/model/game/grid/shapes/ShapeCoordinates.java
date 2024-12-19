@@ -26,14 +26,14 @@ import utils.Point2D;
 /** @author Filippo Benvenuti */
 public final class ShapeCoordinates {
 
-	private List<Point2D> coords;
+	private final List<Point2D> coords;
 
 	/**
 	 * Constructor by array of ints.
 	 *
 	 * @param cord this array will be split into couples (x, y) of coordinates.
 	 */
-	public ShapeCoordinates(int... cord) {
+	public ShapeCoordinates(final int... cord) {
 		if (cord.length % 2 == 1 || cord.length < 2) {
 			throw new IllegalStateException();
 		}

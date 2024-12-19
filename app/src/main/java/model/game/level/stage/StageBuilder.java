@@ -125,9 +125,9 @@ public interface StageBuilder {
 	 *
 	 * @return An object implementing the {@link Stage} interface.
 	 * @throws IllegalStateException If trying to build the same {@link Stage} twice, if {@link Stage}'s grid isn't set,
-	 *     if no {@link CandyColors} are set, if grid is filled with {@link CandyColors.CHOCOLATE}, if both jelly and
-	 *     {@link CandyColors.CHOCOLATE} are present, if at least one {@link Candy} is in the same position of one
-	 *     {@link CandyColors.CHOCOLATE} piece, if no {@link Objective} is set, if no {@link Controller} is set.
+	 *     if no {@link CandyColors} are set, if grid is filled with {@link CandyColors#CHOCOLATE}, if both jelly and
+	 *     {@link CandyColors#CHOCOLATE} are present, if at least one {@link Candy} is in the same position of one
+	 *     {@link CandyColors#CHOCOLATE} piece, if no {@link Objective} is set, if no {@link Controller} is set.
 	 */
 	Stage build();
 }

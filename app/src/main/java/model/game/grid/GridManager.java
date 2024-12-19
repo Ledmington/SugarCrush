@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import model.game.grid.candies.Candy;
+import model.game.grid.shapes.Shapes;
 import model.score.Status;
 import utils.Point2D;
 
@@ -49,7 +50,7 @@ public interface GridManager {
 	 *
 	 * @param cndA The first {@link Candy}.
 	 * @param cndB The second {@link Candy}.
-	 * @return True even if no {@link Shapes} (false if it bring to bad state).
+	 * @return True even if no {@link Shapes} (false if it brings to bad state).
 	 */
 	boolean forceMove(Point2D cndA, Point2D cndB);
 

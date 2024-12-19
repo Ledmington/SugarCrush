@@ -51,11 +51,11 @@ public final class ModelImpl implements Model {
 
 	private final Controller controller;
 	private Optional<Level> currentLevel;
-	private PlayerManager pm;
-	private LevelsManager lm;
+	private final PlayerManager pm;
+	private final LevelsManager lm;
 	private GoalManager gm;
-	private ScoreBoard sb;
-	private BoostShop bs;
+	private final ScoreBoard sb;
+	private final BoostShop bs;
 
 	public ModelImpl(final Controller controller) {
 		super();
@@ -68,7 +68,7 @@ public final class ModelImpl implements Model {
 		this.bs = new BoostShop();
 	}
 
-	public final void startNewGame(final Optional<Integer> levelIndex) {
+	public void startNewGame(final Optional<Integer> levelIndex) {
 		if (this.currentLevel.isPresent()) {
 			throw new IllegalStateException("Game already running! End the running game first.");
 		}
@@ -80,53 +80,53 @@ public final class ModelImpl implements Model {
 		}
 	}
 
-	public final Optional<String> getStartingMessage() {
+	public Optional<String> getStartingMessage() {
 		assertGameRunning();
 		return this.currentLevel.orElseThrow().getStartingMessage();
 	}
 
-	public final Optional<String> getEndingMessage() {
+	public Optional<String> getEndingMessage() {
 		assertGameRunning();
 		return this.currentLevel.orElseThrow().getEndingMessage();
 	}
 
-	public final boolean hasNextStage() {
+	public boolean hasNextStage() {
 		assertGameRunning();
 		return this.currentLevel.orElseThrow().hasNextStage();
 	}
 
-	public final void nextStage() {
+	public void nextStage() {
 		assertGameRunning();
 		this.currentLevel.orElseThrow().nextStage();
 	}
 
-	public final Objective getObjective() {
+	public Objective getObjective() {
 		this.assertGameRunning();
 		return this.currentLevel.orElseThrow().getObjective();
 	}
 
-	public final Map<Point2D, Optional<Candy>> getGrid() {
+	public Map<Point2D, Optional<Candy>> getGrid() {
 		this.assertGameRunning();
 		return this.currentLevel.orElseThrow().getGrid();
 	}
 
-	public final boolean move(final Point2D first, final Point2D second) {
+	public boolean move(final Point2D first, final Point2D second) {
 		this.assertGameRunning();
 		return this.currentLevel.orElseThrow().move(first, second);
 	}
 
-	public final Status getCurrentScore() {
+	public Status getCurrentScore() {
 		this.assertGameRunning();
 		return this.currentLevel.orElseThrow().getCurrentScore();
 	}
 
-	public final Integer getRemainingMoves() {
+	public Integer getRemainingMoves() {
 		this.assertGameRunning();
 		return this.currentLevel.orElseThrow().getObjective().getMaxMoves()
 				- this.currentLevel.orElseThrow().getCurrentScore().getMoves();
 	}
 
-	public final GameResult getResult() {
+	public GameResult getResult() {
 		if (this.currentLevel.isEmpty()) {
 			return GameResult.CHALLENGE_COMPLETED;
 		}
@@ -138,99 +138,98 @@ public final class ModelImpl implements Model {
 		return result;
 	}
 
-	public final void end() {
+	public void end() {
 		this.currentLevel = Optional.empty();
 	}
 
-	private final void assertGameRunning() {
+	private void assertGameRunning() {
 		if (this.currentLevel.isEmpty()) {
 			throw new IllegalStateException("Game must be running to do this.");
 		}
 	}
 
-	public final void addPlayer(final String name) {
+	public void addPlayer(final String name) {
 		Objects.requireNonNull(name);
 		pm.addPlayer(name);
 	}
 
-	public final void setPlayerStats(final String name, final Status status, final int level) {
+	public void setPlayerStats(final String name, final Status status, final int level) {
 		Objects.requireNonNull(name);
 		Objects.requireNonNull(status);
-		Objects.requireNonNull(level);
 		pm.setStat(name, status, level);
 	}
 
-	public final void updatePlayer(final List<Map<String, Object>> list, final FileTypes type) {
+	public void updatePlayer(final List<Map<String, Object>> list, final FileTypes type) {
 		Objects.requireNonNull(list);
 		Objects.requireNonNull(type);
 		pm.update(list, type);
 	}
 
-	public final List<Map<String, Object>> getPlayers(final FileTypes type) {
+	public List<Map<String, Object>> getPlayers(final FileTypes type) {
 		Objects.requireNonNull(type);
 		return pm.getPlayers(type);
 	}
 
-	public final void removePlayer(final String name) {
+	public void removePlayer(final String name) {
 		Objects.requireNonNull(name);
 		pm.removePlayer(name);
 	}
 
-	public final int getNumLevels() {
+	public int getNumLevels() {
 		return lm.getNumLevels();
 	}
 
-	public final Level getCurrentLevel() {
+	public Level getCurrentLevel() {
 		this.assertGameRunning();
 		return currentLevel.orElseThrow();
 	}
 
-	public final List<Point2D> getHint() {
+	public List<Point2D> getHint() {
 		this.assertGameRunning();
 		return currentLevel.orElseThrow().getHint();
 	}
 
-	public final void consumeRemainingMoves() {
+	public void consumeRemainingMoves() {
 		this.assertGameRunning();
 		this.currentLevel.orElseThrow().consumeRemainingMoves();
 	}
 
-	public final Optional<Map<Point2D, Integer>> getJelly() {
+	public Optional<Map<Point2D, Integer>> getJelly() {
 		this.assertGameRunning();
 		return this.currentLevel.orElseThrow().getJelly();
 	}
 
-	public final void resetGoals() {
+	public void resetGoals() {
 		this.gm = new GoalManager(controller);
 	}
 
-	public final List<Goal> getAchievement() {
+	public List<Goal> getAchievement() {
 		this.gm.resetPlayerMap();
 		return this.gm.getAchievement();
 	}
 
-	public final List<Pair<String, Integer>> getGeneralScoreRank() {
+	public List<Pair<String, Integer>> getGeneralScoreRank() {
 		return this.sb.rankByGeneralScore();
 	}
 
-	public final List<Pair<String, Integer>> getLevelScoreRank(int lvlNumber) {
+	public List<Pair<String, Integer>> getLevelScoreRank(int lvlNumber) {
 		return this.sb.rankByScoreInLevel(lvlNumber);
 	}
 
-	public final List<Boost> getBoostsList() {
+	public List<Boost> getBoostsList() {
 		return this.bs.getBoosts();
 	}
 
-	public final void makePayment(final String name, final Boost bst) {
+	public void makePayment(final String name, final Boost bst) {
 		this.bs.payment(name, bst);
 	}
 
-	public final boolean mutateCandy(final Point2D cord, final Candy cnd) {
+	public boolean mutateCandy(final Point2D cord, final Candy cnd) {
 		assertGameRunning();
 		return currentLevel.orElseThrow().mutateCandy(cord, cnd);
 	}
 
-	public final void resetShop() {
+	public void resetShop() {
 		this.bs.generateShop();
 	}
 }
