@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package model.goals;
+package model.achievement;
 
 import java.util.Map;
 import java.util.Objects;
@@ -25,60 +25,60 @@ import java.util.function.Predicate;
 import controller.Controller;
 
 /** @author Davide Degli Esposti */
-public final class GoalBuilderImpl implements GoalBuilder {
+public final class AchievementBuilderImpl implements AchievementBuilder {
 
-	private Optional<String> title = Optional.empty(); // is the main title of the achievement
-	private Optional<String> descr = Optional.empty(); // is the short description of the achievement
-	private Optional<Predicate<Map<String, Object>>> method =
-			Optional.empty(); // is the method for check if the achievement is reached
-	private boolean isBuilt = false; // is the flag that is true if i have already built the achievement
+	private Optional<String> title = Optional.empty();
+	private Optional<String> descr = Optional.empty();
+	private Optional<Predicate<Map<String, Object>>> method = Optional.empty();
+	private boolean alreadyBuilt = false;
 	private Optional<Controller> controller = Optional.empty();
 
 	@Override
-	public GoalBuilder setTitle(final String title) {
-		if (title == null || title.isEmpty()) {
-			throw new IllegalStateException("Title can't be null");
+	public AchievementBuilder title(final String title) {
+		Objects.requireNonNull(title);
+		if (title.isBlank()) {
+			throw new IllegalArgumentException("Title can't be null");
 		}
 		this.title = Optional.of(title);
 		return this;
 	}
 
 	@Override
-	public GoalBuilder setDescr(final String descr) {
-		if (descr == null || descr.isEmpty()) {
-			throw new IllegalStateException("Description can't be null");
+	public AchievementBuilder description(final String description) {
+		Objects.requireNonNull(description);
+		if (description.isBlank()) {
+			throw new IllegalArgumentException("Description can't be null");
 		}
-		this.descr = Optional.of(descr);
+		this.descr = Optional.of(description);
 		return this;
 	}
 
-	public GoalBuilder setController(final Controller controller) {
+	public AchievementBuilder setController(final Controller controller) {
 		this.controller = Optional.of(Objects.requireNonNull(controller));
 		return this;
 	}
 
 	@Override
-	public Goal build() {
-		if (this.isBuilt) {
+	public Achievement build() {
+		if (this.alreadyBuilt) {
 			throw new IllegalStateException("Can't build the same achievement twice.");
 		}
+
 		if (this.title.isEmpty()) {
 			throw new NullPointerException("Title not set.");
 		}
-
 		if (this.descr.isEmpty()) {
 			throw new NullPointerException("Description not set.");
 		}
-
 		if (this.method.isEmpty()) {
 			throw new NullPointerException("Method not set.");
 		}
-
 		if (this.controller.isEmpty()) {
 			throw new NullPointerException("Controller not set.");
 		}
-		this.isBuilt = true;
-		return new Goal(
+
+		this.alreadyBuilt = true;
+		return new Achievement(
 				this.controller.orElseThrow(),
 				this.title.orElseThrow(),
 				this.descr.orElseThrow(),
@@ -86,10 +86,8 @@ public final class GoalBuilderImpl implements GoalBuilder {
 	}
 
 	@Override
-	public GoalBuilder setMethod(final Predicate<Map<String, Object>> method) {
-		if (method == null) {
-			throw new NullPointerException("The method can't be null ");
-		}
+	public AchievementBuilder check(final Predicate<Map<String, Object>> method) {
+		Objects.requireNonNull(method);
 		this.method = Optional.of(method);
 		return this;
 	}

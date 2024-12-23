@@ -29,12 +29,12 @@ import java.util.Set;
 import controller.files.*;
 import model.Model;
 import model.ModelImpl;
+import model.achievement.Achievement;
 import model.game.GameResult;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyBuilderImpl;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyTypes;
-import model.goals.Goal;
 import model.objectives.Challenge;
 import model.objectives.Objective;
 import model.score.Status;
@@ -126,7 +126,7 @@ public final class ControllerImpl implements Controller {
 			this.stageEnd();
 			// Stage is ended, we check if the level is done.
 			if (this.isLevelEnded()) {
-				for (final Goal g : model.getAchievement()) {
+				for (final Achievement g : model.getAchievement()) {
 					if (!g.isReached() && g.checkIfReached(this.model.getPlayerManager())) {
 						view.achievementUnlocked("Achievement Unlocked!\n" + g.getTitle() + "\n" + g.getDescription());
 					}
@@ -321,7 +321,7 @@ public final class ControllerImpl implements Controller {
 
 	public List<Triple<String, String, Boolean>> getAchievements() {
 		final List<Triple<String, String, Boolean>> dataAchievement = new ArrayList<>();
-		for (final Goal g : model.getAchievement()) {
+		for (final Achievement g : model.getAchievement()) {
 			dataAchievement.add(
 					new Triple<>(g.getTitle(), g.getDescription(), g.checkIfReached(this.model.getPlayerManager())));
 		}

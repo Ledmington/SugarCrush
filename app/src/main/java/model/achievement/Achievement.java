@@ -15,18 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package model.goals;
+package model.achievement;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import controller.*;
+import controller.Controller;
 import controller.files.FileTypes;
 import model.players.PlayerManager;
 
 /** @author Davide Degli Esposti */
-public final class Goal {
+public final class Achievement {
+
+	public static AchievementBuilder builder() {
+		return new AchievementBuilderImpl();
+	}
 
 	private final String title; // The main title of the goal
 	private final String descr; // The short description of the goal
@@ -41,7 +45,7 @@ public final class Goal {
 	 * @param descr the description of the goal
 	 * @param method the method for check if a goal is reached
 	 */
-	public Goal(
+	public Achievement(
 			final Controller controller,
 			final String title,
 			final String descr,

@@ -24,13 +24,13 @@ import java.util.Optional;
 
 import controller.Controller;
 import controller.files.FileTypes;
+import model.achievement.Achievement;
+import model.achievement.AchievementManager;
 import model.game.GameResult;
 import model.game.grid.candies.Candy;
 import model.game.level.Level;
 import model.game.level.LevelsManager;
 import model.game.level.LevelsManagerImpl;
-import model.goals.Goal;
-import model.goals.GoalManager;
 import model.objectives.Objective;
 import model.players.PlayerManager;
 import model.players.PlayerManagerImpl;
@@ -53,7 +53,7 @@ public final class ModelImpl implements Model {
 	private Optional<Level> currentLevel;
 	private final PlayerManager pm;
 	private final LevelsManager lm;
-	private GoalManager gm;
+	private AchievementManager gm;
 	private final ScoreBoard sb;
 	private final BoostShop bs;
 
@@ -63,7 +63,7 @@ public final class ModelImpl implements Model {
 		this.currentLevel = Optional.empty();
 		this.pm = new PlayerManagerImpl();
 		this.lm = new LevelsManagerImpl(controller);
-		this.gm = new GoalManager(controller);
+		this.gm = new AchievementManager(controller);
 		this.sb = new ScoreBoard();
 		this.bs = new BoostShop();
 	}
@@ -205,12 +205,12 @@ public final class ModelImpl implements Model {
 	}
 
 	public void resetGoals() {
-		this.gm = new GoalManager(controller);
+		this.gm = new AchievementManager(controller);
 	}
 
-	public List<Goal> getAchievement() {
+	public List<Achievement> getAchievement() {
 		this.gm.resetPlayerMap();
-		return this.gm.getAchievement();
+		return this.gm.getAchievements();
 	}
 
 	public List<Pair<String, Integer>> getGeneralScoreRank() {

@@ -17,7 +17,7 @@
  */
 package view;
 
-import model.goals.Goal;
+import model.achievement.Achievement;
 import view.gui.GUI;
 
 /** @author Filippo Barbari */
@@ -50,7 +50,7 @@ public interface View {
 	void nextStage();
 
 	/**
-	 * Inform the view that a {@link Goal} has been reached.
+	 * Inform the view that a {@link Achievement} has been reached.
 	 *
 	 * @param text The text describing the achievement reached.
 	 */

@@ -24,61 +24,61 @@ import org.junit.jupiter.api.Test;
 
 import controller.Controller;
 import controller.ControllerImpl;
-import model.goals.GoalBuilder;
-import model.goals.GoalBuilderImpl;
+import model.achievement.AchievementBuilder;
+import model.achievement.AchievementBuilderImpl;
 
-public final class TestGoalBuilder {
+public final class TestAchievementBuilder {
 
-	private GoalBuilder gb;
+	private AchievementBuilder gb;
 	private Controller ctrl;
 
 	@BeforeEach
 	public void prepare() {
-		this.gb = new GoalBuilderImpl();
+		this.gb = new AchievementBuilderImpl();
 		this.ctrl = new ControllerImpl();
 	}
 
 	@Test
 	public void titleCantBeAVoidString() {
-		assertThrows(IllegalStateException.class, () -> this.gb.setTitle(""));
+		assertThrows(IllegalArgumentException.class, () -> this.gb.title(""));
 	}
 
 	@Test
 	public void descrCantBeAVoidString() {
-		assertThrows(IllegalStateException.class, () -> this.gb.setDescr(""));
+		assertThrows(IllegalArgumentException.class, () -> this.gb.description(""));
 	}
 
 	@Test
 	public void methodCantBeNull() {
-		assertThrows(NullPointerException.class, () -> this.gb.setMethod(null));
+		assertThrows(NullPointerException.class, () -> this.gb.check(null));
 	}
 
 	@Test
 	public void titleNeedToBeSet() {
-		this.gb.setDescr("prova descrizione");
-		this.gb.setMethod(e -> false);
+		this.gb.description("prova descrizione");
+		this.gb.check(e -> false);
 		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
 	@Test
 	public void descrNeedToBeSet() {
-		this.gb.setTitle("prova titolo");
-		this.gb.setMethod(e -> true);
+		this.gb.title("prova titolo");
+		this.gb.check(e -> true);
 		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
 	@Test
 	public void methodNeedToBeSet() {
-		this.gb.setDescr("prova descrizione");
-		this.gb.setTitle("prova titolo");
+		this.gb.description("prova descrizione");
+		this.gb.title("prova titolo");
 		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
 	@Test
 	public void cantBuildTwice() {
-		this.gb.setDescr("prova descrizione");
-		this.gb.setTitle("prova titolo");
-		this.gb.setMethod(e -> false);
+		this.gb.description("prova descrizione");
+		this.gb.title("prova titolo");
+		this.gb.check(e -> false);
 		this.gb.setController(ctrl);
 		gb.build();
 		assertThrows(IllegalStateException.class, () -> gb.build());

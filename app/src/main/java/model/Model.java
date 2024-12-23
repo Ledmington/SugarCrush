@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import controller.files.FileTypes;
+import model.achievement.Achievement;
 import model.game.GameResult;
 import model.game.grid.candies.Candy;
 import model.game.level.Level;
 import model.game.level.stage.Stage;
-import model.goals.Goal;
 import model.objectives.Objective;
 import model.players.PlayerManager;
 import model.score.Status;
@@ -182,7 +182,7 @@ public interface Model {
 	void resetGoals();
 
 	/** @return the list of all achievements */
-	List<Goal> getAchievement();
+	List<Achievement> getAchievement();
 
 	/** @return the list of players sort by general score */
 	List<Pair<String, Integer>> getGeneralScoreRank();
