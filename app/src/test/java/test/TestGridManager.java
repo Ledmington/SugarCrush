@@ -41,10 +41,11 @@ import model.game.grid.candies.CandyFactory;
 import model.game.grid.candies.CandyTypes;
 import model.score.Status;
 import model.score.StatusImpl;
+import utils.ImmutableMap;
 import utils.Point2D;
 
 /** @author Filippo Benvenuti */
-public final class TestGridManager {
+final class TestGridManager {
 
 	private GridManager grdMng;
 	private Map<Point2D, Optional<Candy>> map;
@@ -62,31 +63,29 @@ public final class TestGridManager {
 		colors.add(CandyColors.YELLOW);
 		colors.add(CandyColors.PURPLE);
 		colors.add(CandyColors.RED);
-		map = new HashMap<>() {
-			{
-				put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(3, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(4, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(5, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(6, 0), Optional.empty());
-			}
-		};
+		map = ImmutableMap.<Point2D, Optional<Candy>>builder()
+				.put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)))
+				.put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)))
+				.put(new Point2D(3, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)))
+				.put(new Point2D(4, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)))
+				.put(new Point2D(5, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)))
+				.put(new Point2D(6, 0), Optional.empty())
+				.build();
 	}
 
 	@Test
-	public void gridCantBeNull() {
+	void gridCantBeNull() {
 		assertThrows(NullPointerException.class, () -> new GridManagerImpl(c, null, null, null, false));
 	}
 
 	@Test
-	public void noEmptyInsideGridAfterDropCandy() {
+	void noEmptyInsideGridAfterDropCandy() {
 		grdMng = new GridManagerImpl(c, map, this.score, colors, false);
 		assertFalse(grdMng.getGrid().containsValue(Optional.empty()));
 	}
 
 	@Test
-	public void frecklesPresent() {
+	void frecklesPresent() {
 		grdMng = new GridManagerImpl(c, map, this.score, colors, false);
 		boolean found = false;
 		for (final Map.Entry<Point2D, Optional<Candy>> crd : grdMng.getGrid().entrySet()) {
@@ -96,14 +95,12 @@ public final class TestGridManager {
 	}
 
 	@Test
-	public void genericChecks() {
-		final Map<Point2D, Optional<Candy>> m = new HashMap<>() {
-			{
-				put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.GREEN)));
-				put(new Point2D(4, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
-			}
-		};
+	void genericChecks() {
+		final Map<Point2D, Optional<Candy>> m = ImmutableMap.<Point2D, Optional<Candy>>builder()
+				.put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)))
+				.put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.GREEN)))
+				.put(new Point2D(4, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)))
+				.build();
 		grdMng = new GridManagerImpl(c, m, this.score, colors, false);
 
 		assertFalse(grdMng.move(new Point2D(1, 0), new Point2D(2, 0)));
@@ -115,7 +112,7 @@ public final class TestGridManager {
 	}
 
 	@Test
-	public void insaneAndCurious() {
+	void insaneAndCurious() {
 		final Map<Point2D, Optional<Candy>> nsnMap = new HashMap<>();
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
@@ -126,15 +123,13 @@ public final class TestGridManager {
 	}
 
 	@Test
-	public void chocolateLiveness() {
-		final Map<Point2D, Optional<Candy>> m = new HashMap<>() {
-			{
-				put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.PURPLE)));
-				put(new Point2D(3, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.GREEN)));
-				put(new Point2D(4, 0), Optional.of(CandyFactory.getChocolate()));
-			}
-		};
+	void chocolateLiveness() {
+		final Map<Point2D, Optional<Candy>> m = ImmutableMap.<Point2D, Optional<Candy>>builder()
+				.put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)))
+				.put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.PURPLE)))
+				.put(new Point2D(3, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.GREEN)))
+				.put(new Point2D(4, 0), Optional.of(CandyFactory.getChocolate()))
+				.build();
 		grdMng = new GridManagerImpl(c, m, this.score, colors, false);
 
 		// Checking ascending chocolate and if it is possible to destroy it.

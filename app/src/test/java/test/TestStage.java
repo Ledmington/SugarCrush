@@ -37,7 +37,7 @@ import model.objectives.ObjectiveFactory;
 import utils.Point2D;
 
 /** @author Filippo Barbari */
-public final class TestStage {
+final class TestStage {
 
 	private Stage s;
 	private final Map<Point2D, Candy> m = new HashMap<>();
@@ -67,7 +67,7 @@ public final class TestStage {
 	}
 
 	@Test
-	public void gridConsistency() {
+	void gridConsistency() {
 		final Map<Point2D, Candy> m2 = new HashMap<>();
 		final Map<Point2D, Optional<Candy>> grid = s.getGrid();
 		grid.keySet().forEach(p -> m2.put(p, grid.get(p).orElseThrow()));

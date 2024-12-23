@@ -27,7 +27,7 @@ import controller.ControllerImpl;
 import model.achievement.AchievementBuilder;
 import model.achievement.AchievementBuilderImpl;
 
-public final class TestAchievementBuilder {
+final class TestAchievementBuilder {
 
 	private AchievementBuilder gb;
 	private Controller ctrl;
@@ -39,43 +39,43 @@ public final class TestAchievementBuilder {
 	}
 
 	@Test
-	public void titleCantBeAVoidString() {
+	void titleCantBeAVoidString() {
 		assertThrows(IllegalArgumentException.class, () -> this.gb.title(""));
 	}
 
 	@Test
-	public void descrCantBeAVoidString() {
+	void descrCantBeAVoidString() {
 		assertThrows(IllegalArgumentException.class, () -> this.gb.description(""));
 	}
 
 	@Test
-	public void methodCantBeNull() {
+	void methodCantBeNull() {
 		assertThrows(NullPointerException.class, () -> this.gb.check(null));
 	}
 
 	@Test
-	public void titleNeedToBeSet() {
+	void titleNeedToBeSet() {
 		this.gb.description("prova descrizione");
 		this.gb.check(e -> false);
 		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
 	@Test
-	public void descrNeedToBeSet() {
+	void descrNeedToBeSet() {
 		this.gb.title("prova titolo");
 		this.gb.check(e -> true);
 		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
 	@Test
-	public void methodNeedToBeSet() {
+	void methodNeedToBeSet() {
 		this.gb.description("prova descrizione");
 		this.gb.title("prova titolo");
 		assertThrows(NullPointerException.class, () -> gb.build());
 	}
 
 	@Test
-	public void cantBuildTwice() {
+	void cantBuildTwice() {
 		this.gb.description("prova descrizione");
 		this.gb.title("prova titolo");
 		this.gb.check(e -> false);

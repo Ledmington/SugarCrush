@@ -135,14 +135,16 @@ public final class Game extends GUI {
 			westPanel.add(boosts);
 
 			// Adding usable boosts
-			for (final String s : playerBoosts.keySet()) {
-				if (playerBoosts.get(s) > 0) {
-					final JButton boost = new JButton(s + " (" + playerBoosts.get(s) + ")");
+			for (final Map.Entry<String, Integer> entry : playerBoosts.entrySet()) {
+				final String boostName = entry.getKey();
+				final int boostAmount = entry.getValue();
+				if (boostAmount > 0) {
+					final JButton boost = new JButton(boostName + " (" + boostAmount + ")");
 					westPanel.add(boost);
 					boost.addActionListener(e -> {
 						if (boostSelected.isEmpty()) {
-							boostSelected = Optional.of(s);
-							currentBoost.setText(s);
+							boostSelected = Optional.of(boostName);
+							currentBoost.setText(boostName);
 						} else {
 							boostSelected = Optional.empty();
 							currentBoost.setText("(none)");
@@ -219,11 +221,13 @@ public final class Game extends GUI {
 	}
 
 	private void updateBoostsButtons() {
-		final Iterator<String> it = playerBoosts.keySet().iterator();
+		final Iterator<Map.Entry<String, Integer>> it = playerBoosts.entrySet().iterator();
 		for (final JButton jb : boostsBtn) {
-			final String boostName = it.next();
-			jb.setText(boostName + " (" + playerBoosts.get(boostName) + ")");
-			if (playerBoosts.get(boostName) == 0) {
+			final Map.Entry<String, Integer> boost = it.next();
+			final String boostName = boost.getKey();
+			final int boostAmount = boost.getValue();
+			jb.setText(boostName + " (" + boostAmount + ")");
+			if (boostAmount == 0) {
 				jb.setEnabled(false);
 			}
 		}

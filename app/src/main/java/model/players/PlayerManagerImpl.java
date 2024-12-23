@@ -17,10 +17,15 @@
  */
 package model.players;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,8 +89,8 @@ public final class PlayerManagerImpl implements PlayerManager {
 		for (final FileTypes type : FileTypes.values()) {
 			if (FILES_MAP.get(type).second().length() != 0) {
 				final JsonParser parser = new JsonParser();
-				try (final FileReader reader =
-						new FileReader(FILES_MAP.get(type).first())) {
+				try (final BufferedReader reader =
+						Files.newBufferedReader(Path.of(FILES_MAP.get(type).first()), StandardCharsets.UTF_8)) {
 					FILES_MAP.put(
 							type,
 							new Triple<>(
@@ -98,10 +103,10 @@ public final class PlayerManagerImpl implements PlayerManager {
 			}
 			if (!FILES_MAP.get(type).third().contains(obMap.get(type))) {
 				FILES_MAP.get(type).third().add(obMap.get(type));
-				try (final FileWriter fileName =
-						new FileWriter(FILES_MAP.get(type).first())) {
-					fileName.write(FILES_MAP.get(type).third().toString());
-					fileName.flush();
+				try (final BufferedWriter bw =
+						Files.newBufferedWriter(Path.of(FILES_MAP.get(type).first()), StandardCharsets.UTF_8)) {
+					bw.write(FILES_MAP.get(type).third().toString());
+					bw.flush();
 				} catch (final IOException e) {
 					throw new RuntimeException(e);
 				}
@@ -119,8 +124,8 @@ public final class PlayerManagerImpl implements PlayerManager {
 				FILES_MAP.get(FileTypes.STATS).second(),
 				FILES_MAP.get(FileTypes.BOOSTS).second());
 		final JsonParser parser = new JsonParser();
-		try (final FileReader reader =
-				new FileReader(FILES_MAP.get(FileTypes.STATS).first())) {
+		try (final BufferedReader reader =
+				Files.newBufferedReader(Path.of(FILES_MAP.get(FileTypes.STATS).first()), StandardCharsets.UTF_8)) {
 			FILES_MAP.put(
 					FileTypes.STATS,
 					new Triple<>(
@@ -169,7 +174,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 		});
 		// writes in stats.json
 		try (final FileWriter fileName =
-				new FileWriter(FILES_MAP.get(FileTypes.STATS).first())) {
+				new FileWriter(FILES_MAP.get(FileTypes.STATS).first(), StandardCharsets.UTF_8)) {
 			fileName.write(FILES_MAP.get(FileTypes.STATS).third().toString());
 			fileName.flush();
 		} catch (final IOException e) {
@@ -177,6 +182,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 		}
 	}
 
+	@Override
 	public void update(final List<Map<String, Object>> list, final FileTypes type) {
 		Objects.requireNonNull(list);
 		Objects.requireNonNull(type);
@@ -194,9 +200,10 @@ public final class PlayerManagerImpl implements PlayerManager {
 			jse.add(jso);
 		});
 		// Writes in the correct file, depending on the file types passed as parameter
-		try (final FileWriter fileName = new FileWriter(FILES_MAP.get(type).first())) {
-			fileName.write(jse.toString());
-			fileName.flush();
+		try (final BufferedWriter bw =
+				Files.newBufferedWriter(Path.of(FILES_MAP.get(type).first()), StandardCharsets.UTF_8)) {
+			bw.write(jse.toString());
+			bw.flush();
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -211,7 +218,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 		// Initializes the list checking the correct file type
 		if (FILES_MAP.get(type).second().length() != 0) {
 			final JsonParser parser = new JsonParser();
-			try (final FileReader reader = new FileReader(FILES_MAP.get(type).first())) {
+			try (final FileReader reader = new FileReader(FILES_MAP.get(type).first(), StandardCharsets.UTF_8)) {
 				FILES_MAP.put(
 						type,
 						new Triple<>(
@@ -230,6 +237,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 		return list;
 	}
 
+	@Override
 	public void removePlayer(final String name) {
 		Objects.requireNonNull(name);
 		this.stringCheck(name);
@@ -239,8 +247,8 @@ public final class PlayerManagerImpl implements PlayerManager {
 			JsonElement el = null;
 			if (FILES_MAP.get(type).second().length() != 0) {
 				final JsonParser parser = new JsonParser();
-				try (final FileReader reader =
-						new FileReader(FILES_MAP.get(type).first())) {
+				try (final BufferedReader reader =
+						Files.newBufferedReader(Path.of(FILES_MAP.get(type).first()), StandardCharsets.UTF_8)) {
 					FILES_MAP.put(
 							type,
 							new Triple<>(
@@ -259,9 +267,10 @@ public final class PlayerManagerImpl implements PlayerManager {
 			if (el != null) {
 				FILES_MAP.get(type).third().remove(el);
 			}
-			try (final FileWriter fileName = new FileWriter(FILES_MAP.get(type).first())) {
-				fileName.write(FILES_MAP.get(type).third().toString());
-				fileName.flush();
+			try (final BufferedWriter bw =
+					Files.newBufferedWriter(Path.of(FILES_MAP.get(type).first()), StandardCharsets.UTF_8)) {
+				bw.write(FILES_MAP.get(type).third().toString());
+				bw.flush();
 			} catch (final IOException e) {
 				throw new RuntimeException(e);
 			}

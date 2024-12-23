@@ -4,4 +4,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>SugarCrush ruleset</description>
+
+    <rule ref="category/java/errorprone.xml">
+    </rule>
+
+    <rule ref="category/java/bestpractices.xml">
+    </rule>
+
+    <rule ref="category/java/performance.xml">
+        <!-- Avoid reporting redundant field initialization -->
+        <exclude name="RedundantFieldInitializer" />
+    </rule>
 </ruleset>

@@ -103,7 +103,7 @@ public final class StageBuilderImpl implements StageBuilder {
 	public StageBuilder addChocolatePosition(final Point2D chocolatePosition) {
 		check(alreadyBuilt, "This stage has already been built.");
 		Objects.requireNonNull(chocolatePosition);
-		if (this.grid.containsKey(chocolatePosition) == false) {
+		if (!this.grid.containsKey(chocolatePosition)) {
 			throw new IllegalArgumentException("Grid does not contain this position.");
 		}
 
@@ -132,7 +132,9 @@ public final class StageBuilderImpl implements StageBuilder {
 		check(alreadyBuilt, "This stage has already been built.");
 		Objects.requireNonNull(candies);
 
-		for (Point2D p : candies.keySet()) {
+		for (final Map.Entry<Point2D, Candy> entry : candies.entrySet()) {
+			final Point2D p = entry.getKey();
+			final Candy candy = entry.getValue();
 			if (!this.grid.containsKey(p)) {
 				throw new IllegalArgumentException("Can't set candies in unexisting positions.");
 			}
@@ -140,8 +142,8 @@ public final class StageBuilderImpl implements StageBuilder {
 				throw new IllegalArgumentException("This position already contains a Candy.");
 			}
 
-			this.grid.put(p, Optional.of(Objects.requireNonNull(candies.get(p))));
-			this.colors.add(candies.get(p).getColor());
+			this.grid.put(p, Optional.of(candy));
+			this.colors.add(candy.getColor());
 		}
 
 		return this;

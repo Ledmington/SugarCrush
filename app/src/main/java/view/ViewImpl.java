@@ -31,42 +31,45 @@ public final class ViewImpl implements View {
 
 	private GUI currentGUI;
 
-	public ViewImpl() {
-		super();
-	}
-
+	@Override
 	public void setCurrentGUI(final GUI gui) {
 		this.currentGUI = gui;
 	}
 
+	@Override
 	public GUI getCurrentGUI() {
 		return this.currentGUI;
 	}
 
+	@Override
 	public void updateGrid() {
 		if (this.getCurrentGUI().getClass() == Game.class) {
 			((Game) this.getCurrentGUI()).updateGrid();
 		}
 	}
 
+	@Override
 	public void levelEnd() {
 		if (this.currentGUI.getClass() == Game.class) {
 			((Game) this.getCurrentGUI()).levelEnd();
 		}
 	}
 
+	@Override
 	public void stageEnd() {
 		if (this.currentGUI.getClass() == Game.class) {
 			((Game) this.getCurrentGUI()).stageEnd();
 		}
 	}
 
+	@Override
 	public void nextStage() {
 		if (this.currentGUI.getClass() == Game.class) {
 			((Game) this.getCurrentGUI()).nextStage();
 		}
 	}
 
+	@Override
 	public void achievementUnlocked(final String text) {
 		JOptionPane.showMessageDialog(null, text);
 	}

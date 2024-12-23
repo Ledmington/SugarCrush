@@ -29,22 +29,22 @@ import model.game.grid.shapes.Shapes;
 import utils.Point2D;
 
 /** @author Filippo Benvenuti */
-public final class TestShapeCoordinates {
+final class TestShapeCoordinates {
 
 	private ShapeCoordinates cc;
 
 	@Test
-	public void cantBeOdd() {
+	void cantBeOdd() {
 		assertThrows(IllegalStateException.class, () -> new ShapeCoordinates(1, 2, 3, 4, 5, 6, 7));
 	}
 
 	@Test
-	public void cantBeNull() {
+	void cantBeNull() {
 		assertThrows(NullPointerException.class, () -> new ShapeCoordinates(Arrays.asList(new Point2D(1, 2), null)));
 	}
 
 	@Test
-	public void correctRotation() {
+	void correctRotation() {
 		cc = new ShapeCoordinates(0, 1, 1, 0);
 		assertEquals(
 				Arrays.asList(new Point2D(1, 0), new Point2D(0, -1)),
@@ -52,7 +52,7 @@ public final class TestShapeCoordinates {
 	}
 
 	@Test
-	public void stripedVertical() {
+	void stripedVertical() {
 		cc = Shapes.LINE_FOUR_VERTICAL.getCoordinates();
 		assertEquals(Shapes.LINE_FOUR_VERTICAL.getCoordinates().getRelativeCoordinates(), cc.getRelativeCoordinates());
 	}

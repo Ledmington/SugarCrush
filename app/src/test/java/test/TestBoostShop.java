@@ -32,7 +32,7 @@ import model.players.PlayerManagerImpl;
 import model.shop.BoostShop;
 
 /** @author Davide Degli Esposti */
-public final class TestBoostShop {
+final class TestBoostShop {
 
 	private BoostShop bs;
 	private PlayerManagerImpl pm;
@@ -45,13 +45,13 @@ public final class TestBoostShop {
 	}
 
 	@Test
-	public void enoughMoney() {
+	void enoughMoney() {
 		pm.addPlayer("Player");
 
 		final int moneyGained = 2000000;
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
 		for (final Map<String, Object> map : list) {
-			if (map.get(playerName).toString().equals("\"Player\"")) {
+			if ("\"Player\"".equals(map.get(playerName).toString())) {
 				map.put(
 						StatsTypes.MONEY.name(),
 						Integer.parseInt(map.get(StatsTypes.MONEY.name()).toString()) + moneyGained);
@@ -64,11 +64,11 @@ public final class TestBoostShop {
 	}
 
 	@Test
-	public void notEnoughMoney() {
+	void notEnoughMoney() {
 		pm.addPlayer("Player");
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
 		for (final Map<String, Object> map : list) {
-			if (map.get(playerName).toString().equals("\"Player\"")) {
+			if ("\"Player\"".equals(map.get(playerName).toString())) {
 				map.put(StatsTypes.MONEY.name(), 0);
 				break;
 			}
@@ -82,7 +82,7 @@ public final class TestBoostShop {
 	}
 
 	@Test
-	public void playerNotRegistered() {
+	void playerNotRegistered() {
 		assertThrows(
 				IllegalStateException.class,
 				() -> bs.payment("notRegisteredPlayer", bs.getBoosts().get(1)));

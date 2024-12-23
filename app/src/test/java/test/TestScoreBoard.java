@@ -34,7 +34,7 @@ import model.rank.ScoreBoard;
 import utils.Pair;
 
 /** @author Davide Degli Esposti */
-public final class TestScoreBoard {
+final class TestScoreBoard {
 
 	private static PlayerManagerImpl pm;
 	private static ScoreBoard sb;
@@ -79,7 +79,7 @@ public final class TestScoreBoard {
 	}
 
 	@Test
-	public void testGeneralScore() {
+	void testGeneralScore() {
 		addPlayerAndScore("filippo", 90);
 		addPlayerAndScore("samuele", 0);
 		addPlayerAndScore("davide", 138);
@@ -90,7 +90,7 @@ public final class TestScoreBoard {
 	}
 
 	@Test
-	public void testScoreByLevel() {
+	void testScoreByLevel() {
 		addPlayerAndLvlScore("filippo", 90);
 		addPlayerAndLvlScore("samuele", 0);
 		addPlayerAndLvlScore("davide", 138);

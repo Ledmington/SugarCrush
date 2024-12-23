@@ -31,7 +31,7 @@ import model.game.level.stage.StageBuilderImpl;
 import model.objectives.ObjectiveFactory;
 
 /** @author Filippo Barbari */
-public final class TestLevelBuilder {
+final class TestLevelBuilder {
 
 	private LevelBuilder lb;
 	private Controller controller;
@@ -43,12 +43,12 @@ public final class TestLevelBuilder {
 	}
 
 	@Test
-	public void nullStage() {
+	void nullStage() {
 		assertThrows(NullPointerException.class, () -> lb.addStage(null));
 	}
 
 	@Test
-	public void cantBuildTwice() {
+	void cantBuildTwice() {
 		lb.addStage(new StageBuilderImpl()
 						.setDimensions(3, 3)
 						.addAvailableColor(CandyColors.BLUE)
@@ -63,12 +63,12 @@ public final class TestLevelBuilder {
 	}
 
 	@Test
-	public void emptyStages() {
+	void emptyStages() {
 		assertThrows(IllegalStateException.class, () -> lb.build());
 	}
 
 	@Test
-	public void cantCallMethodsAfterBuilding() {
+	void cantCallMethodsAfterBuilding() {
 		lb.addStage(new StageBuilderImpl()
 						.setDimensions(3, 3)
 						.addAvailableColor(CandyColors.BLUE)

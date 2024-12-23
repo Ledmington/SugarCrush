@@ -40,7 +40,7 @@ import model.score.Status.Ratios;
 import model.score.StatusImpl;
 
 /** @author Emanuele Lamagna */
-public final class TestPlayerManager {
+final class TestPlayerManager {
 
 	private final Controller controller = new ControllerImpl();
 	private PlayerManager pm;
@@ -58,7 +58,7 @@ public final class TestPlayerManager {
 
 	/** Creates a new player, modifies some information and then remove it. */
 	@Test
-	public void testStats() {
+	void testStats() {
 		// create player
 		pm.addPlayer("tmpPlayer");
 		mapP = check(FileTypes.STATS);
@@ -77,7 +77,8 @@ public final class TestPlayerManager {
 		status.complete();
 		pm.setStat("tmpPlayer", status, 3);
 		pm.getPlayers(FileTypes.STATS).stream()
-				.filter(map -> map.get(Controller.playerName).toString().equals("\"tmpPlayer\""))
+				.filter(map ->
+						"\"tmpPlayer\"".equals(map.get(Controller.playerName).toString()))
 				.forEach(map -> {
 					assertEquals("1", map.get(StatsTypes.PURPLE.name()).toString());
 					assertEquals("1", map.get(StatsTypes.BLUE.name()).toString());
@@ -95,7 +96,7 @@ public final class TestPlayerManager {
 		int moneyHold = 0;
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
 		for (final Map<String, Object> map : list) {
-			if (map.get(Controller.playerName).toString().equals("\"tmpPlayer\"")) {
+			if ("\"tmpPlayer\"".equals(map.get(Controller.playerName).toString())) {
 				moneyHold = Integer.parseInt(map.get(StatsTypes.MONEY.name()).toString());
 				map.put(
 						StatsTypes.MONEY.name(),
@@ -104,7 +105,7 @@ public final class TestPlayerManager {
 		}
 		pm.update(list, FileTypes.STATS);
 		for (final Map<String, Object> map : pm.getPlayers(FileTypes.STATS)) {
-			if (map.get(Controller.playerName).toString().equals("\"tmpPlayer\"")) {
+			if ("\"tmpPlayer\"".equals(map.get(Controller.playerName).toString())) {
 				assertEquals(map.get(StatsTypes.MONEY.name()).toString(), Integer.toString(moneyHold + moneyGained));
 			}
 		}
@@ -120,7 +121,7 @@ public final class TestPlayerManager {
 
 	private Optional<Map<String, Object>> check(final FileTypes type) {
 		for (final Map<String, Object> map : pm.getPlayers(type)) {
-			if (map.get(Controller.playerName).toString().equals(("\"tmpPlayer\""))) {
+			if ("\"tmpPlayer\"".equals(map.get(Controller.playerName).toString())) {
 				return Optional.of(map);
 			}
 		}

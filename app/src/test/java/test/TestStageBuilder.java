@@ -38,7 +38,7 @@ import model.objectives.ObjectiveFactory;
 import utils.Point2D;
 
 /** @author Filippo Barbari */
-public final class TestStageBuilder {
+final class TestStageBuilder {
 
 	private StageBuilder sb;
 	private Controller controller;
@@ -52,52 +52,52 @@ public final class TestStageBuilder {
 	}
 
 	@Test
-	public void zeroOrNegativeDimensions() {
+	void zeroOrNegativeDimensions() {
 		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(5, 0));
 		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(0, 2));
 		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(-1, -1));
 	}
 
 	@Test
-	public void nullEmptyCells() {
+	void nullEmptyCells() {
 		assertThrows(NullPointerException.class, () -> sb.setEmptyCells(null));
 	}
 
 	@Test
-	public void emptyCellsWithoutGrid() {
+	void emptyCellsWithoutGrid() {
 		final Set<Point2D> s = new HashSet<>();
 		s.add(new Point2D(1, 1));
 		assertThrows(IllegalStateException.class, () -> sb.setEmptyCells(s));
 	}
 
 	@Test
-	public void nullObjective() {
+	void nullObjective() {
 		assertThrows(NullPointerException.class, () -> sb.setObjective(null));
 	}
 
 	@Test
-	public void nullChocolate() {
+	void nullChocolate() {
 		assertThrows(NullPointerException.class, () -> sb.addChocolatePosition(null));
 	}
 
 	@Test
-	public void chocolateNotInGrid() {
+	void chocolateNotInGrid() {
 		sb.setDimensions(3, 3);
 		assertThrows(IllegalArgumentException.class, () -> sb.addChocolatePosition(new Point2D(4, 4)));
 	}
 
 	@Test
-	public void nullColor() {
+	void nullColor() {
 		assertThrows(NullPointerException.class, () -> sb.addAvailableColor(null));
 	}
 
 	@Test
-	public void nullCandies() {
+	void nullCandies() {
 		assertThrows(NullPointerException.class, () -> sb.setCandies(null));
 	}
 
 	@Test
-	public void candiesNotInGrid() {
+	void candiesNotInGrid() {
 		final Map<Point2D, Candy> m = new HashMap<>();
 		m.put(new Point2D(3, 3), CandyFactory.getFreckles());
 
@@ -110,7 +110,7 @@ public final class TestStageBuilder {
 	}
 
 	@Test
-	public void twoCandiesInSamePosition() {
+	void twoCandiesInSamePosition() {
 		final Map<Point2D, Candy> m = new HashMap<>();
 		m.put(new Point2D(3, 3), CandyFactory.getFreckles());
 
@@ -119,7 +119,7 @@ public final class TestStageBuilder {
 	}
 
 	@Test
-	public void emptyCandies() {
+	void emptyCandies() {
 		final Map<Point2D, Candy> m = new HashMap<>();
 		m.put(new Point2D(1, 1), null);
 		sb.setDimensions(5, 5);
@@ -127,17 +127,17 @@ public final class TestStageBuilder {
 	}
 
 	@Test
-	public void nullStartingMessage() {
+	void nullStartingMessage() {
 		assertThrows(NullPointerException.class, () -> sb.setStartingMessage(null));
 	}
 
 	@Test
-	public void nullEndingMessage() {
+	void nullEndingMessage() {
 		assertThrows(NullPointerException.class, () -> sb.setEndingMessage(null));
 	}
 
 	@Test
-	public void cantBuildTwice() {
+	void cantBuildTwice() {
 		sb.setDimensions(5, 5)
 				.addAvailableColor(CandyColors.BLUE)
 				.addAvailableColor(CandyColors.GREEN)
@@ -151,24 +151,24 @@ public final class TestStageBuilder {
 	}
 
 	@Test
-	public void cantBuildWithoutGrid() {
+	void cantBuildWithoutGrid() {
 		assertThrows(IllegalStateException.class, () -> sb.build());
 	}
 
 	@Test
-	public void cantBuildWithoutColors() {
+	void cantBuildWithoutColors() {
 		sb.setDimensions(5, 5);
 		assertThrows(IllegalStateException.class, () -> sb.build());
 	}
 
 	@Test
-	public void gridOnlyChocolate() {
+	void gridOnlyChocolate() {
 		sb.setDimensions(1, 1).addAvailableColor(CandyColors.BLUE).addChocolatePosition(new Point2D(0, 0));
 		assertThrows(IllegalStateException.class, () -> sb.build());
 	}
 
 	@Test
-	public void chocolateAndJelly() {
+	void chocolateAndJelly() {
 		sb.setDimensions(5, 5)
 				.addAvailableColor(CandyColors.BLUE)
 				.addChocolatePosition(new Point2D(2, 2))
@@ -178,7 +178,7 @@ public final class TestStageBuilder {
 	}
 
 	@Test
-	public void chocolateAndCandyInSamePosition() {
+	void chocolateAndCandyInSamePosition() {
 		final Map<Point2D, Candy> m = new HashMap<>();
 		m.put(new Point2D(2, 2), CandyFactory.getVerticalStripedCandy(CandyColors.BLUE));
 		sb.setDimensions(5, 5).setCandies(m).addChocolatePosition(new Point2D(2, 2));
@@ -186,13 +186,13 @@ public final class TestStageBuilder {
 	}
 
 	@Test
-	public void buildWithoutObjective() {
+	void buildWithoutObjective() {
 		sb.setDimensions(5, 5).addAvailableColor(CandyColors.BLUE);
 		assertThrows(IllegalStateException.class, () -> sb.build());
 	}
 
 	@Test
-	public void cantDoAnythingAfterBuilding() {
+	void cantDoAnythingAfterBuilding() {
 		sb.setDimensions(5, 5)
 				.addAvailableColor(CandyColors.BLUE)
 				.addAvailableColor(CandyColors.GREEN)

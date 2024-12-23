@@ -37,21 +37,21 @@ import model.objectives.ObjectiveFactory;
  *
  * @author Emanuele Lamagna
  */
-public final class TestObjective {
+final class TestObjective {
 
 	private ObjectiveBuilder obb;
 	private ChallengeBuilder ch;
 
 	/** Creates normal {@link Objective}. */
 	@Test
-	public void testNormalObjective() {
+	void testNormalObjective() {
 		final Objective ob = ObjectiveFactory.normal();
 		assertEquals(ob.getChallenge(), Optional.empty());
 	}
 
 	/** Creates an explode {@link Objective}. */
 	@Test
-	public void testExplodeObjective() {
+	void testExplodeObjective() {
 		final Objective ob = ObjectiveFactory.explode();
 		assertNotEquals(ob.getChallenge(), Optional.empty());
 		assertEquals(ob.getChallenge().orElseThrow().getWrappedToFarm(), Objective.Values.DEF_WRAPPED.getValue());
@@ -60,7 +60,7 @@ public final class TestObjective {
 
 	/** Test if an {@link Objective} can be built twice. */
 	@Test
-	public void testDoubleBuildObjective() {
+	void testDoubleBuildObjective() {
 		obb = Objective.builder();
 		obb.setMaxScore(10000).setMaxMoves(20).build();
 		assertThrows(IllegalStateException.class, () -> obb.build());
@@ -68,7 +68,7 @@ public final class TestObjective {
 
 	/** Test if an {@link Objective} can have an empty string. */
 	@Test
-	public void testStringNotEmpty() {
+	void testStringNotEmpty() {
 		obb = Objective.builder();
 		obb.setMaxScore(10000).setMaxMoves(20);
 		assertThrows(IllegalArgumentException.class, () -> obb.setObjectiveText(""));
@@ -76,14 +76,14 @@ public final class TestObjective {
 
 	/** Test if an {@link Objective} can have a negative parameter. */
 	@Test
-	public void testNotNegativeObjective() {
+	void testNotNegativeObjective() {
 		obb = Objective.builder();
 		assertThrows(IllegalArgumentException.class, () -> obb.setMaxScore(-1));
 	}
 
 	/** Test if a {@link Challenge} can be built twice. */
 	@Test
-	public void testDoubleBuildChallenge() {
+	void testDoubleBuildChallenge() {
 		ch = new ChallengeBuilderImpl();
 		ch.setBlue(10).setRed(10).setYellow(10).build();
 		assertThrows(IllegalStateException.class, () -> ch.build());
@@ -91,7 +91,7 @@ public final class TestObjective {
 
 	/** Test if an {@link Challenge} can have a negative parameter */
 	@Test
-	public void testNotNegativeChallenge() {
+	void testNotNegativeChallenge() {
 		ch = new ChallengeBuilderImpl();
 		ch.setBlue(10).setRed(10);
 		assertThrows(IllegalArgumentException.class, () -> ch.setYellow(-4));

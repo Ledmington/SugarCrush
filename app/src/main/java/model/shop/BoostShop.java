@@ -20,7 +20,8 @@ package model.shop;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.random.RandomGenerator;
+import java.util.random.RandomGeneratorFactory;
 
 import controller.Controller;
 import controller.files.FileTypes;
@@ -44,7 +45,7 @@ public final class BoostShop {
 
 	/** generate the items sold in the shop */
 	public void generateShop() {
-		boosts.removeAll(boosts);
+		boosts.clear();
 		for (int i = 0; i < MAXELEMSHOP; i++) {
 			generateBoost();
 		}
@@ -52,18 +53,19 @@ public final class BoostShop {
 
 	/** generate the boost to add at the shop */
 	private void generateBoost() {
-		Random rnd = new Random();
+		final RandomGenerator rng = RandomGeneratorFactory.getDefault().create(System.nanoTime());
+
 		// variable for the random color
 		CandyColors color;
 		do {
-			color = CandyColors.values()[rnd.nextInt(CandyColors.values().length)];
+			color = CandyColors.values()[rng.nextInt(CandyColors.values().length)];
 		} while (color == CandyColors.CHOCOLATE || color == CandyColors.FRECKLES);
 
 		// if true, the candy have type=chocolate or normal
 		boolean flag;
 		do {
 			Candy candy;
-			switch (rnd.nextInt(CandyTypes.values().length)) {
+			switch (rng.nextInt(CandyTypes.values().length)) {
 				case 0:
 					flag = false;
 					// boost to add at the shop
@@ -92,7 +94,7 @@ public final class BoostShop {
 	}
 
 	/**
-	 * if player have enough money update the set of player properties
+	 * If player has enough money update the set of player properties.
 	 *
 	 * @param name the name of the player
 	 * @param bst the boost bought by the player
@@ -100,7 +102,7 @@ public final class BoostShop {
 	public void payment(final String name, final Boost bst) {
 		final PlayerManagerImpl pl = new PlayerManagerImpl();
 		final List<Map<String, Object>> list = pl.getPlayers(FileTypes.STATS);
-		for (Map<String, Object> map : list) {
+		for (final Map<String, Object> map : list) {
 			if (map.get(Controller.playerName).toString().equals("\"" + name + "\"")) {
 				if ((Integer.parseInt(map.get(Status.Ratios.MONEY.name()).toString())) >= bst.getPrice()) {
 					map.put(

@@ -27,7 +27,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
- * A class that implements {@link Sound}
+ * A class that implements {@link Sound}.
  *
  * @author Emanuele Lamagna
  */
@@ -49,6 +49,7 @@ public final class SoundImpl implements Sound {
 		}
 	}
 
+	@Override
 	public void setSoundEnabled() {
 		this.soundEnabled = !this.soundEnabled;
 	}

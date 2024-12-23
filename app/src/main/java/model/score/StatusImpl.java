@@ -18,6 +18,7 @@
 package model.score;
 
 import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -36,10 +37,10 @@ import model.game.grid.shapes.Shapes;
 public final class StatusImpl implements Status {
 
 	// a map with all the colors in the keyset: the values are the candies destroyed of that color
-	private final EnumMap<CandyColors, Integer> colorsMap = new EnumMap<>(CandyColors.class);
+	private final Map<CandyColors, Integer> colorsMap = new EnumMap<>(CandyColors.class);
 
 	// a map with all the types in the keyset: the values are the candies destroyed of that type
-	private final EnumMap<CandyTypes, Integer> typesMap = new EnumMap<>(CandyTypes.class);
+	private final Map<CandyTypes, Integer> typesMap = new EnumMap<>(CandyTypes.class);
 
 	private final Controller controller;
 	private boolean jellyDestroyed = false;
@@ -61,6 +62,7 @@ public final class StatusImpl implements Status {
 		}
 	}
 
+	@Override
 	public void update(final Shapes shape) {
 		Objects.requireNonNull(shape);
 		this.totalLevelScore = this.totalLevelScore
@@ -70,6 +72,7 @@ public final class StatusImpl implements Status {
 		this.typesMap.put(shape.getCandyType(), this.typesMap.get(shape.getCandyType()) + 1);
 	}
 
+	@Override
 	public void update(final Candy candy) {
 		Objects.requireNonNull(candy);
 		Stream.of(Ratios.values())
@@ -79,17 +82,20 @@ public final class StatusImpl implements Status {
 		this.colorsMap.put(candy.getColor(), this.colorsMap.get(candy.getColor()) + 1);
 	}
 
+	@Override
 	public void setJelly() {
 		if (controller.getJelly().isPresent() && this.checkJelly()) {
 			this.jellyDestroyed = true;
 		}
 	}
 
+	@Override
 	public int getColors(final CandyColors color) {
 		Objects.requireNonNull(color);
 		return this.colorsMap.get(color);
 	}
 
+	@Override
 	public int getTypes(final StatsTypes type) {
 		Objects.requireNonNull(type);
 		return switch (type) {
@@ -102,34 +108,42 @@ public final class StatusImpl implements Status {
 		};
 	}
 
+	@Override
 	public boolean isJellyDestroyed() {
 		return this.jellyDestroyed;
 	}
 
+	@Override
 	public int getScore() {
 		return this.totalLevelScore;
 	}
 
+	@Override
 	public void updateMoves() {
 		this.moves++;
 	}
 
+	@Override
 	public int getMoves() {
 		return this.moves;
 	}
 
+	@Override
 	public int getMoney() {
 		return this.levelMoney;
 	}
 
+	@Override
 	public boolean isCompleted() {
 		return this.levelCompleted;
 	}
 
+	@Override
 	public void complete() {
 		this.levelCompleted = true;
 	}
 
+	@Override
 	public void isFirstTime(final boolean firstTime) {
 		if (!firstTime) {
 			this.levelMoney = this.getMoney() / Ratios.REDUCE_MONEY.get();

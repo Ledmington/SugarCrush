@@ -67,6 +67,7 @@ public final class Login extends GUI {
 		bt.addActionListener(al);
 
 		jtf.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					performAction(jtf, comment);

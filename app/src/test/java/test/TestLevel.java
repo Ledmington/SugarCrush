@@ -35,7 +35,7 @@ import model.game.level.stage.StageBuilderImpl;
 import model.objectives.ObjectiveFactory;
 
 /** @author Filippo Barbari */
-public final class TestLevel {
+final class TestLevel {
 
 	private Level l;
 
@@ -68,12 +68,12 @@ public final class TestLevel {
 	}
 
 	@Test
-	public void checkResult() {
+	void checkResult() {
 		assertSame(GameResult.STILL_PLAYING, l.getResult());
 	}
 
 	@Test
-	public void stageIterationCorrect() {
+	void stageIterationCorrect() {
 		assertTrue(l.hasNextStage());
 		l.nextStage();
 		assertFalse(l.hasNextStage());

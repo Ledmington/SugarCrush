@@ -300,9 +300,12 @@ public final class GridManagerImpl implements GridManager {
 				// For each rotation we get every near shape.
 				for (final ShapeCoordinates nearShp : curShp.getNearCoordinateShapes()) {
 					// For each near shape we scroll all the candies in the grid.
-					for (final Point2D crd : this.grid.keySet()) {
+					for (final Map.Entry<Point2D, Optional<Candy>> entry : this.grid.entrySet()) {
+						final Point2D crd = entry.getKey();
+						final Optional<Candy> candy = entry.getValue();
+
 						// If candy is present.
-						if (this.grid.get(crd).isPresent()) {
+						if (candy.isPresent()) {
 							// If shape can be created.
 							if (this.shapePossible(curShp, crd)) {
 								// If we find the shape.
@@ -353,9 +356,11 @@ public final class GridManagerImpl implements GridManager {
 		boolean anotherFound;
 		do {
 			anotherFound = false;
-			for (final Point2D crd : this.grid.keySet()) {
-				if (this.grid.get(crd).isPresent()) {
-					final Candy cnd = this.grid.get(crd).orElseThrow();
+			for (final Map.Entry<Point2D, Optional<Candy>> entry : this.grid.entrySet()) {
+				final Point2D crd = entry.getKey();
+				final Optional<Candy> candy = entry.getValue();
+				if (candy.isPresent()) {
+					final Candy cnd = candy.orElseThrow();
 					if (cnd.getType() != CandyTypes.NORMAL && cnd.getType() != CandyTypes.CHOCOLATE) {
 						// Special candy found, destroy that.
 						this.destroyCandy(crd);
@@ -381,11 +386,12 @@ public final class GridManagerImpl implements GridManager {
 			// For each shape we get every rotation.
 			for (int rot = 0; rot < shp.getRotations(); rot++) {
 				// For each rotation we scroll every candy in the grid.
-				for (final Point2D crd : this.grid.keySet()) {
+				for (final Map.Entry<Point2D, Optional<Candy>> entry : this.grid.entrySet()) {
+					final Point2D crd = entry.getKey();
+					final Optional<Candy> candy = entry.getValue();
 					// If candy is present.
-					if (this.grid.get(crd).isPresent()) {
-						final CandyColors cndCol =
-								this.grid.get(crd).orElseThrow().getColor();
+					if (candy.isPresent()) {
+						final CandyColors cndCol = candy.orElseThrow().getColor();
 						// If shape is found we destroy the shape.
 						if (this.findShape(shpCrd, crd, false)) {
 							shpFound = true;
@@ -487,10 +493,10 @@ public final class GridManagerImpl implements GridManager {
 	}
 
 	private void destroyChocolateAround(final Point2D cord) {
-		final List<Point2D> relMov = Arrays.asList( // Up - Down - Left - Right
+		final List<Point2D> relativeMovements = Arrays.asList( // Up - Down - Left - Right
 				new Point2D(-1, 0), new Point2D(1, 0), new Point2D(0, -1), new Point2D(0, 1));
 
-		for (final Point2D rel : relMov) {
+		for (final Point2D rel : relativeMovements) {
 			final Point2D tmp = new Point2D(cord.x() + rel.x(), cord.y() + rel.y());
 			// Coordinates in grid.
 			if (this.grid.containsKey(tmp)) {
@@ -563,11 +569,13 @@ public final class GridManagerImpl implements GridManager {
 		// Choose random chocolate candy.
 		final List<Point2D> chcList = new ArrayList<>();
 		// Filling chcList with chocolate coordinates (that have no chocolate neighbour).
-		for (final Point2D crd : this.grid.keySet()) {
+		for (final Map.Entry<Point2D, Optional<Candy>> entry : this.grid.entrySet()) {
+			final Point2D crd = entry.getKey();
+			final Optional<Candy> candy = entry.getValue();
 			// Not empty.
-			if (this.grid.get(crd).isPresent()) {
+			if (candy.isPresent()) {
 				// Is chocolate.
-				if (this.grid.get(crd).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
+				if (candy.orElseThrow().getType() == CandyTypes.CHOCOLATE) {
 					// Has a non-chocolate neighbour.
 					boolean onlyChocolate = true;
 					Point2D tmp;
