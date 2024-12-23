@@ -33,7 +33,6 @@ import javax.swing.SwingConstants;
 
 import controller.Controller;
 import controller.image.ImageManager;
-import controller.image.ImageManagerImpl;
 import view.View;
 
 /** @author Davide Degli Esposti */
@@ -50,7 +49,6 @@ public final class Shop extends GUI {
 	private final JPanel shopPanel = new JPanel(); // panel that contain the item on sale
 	private final transient List<JButton> itemBtns =
 			new ArrayList<>(); // list of buttons that represents the boost on sale
-	private final transient ImageManager im = new ImageManagerImpl(); // variable to get the image of the candy
 	private int btnNotEnable = 4; // represents the number of button not enable
 	private final JLabel moneyLabel =
 			new JLabel("Money: " + controller.getCurrentMoney()); // show the current amount of money of the player
@@ -112,7 +110,8 @@ public final class Shop extends GUI {
 		for (int i = 0; i < controller.getBoostOnSale().size(); i++) {
 			itemBtns.add(new JButton());
 			itemBtns.get(i)
-					.setIcon(im.getCandyImage(controller.getBoostOnSale().get(i).getCandy()));
+					.setIcon(ImageManager.getCandyImage(
+							controller.getBoostOnSale().get(i).getCandy()));
 			shopPanel.add(itemBtns.get(i));
 		}
 		JLabel tmpLabel;

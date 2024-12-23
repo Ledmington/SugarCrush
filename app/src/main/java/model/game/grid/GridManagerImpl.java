@@ -24,7 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
+import java.util.random.RandomGenerator;
+import java.util.random.RandomGeneratorFactory;
 
 import controller.Controller;
 import model.game.grid.candies.Candy;
@@ -41,8 +42,10 @@ import utils.Point2D;
 /** @author Filippo Benvenuti */
 public final class GridManagerImpl implements GridManager {
 
+	private static final RandomGenerator rng =
+			RandomGeneratorFactory.getDefault().create(System.nanoTime());
+
 	private final Map<Point2D, Optional<Candy>> grid;
-	private static final Random rnd = new Random();
 	private final CandyFactory cndFac;
 	private final Status score;
 	private final List<CandyColors> spawnedCandyColors;
@@ -66,7 +69,6 @@ public final class GridManagerImpl implements GridManager {
 		this.grid = new HashMap<>(initialGrid);
 		this.spawnedCandyColors = colors;
 		this.score = score;
-		rnd.setSeed(System.currentTimeMillis());
 		this.cndFac = new CandyFactoryImpl();
 		this.dropCandies();
 		this.updateScore = true;
@@ -346,7 +348,7 @@ public final class GridManagerImpl implements GridManager {
 					tmp,
 					new CandyBuilderImpl()
 							.setColor(this.grid.get(tmp).orElseThrow().getColor())
-							.setType(spawnable.get(rnd.nextInt(spawnable.size())))
+							.setType(spawnable.get(rng.nextInt(spawnable.size())))
 							.build());
 		}
 
@@ -470,7 +472,7 @@ public final class GridManagerImpl implements GridManager {
 					// If no candy was found, we generate a new one.
 					if (!found) {
 						tmp = Optional.of(cndFac.getNormalCandy(
-								this.spawnedCandyColors.get(rnd.nextInt(this.spawnedCandyColors.size()))));
+								this.spawnedCandyColors.get(rng.nextInt(this.spawnedCandyColors.size()))));
 					}
 
 					if (tmp.isPresent()) {
@@ -490,9 +492,9 @@ public final class GridManagerImpl implements GridManager {
 	private void destroyChocolateAround(final Point2D cord) {
 		final List<Point2D> relMov = Arrays.asList( // Up - Down - Left - Right
 				new Point2D(-1, 0), new Point2D(1, 0), new Point2D(0, -1), new Point2D(0, 1));
-		Point2D tmp;
+
 		for (final Point2D rel : relMov) {
-			tmp = new Point2D(cord.x() + rel.x(), cord.y() + rel.y());
+			final Point2D tmp = new Point2D(cord.x() + rel.x(), cord.y() + rel.y());
 			// Coordinates in grid.
 			if (this.grid.containsKey(tmp)) {
 				// Is not empty.
@@ -521,7 +523,7 @@ public final class GridManagerImpl implements GridManager {
 		for (final Point2D relCrd : shc.getRelativeCoordinates()) {
 			final Point2D relCord = new Point2D(crd.x() + relCrd.x(), crd.y() + relCrd.y());
 
-			// The first one can be checked by it self.
+			// The first one can be checked by itself.
 			if (last.isEmpty()) {
 				last = Optional.of(relCord);
 			}
@@ -569,7 +571,7 @@ public final class GridManagerImpl implements GridManager {
 			if (this.grid.get(crd).isPresent()) {
 				// Is chocolate.
 				if (this.grid.get(crd).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
-					// Has non chocolate neighbor.
+					// Has non-chocolate neighbor.
 					boolean onlyChocolate = true;
 					Point2D tmp;
 					for (final Point2D rel : relMov) {
@@ -596,18 +598,18 @@ public final class GridManagerImpl implements GridManager {
 			return;
 		}
 		// Select random chocolate.
-		final Point2D crdRandom = chcList.get(rnd.nextInt(chcList.size()));
+		final Point2D crdRandom = chcList.get(rng.nextInt(chcList.size()));
 		Point2D crdToChocolize;
 		// Select random neighbor.
 		do {
-			int rndInd = rnd.nextInt(relMov.size());
+			int rndInd = rng.nextInt(relMov.size());
 			crdToChocolize = new Point2D(
 					crdRandom.x() + relMov.get(rndInd).x(),
 					crdRandom.y() + relMov.get(rndInd).y());
 		} while ((!this.grid.containsKey(crdToChocolize))
 				|| this.grid.get(crdToChocolize).isEmpty()
 				|| this.grid.get(crdToChocolize).orElseThrow().getType() == CandyTypes.CHOCOLATE);
-		// Found non chocolate neighbor.
+		// Found non-chocolate neighbor.
 		// CHOCOLIZE IT!!!!
 		this.grid.put(crdToChocolize, Optional.of(cndFac.getChocolate()));
 		controller.getSound().playSound("chocolate_grows");
@@ -619,7 +621,7 @@ public final class GridManagerImpl implements GridManager {
 
 	private void shuffle() {
 		// Random number of times (200 may be enough?).
-		int times = rnd.nextInt(200);
+		int times = rng.nextInt(200);
 		while (times > 0) {
 			// Choose 2 normal candies and swap them.
 			Point2D a, b;
@@ -647,7 +649,7 @@ public final class GridManagerImpl implements GridManager {
 	private Point2D pickRandomCandy() {
 		// Iterate a random number of times in the map.
 		// Random pos.
-		int pos = rnd.nextInt(this.grid.size());
+		int pos = rng.nextInt(this.grid.size());
 		// Iterator.
 		final Iterator<Point2D> it = this.grid.keySet().iterator();
 		// Getting pos° candy.
@@ -659,8 +661,8 @@ public final class GridManagerImpl implements GridManager {
 	}
 
 	private boolean mergeTwoCandies(final Point2D a, final Point2D b) {
-		CandyTypes aT = this.grid.get(a).orElseThrow().getType();
-		CandyTypes bT = this.grid.get(b).orElseThrow().getType();
+		final CandyTypes aT = this.grid.get(a).orElseThrow().getType();
+		final CandyTypes bT = this.grid.get(b).orElseThrow().getType();
 		// In case they are the same.
 		if (aT == bT
 				|| (aT == CandyTypes.STRIPED_HORIZONTAL && bT == CandyTypes.STRIPED_VERTICAL)

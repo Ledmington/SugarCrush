@@ -18,19 +18,19 @@
 package view.sounds;
 
 /**
- * An interface that allows to play the sounds of the game
+ * An interface that allows to play the sounds of the game.
  *
  * @author Emanuele Lamagna
  */
 public interface Sound {
 
 	/**
-	 * Plays the sound passed by parameter (with his name)
+	 * Plays the sound passed by parameter (with his name).
 	 *
 	 * @param sound the sound to be played
 	 */
 	void playSound(final String sound);
 
-	/** If the sound is on, sets it off, otherwise the opposite */
+	/** If the sound is on, sets it off, otherwise the opposite. */
 	void setSoundEnabled();
 }

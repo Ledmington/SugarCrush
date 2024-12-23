@@ -17,22 +17,43 @@
  */
 package controller.image;
 
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import javax.swing.ImageIcon;
 
 import model.game.grid.candies.Candy;
 
-/**
- * Manages the usage of candies' images in memory.
- *
- * @author Filippo Barbari
- */
-public interface ImageManager {
+/** @author Filippo Barbari */
+public final class ImageManager {
+
+	private static final Map<Candy, ImageIcon> candyImages = new HashMap<>();
+
+	private ImageManager() {}
+
+	private static String getCandyImageFileName(final Candy c) {
+		return "candyImages/" + c.getType().name() + "_" + c.getColor().name() + ".jpeg";
+	}
+
+	private static ImageIcon loadImage(final Candy cnd) {
+		Objects.requireNonNull(cnd);
+		final URL imageUrl = ClassLoader.getSystemResource(getCandyImageFileName(cnd));
+		return new ImageIcon(imageUrl);
+	}
 
 	/**
-	 * Given a {@link Candy} it return the image of that {@link Candy}.
+	 * Given a {@link Candy} it returns the image of that {@link Candy}.
 	 *
 	 * @param candy The candy describing the image you need.
 	 * @return An {@link ImageIcon} of the {@link Candy} passed.
 	 */
-	ImageIcon getCandyImage(final Candy candy);
+	public static ImageIcon getCandyImage(final Candy candy) {
+		// Lazy update
+		if (!candyImages.containsKey(candy)) {
+			candyImages.put(candy, loadImage(candy));
+		}
+		return candyImages.get(candy);
+	}
 }

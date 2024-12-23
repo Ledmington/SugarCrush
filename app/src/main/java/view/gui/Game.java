@@ -40,7 +40,6 @@ import javax.swing.SwingUtilities;
 
 import controller.Controller;
 import controller.image.ImageManager;
-import controller.image.ImageManagerImpl;
 import model.game.grid.candies.Candy;
 import utils.Point2D;
 import view.View;
@@ -58,9 +57,8 @@ public final class Game extends GUI {
 
 	private final JLabel scoreLabel = new JLabel();
 	private final JLabel movesLabel = new JLabel();
-	private final JLabel progrLabel = new JLabel("0%");
+	private final JLabel progressLabel = new JLabel("0%");
 	private final transient Map<JButton, Point2D> buttons = new HashMap<>();
-	private final transient ImageManager im = new ImageManagerImpl();
 	private final boolean slowShow;
 	private final JPanel gameGrid = new JPanel();
 	private final JPanel mainPanel;
@@ -170,7 +168,7 @@ public final class Game extends GUI {
 		if (controller.getObjective().getChallenge().isPresent()
 				&& !controller.getObjective().getChallenge().orElseThrow().isJellyToDestroy()) {
 			labelsPanel.add(new JLabel("Progression: "));
-			labelsPanel.add(progrLabel);
+			labelsPanel.add(progressLabel);
 		}
 
 		// Hint button.
@@ -280,7 +278,7 @@ public final class Game extends GUI {
 		final Map<Point2D, Optional<Candy>> grid = controller.getGrid();
 		buttons.forEach((jbt, crd) -> {
 			if (grid.get(crd).isPresent()) {
-				jbt.setIcon(im.getCandyImage(grid.get(crd).orElseThrow()));
+				jbt.setIcon(ImageManager.getCandyImage(grid.get(crd).orElseThrow()));
 			} else {
 				jbt.setIcon(null);
 			}
@@ -314,7 +312,7 @@ public final class Game extends GUI {
 
 		scoreLabel.setText(String.format("%04d", controller.getCurrentScore().getScore()));
 		movesLabel.setText(String.valueOf(controller.getRemainingMoves()));
-		progrLabel.setText((int) controller.getPercent() + "%");
+		progressLabel.setText((int) controller.getPercent() + "%");
 
 		if (!SwingUtilities.isEventDispatchThread()) {
 			try {
@@ -328,7 +326,8 @@ public final class Game extends GUI {
 		}
 		if (slowShow) {
 			try {
-				Thread.sleep(50);
+				// Thread.sleep(50);
+				Thread.sleep(20); // faster
 			} catch (final InterruptedException e) {
 				throw new RuntimeException(e);
 			}
