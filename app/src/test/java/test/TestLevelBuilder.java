@@ -28,7 +28,7 @@ import model.game.grid.candies.CandyColors;
 import model.game.level.LevelBuilder;
 import model.game.level.LevelBuilderImpl;
 import model.game.level.stage.StageBuilderImpl;
-import model.objectives.ObjectiveFactoryImpl;
+import model.objectives.ObjectiveFactory;
 
 /** @author Filippo Barbari */
 public final class TestLevelBuilder {
@@ -54,7 +54,7 @@ public final class TestLevelBuilder {
 						.addAvailableColor(CandyColors.BLUE)
 						.addAvailableColor(CandyColors.GREEN)
 						.addAvailableColor(CandyColors.RED)
-						.setObjective(new ObjectiveFactoryImpl().explode())
+						.setObjective(ObjectiveFactory.explode())
 						.setController(controller)
 						.build())
 				.setController(controller)
@@ -74,7 +74,7 @@ public final class TestLevelBuilder {
 						.addAvailableColor(CandyColors.BLUE)
 						.addAvailableColor(CandyColors.GREEN)
 						.addAvailableColor(CandyColors.RED)
-						.setObjective(new ObjectiveFactoryImpl().explode())
+						.setObjective(ObjectiveFactory.explode())
 						.setController(controller)
 						.build())
 				.setController(controller)
@@ -87,7 +87,7 @@ public final class TestLevelBuilder {
 						.addAvailableColor(CandyColors.BLUE)
 						.addAvailableColor(CandyColors.GREEN)
 						.addAvailableColor(CandyColors.RED)
-						.setObjective(new ObjectiveFactoryImpl().explode())
+						.setObjective(ObjectiveFactory.explode())
 						.setController(controller)
 						.build()));
 

@@ -32,7 +32,7 @@ import model.game.level.Level;
 import model.game.level.LevelBuilderImpl;
 import model.game.level.stage.Stage;
 import model.game.level.stage.StageBuilderImpl;
-import model.objectives.ObjectiveFactoryImpl;
+import model.objectives.ObjectiveFactory;
 
 /** @author Filippo Barbari */
 public final class TestLevel {
@@ -48,7 +48,7 @@ public final class TestLevel {
 				.addAvailableColor(CandyColors.GREEN)
 				.addAvailableColor(CandyColors.ORANGE)
 				.addAvailableColor(CandyColors.PURPLE)
-				.setObjective(new ObjectiveFactoryImpl().explode())
+				.setObjective(ObjectiveFactory.explode())
 				.setController(controller)
 				.build();
 		final Stage s2 = new StageBuilderImpl()
@@ -57,7 +57,7 @@ public final class TestLevel {
 				.addAvailableColor(CandyColors.GREEN)
 				.addAvailableColor(CandyColors.ORANGE)
 				.addAvailableColor(CandyColors.PURPLE)
-				.setObjective(new ObjectiveFactoryImpl().explode())
+				.setObjective(ObjectiveFactory.explode())
 				.setController(controller)
 				.build();
 		l = new LevelBuilderImpl()

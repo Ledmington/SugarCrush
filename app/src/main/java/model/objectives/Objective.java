@@ -62,6 +62,10 @@ public interface Objective {
 		}
 	}
 
+	static ObjectiveBuilder builder() {
+		return new ObjectiveBuilderImpl();
+	}
+
 	/**
 	 * Getter of the score to reach in the level
 	 *

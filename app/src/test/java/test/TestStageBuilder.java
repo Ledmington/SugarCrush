@@ -35,14 +35,12 @@ import model.game.grid.candies.CandyFactory;
 import model.game.level.stage.StageBuilder;
 import model.game.level.stage.StageBuilderImpl;
 import model.objectives.ObjectiveFactory;
-import model.objectives.ObjectiveFactoryImpl;
 import utils.Point2D;
 
 /** @author Filippo Barbari */
 public final class TestStageBuilder {
 
 	private StageBuilder sb;
-	private ObjectiveFactory of;
 	private Controller controller;
 
 	public TestStageBuilder() {}
@@ -50,7 +48,6 @@ public final class TestStageBuilder {
 	@BeforeEach
 	public void prepare() {
 		sb = new StageBuilderImpl();
-		of = new ObjectiveFactoryImpl();
 		controller = new ControllerImpl();
 	}
 
@@ -147,7 +144,7 @@ public final class TestStageBuilder {
 				.addAvailableColor(CandyColors.ORANGE)
 				.addAvailableColor(CandyColors.YELLOW)
 				.addAvailableColor(CandyColors.RED)
-				.setObjective(of.explode())
+				.setObjective(ObjectiveFactory.explode())
 				.setController(controller)
 				.build();
 		assertThrows(IllegalStateException.class, () -> sb.build());
@@ -202,7 +199,7 @@ public final class TestStageBuilder {
 				.addAvailableColor(CandyColors.ORANGE)
 				.addAvailableColor(CandyColors.YELLOW)
 				.addAvailableColor(CandyColors.RED)
-				.setObjective(of.explode())
+				.setObjective(ObjectiveFactory.explode())
 				.setController(controller)
 				.build();
 
@@ -214,6 +211,6 @@ public final class TestStageBuilder {
 		assertThrows(IllegalStateException.class, () -> sb.setEmptyCells(new HashSet<>()));
 		assertThrows(IllegalStateException.class, () -> sb.setEndingMessage("Bye"));
 		assertThrows(IllegalStateException.class, () -> sb.setStartingMessage("Hello"));
-		assertThrows(IllegalStateException.class, () -> sb.setObjective(of.lineParty()));
+		assertThrows(IllegalStateException.class, () -> sb.setObjective(ObjectiveFactory.lineParty()));
 	}
 }

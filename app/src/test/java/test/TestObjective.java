@@ -30,60 +30,58 @@ import model.objectives.ChallengeBuilder;
 import model.objectives.ChallengeBuilderImpl;
 import model.objectives.Objective;
 import model.objectives.ObjectiveBuilder;
-import model.objectives.ObjectiveBuilderImpl;
-import model.objectives.ObjectiveFactoryImpl;
+import model.objectives.ObjectiveFactory;
 
 /**
- * A class that tests the right operation of the {@link Objective} creation
+ * A class that tests the right operation of the {@link Objective} creation.
  *
  * @author Emanuele Lamagna
  */
 public final class TestObjective {
 
-	private Objective ob;
 	private ObjectiveBuilder obb;
 	private ChallengeBuilder ch;
 
-	/** Creates a normal {@link Objective} */
+	/** Creates normal {@link Objective}. */
 	@Test
 	public void testNormalObjective() {
-		ob = new ObjectiveFactoryImpl().normal();
+		final Objective ob = ObjectiveFactory.normal();
 		assertEquals(ob.getChallenge(), Optional.empty());
 	}
 
-	/** Creates an explode {@link Objective} */
+	/** Creates an explode {@link Objective}. */
 	@Test
 	public void testExplodeObjective() {
-		ob = new ObjectiveFactoryImpl().explode();
+		final Objective ob = ObjectiveFactory.explode();
 		assertNotEquals(ob.getChallenge(), Optional.empty());
 		assertEquals(ob.getChallenge().orElseThrow().getWrappedToFarm(), Objective.Values.DEF_WRAPPED.getValue());
 		assertEquals(0, ob.getChallenge().orElseThrow().getFrecklesToFarm());
 	}
 
-	/** Test if an {@link Objective} can be built twice */
+	/** Test if an {@link Objective} can be built twice. */
 	@Test
 	public void testDoubleBuildObjective() {
-		obb = new ObjectiveBuilderImpl();
+		obb = Objective.builder();
 		obb.setMaxScore(10000).setMaxMoves(20).build();
 		assertThrows(IllegalStateException.class, () -> obb.build());
 	}
 
-	/** Test if an {@link Objective} can have an empty string */
+	/** Test if an {@link Objective} can have an empty string. */
 	@Test
 	public void testStringNotEmpty() {
-		obb = new ObjectiveBuilderImpl();
+		obb = Objective.builder();
 		obb.setMaxScore(10000).setMaxMoves(20);
 		assertThrows(IllegalArgumentException.class, () -> obb.setObjectiveText(""));
 	}
 
-	/** Test if an {@link Objective} can have a negative parameter */
+	/** Test if an {@link Objective} can have a negative parameter. */
 	@Test
 	public void testNotNegativeObjective() {
-		obb = new ObjectiveBuilderImpl();
+		obb = Objective.builder();
 		assertThrows(IllegalArgumentException.class, () -> obb.setMaxScore(-1));
 	}
 
-	/** Test if a {@link Challenge} can be built twice */
+	/** Test if a {@link Challenge} can be built twice. */
 	@Test
 	public void testDoubleBuildChallenge() {
 		ch = new ChallengeBuilderImpl();

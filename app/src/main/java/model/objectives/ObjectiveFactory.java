@@ -17,53 +17,111 @@
  */
 package model.objectives;
 
+import java.util.Optional;
+
 /**
  * A class that creates an {@link Objective} (using the factory method pattern). If the {@link Challenge} is empty, the
- * player only has to reach the score in the def moves, otherwise he has to complete the {@link Challenge} too
+ * player only has to reach the score in the def moves; otherwise he has to complete the {@link Challenge} too.
  *
  * @author Emanuele Lamagna
  */
-public interface ObjectiveFactory {
+public final class ObjectiveFactory {
+
+	private ObjectiveFactory() {}
 
 	/**
 	 * The player doesn't have any {@link Challenge}
 	 *
 	 * @return a new Objective
 	 */
-	Objective normal();
+	public static Objective normal() {
+		return Objective.builder()
+				.setMaxScore(Objective.Values.DEF_SCORE.getValue())
+				.setObjectiveText("Reach a score of " + Objective.Values.DEF_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves!")
+				.build();
+	}
 
 	/**
-	 * The player has to destroy 10 red candies, 10 yellow candies and 10 blue candies
+	 * The player has to destroy 10 red candies, 10 yellow candies and 10 blue candies.
 	 *
 	 * @return a new {@link Objective}
 	 */
-	Objective primary();
+	public static Objective primary() {
+		return Objective.builder()
+				.setChallenge(Optional.of(new ChallengeBuilderImpl()
+						.setRed(Objective.Values.DEF_RED.getValue())
+						.setBlue(Objective.Values.DEF_BLUE.getValue())
+						.setYellow(Objective.Values.DEF_YELLOW.getValue())
+						.build()))
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue()
+						+ " moves and destroy "
+						+ Objective.Values.DEF_RED.getValue() + " red candies, "
+						+ Objective.Values.DEF_YELLOW.getValue() + " yellow candies and "
+						+ Objective.Values.DEF_BLUE.getValue() + " blue candies!")
+				.build();
+	}
 
 	/**
-	 * The player has to farm 4 striped candies
+	 * The player has to farm four striped candies.
 	 *
 	 * @return a new {@link Objective}
 	 */
-	Objective lineParty();
+	public static Objective lineParty() {
+		return Objective.builder()
+				.setChallenge(Optional.of(new ChallengeBuilderImpl()
+						.setStriped(Objective.Values.DEF_STRIPED.getValue())
+						.build()))
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves and farm "
+						+ Objective.Values.DEF_STRIPED.getValue() + " striped candies!")
+				.build();
+	}
 
 	/**
-	 * The player has to farm 2 wrapped candies
+	 * The player has to farm two wrapped candies.
 	 *
 	 * @return a new {@link Objective}
 	 */
-	Objective explode();
+	public static Objective explode() {
+		return Objective.builder()
+				.setChallenge(Optional.of(new ChallengeBuilderImpl()
+						.setWrapped(Objective.Values.DEF_WRAPPED.getValue())
+						.build()))
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves and farm "
+						+ Objective.Values.DEF_WRAPPED.getValue() + " wrapped candies!")
+				.build();
+	}
 
 	/**
-	 * The player has to farm 1 freckles candies
+	 * The player has to farm one freckles candies.
 	 *
 	 * @return a new {@link Objective}
 	 */
-	Objective multiBombs();
+	public static Objective multiBombs() {
+		return Objective.builder()
+				.setChallenge(Optional.of(new ChallengeBuilderImpl()
+						.setFreckles(Objective.Values.DEF_FRECKLES.getValue())
+						.build()))
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves and farm "
+						+ Objective.Values.DEF_FRECKLES.getValue() + " freckles candies!")
+				.build();
+	}
 
 	/**
-	 * The player has to destroy all jelly
+	 * The player has to destroy all jelly.
 	 *
 	 * @return a new {@link Objective}
 	 */
-	Objective jelly();
+	public static Objective jelly() {
+		return Objective.builder()
+				.setChallenge(Optional.of(
+						new ChallengeBuilderImpl().setDestroyJelly(true).build()))
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves and destroy all jelly!")
+				.build();
+	}
 }

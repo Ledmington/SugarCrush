@@ -33,10 +33,9 @@ import model.game.level.stage.Stage;
 import model.game.level.stage.StageBuilderImpl;
 import model.objectives.ChallengeBuilder;
 import model.objectives.ChallengeBuilderImpl;
+import model.objectives.Objective;
 import model.objectives.ObjectiveBuilder;
-import model.objectives.ObjectiveBuilderImpl;
 import model.objectives.ObjectiveFactory;
-import model.objectives.ObjectiveFactoryImpl;
 import utils.Point2D;
 
 /**
@@ -56,7 +55,6 @@ public final class LevelsManagerImpl implements LevelsManager {
 
 	public LevelsManagerImpl(final Controller controller) {
 		super();
-		final ObjectiveFactory of = new ObjectiveFactoryImpl();
 
 		/*
 		 * SCHEME OF TUTORIAL, STAGE 1
@@ -113,7 +111,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 		tutorialMap3.put(new Point2D(2, 3), CandyFactory.getWrapped(CandyColors.RED));
 
 		tutorial = () -> {
-			ObjectiveBuilder ob = new ObjectiveBuilderImpl();
+			ObjectiveBuilder ob = Objective.builder();
 			final Stage s1 = new StageBuilderImpl()
 					.setDimensions(3, 3)
 					.setCandies(tutorialMap1)
@@ -130,7 +128,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 					.setController(controller)
 					.build();
 
-			ob = new ObjectiveBuilderImpl();
+			ob = Objective.builder();
 			ChallengeBuilder cb = new ChallengeBuilderImpl();
 
 			final Stage s2 = new StageBuilderImpl()
@@ -151,7 +149,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 					.setController(controller)
 					.build();
 
-			ob = new ObjectiveBuilderImpl();
+			ob = Objective.builder();
 
 			final Stage s3 = new StageBuilderImpl()
 					.setDimensions(5, 4)
@@ -186,7 +184,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 		};
 
 		/*
-		 * Level 1 :
+		 * Level 1:
 		 * Normal square grid (6x6)
 		 * normal objective
 		 * 4 colors
@@ -198,14 +196,14 @@ public final class LevelsManagerImpl implements LevelsManager {
 						.addAvailableColor(CandyColors.RED)
 						.addAvailableColor(CandyColors.YELLOW)
 						.addAvailableColor(CandyColors.ORANGE)
-						.setObjective(of.normal())
+						.setObjective(ObjectiveFactory.normal())
 						.setController(controller)
 						.build())
 				.setController(controller)
 				.build());
 
 		/*
-		 * Level 2 :
+		 * Level 2:
 		 * Smaller grid (5x5) without corners
 		 * normal objective
 		 * 4 colors
@@ -225,7 +223,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 							.addAvailableColor(CandyColors.RED)
 							.addAvailableColor(CandyColors.YELLOW)
 							.addAvailableColor(CandyColors.ORANGE)
-							.setObjective(of.normal())
+							.setObjective(ObjectiveFactory.normal())
 							.setController(controller)
 							.build())
 					.setController(controller)
@@ -233,7 +231,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 		});
 
 		/*
-		 * Level 3 :
+		 * Level 3:
 		 * Normal square grid (6x6) without center
 		 * 'primary' objective
 		 * 4 colors
@@ -252,7 +250,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 							.addAvailableColor(CandyColors.BLUE)
 							.addAvailableColor(CandyColors.RED)
 							.addAvailableColor(CandyColors.YELLOW)
-							.setObjective(of.primary())
+							.setObjective(ObjectiveFactory.primary())
 							.setController(controller)
 							.build())
 					.setController(controller)
@@ -260,7 +258,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 		});
 
 		/*
-		 * Level 4 :
+		 * Level 4:
 		 * big horizontal rectangle grid (6x8)
 		 * 'jelly' objective
 		 * 4 colors
@@ -273,14 +271,14 @@ public final class LevelsManagerImpl implements LevelsManager {
 						.addAvailableColor(CandyColors.RED)
 						.addAvailableColor(CandyColors.YELLOW)
 						.addAvailableColor(CandyColors.ORANGE)
-						.setObjective(of.jelly())
+						.setObjective(ObjectiveFactory.jelly())
 						.setController(controller)
 						.build())
 				.setController(controller)
 				.build());
 
 		/*
-		 * Level 5 :
+		 * Level 5:
 		 * big vertical rectangle grid (8x6) without corners
 		 * 'multiBombs' objective
 		 * chocolate (on bottom)
@@ -302,7 +300,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 							.addAvailableColor(CandyColors.RED)
 							.addAvailableColor(CandyColors.YELLOW)
 							.addAvailableColor(CandyColors.ORANGE)
-							.setObjective(of.multiBombs())
+							.setObjective(ObjectiveFactory.multiBombs())
 							.setController(controller)
 							.build())
 					.setController(controller)
@@ -325,7 +323,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 						.addAvailableColor(CandyColors.YELLOW)
 						.addAvailableColor(CandyColors.ORANGE)
 						.addAvailableColor(CandyColors.GREEN)
-						.setObjective(of.lineParty())
+						.setObjective(ObjectiveFactory.lineParty())
 						.setController(controller)
 						.build())
 				.setController(controller)
@@ -345,7 +343,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 						.addAvailableColor(CandyColors.YELLOW)
 						.addAvailableColor(CandyColors.ORANGE)
 						.addAvailableColor(CandyColors.GREEN)
-						.setObjective(of.explode())
+						.setObjective(ObjectiveFactory.explode())
 						.setController(controller)
 						.build())
 				.setController(controller)
@@ -368,7 +366,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 						.addAvailableColor(CandyColors.GREEN)
 						.addAvailableColor(CandyColors.PURPLE)
 						.addChocolatePosition(new Point2D(7, 2))
-						.setObjective(of.lineParty())
+						.setObjective(ObjectiveFactory.lineParty())
 						.setController(controller)
 						.build())
 				.setController(controller)
@@ -416,7 +414,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 							.addAvailableColor(CandyColors.ORANGE)
 							.addAvailableColor(CandyColors.GREEN)
 							.addAvailableColor(CandyColors.PURPLE)
-							.setObjective(of.jelly())
+							.setObjective(ObjectiveFactory.jelly())
 							.setController(controller)
 							.build())
 					.setController(controller)
@@ -445,7 +443,7 @@ public final class LevelsManagerImpl implements LevelsManager {
 						.addAvailableColor(CandyColors.ORANGE)
 						.addAvailableColor(CandyColors.GREEN)
 						.addAvailableColor(CandyColors.PURPLE)
-						.setObjective(of.lineParty())
+						.setObjective(ObjectiveFactory.lineParty())
 						.setController(controller)
 						.build())
 				.setController(controller)

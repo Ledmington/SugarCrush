@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Implementation of {@link ObjectiveBuilder}
+ * Implementation of {@link ObjectiveBuilder}.
  *
  * @author Emanuele Lamagna
  */

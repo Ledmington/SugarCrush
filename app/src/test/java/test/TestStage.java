@@ -34,7 +34,6 @@ import model.game.grid.candies.CandyFactory;
 import model.game.level.stage.Stage;
 import model.game.level.stage.StageBuilderImpl;
 import model.objectives.ObjectiveFactory;
-import model.objectives.ObjectiveFactoryImpl;
 import utils.Point2D;
 
 /** @author Filippo Barbari */
@@ -47,7 +46,6 @@ public final class TestStage {
 
 	@BeforeEach
 	public void prepare() {
-		final ObjectiveFactory of = new ObjectiveFactoryImpl();
 		final Controller controller = new ControllerImpl();
 
 		m.put(new Point2D(0, 0), CandyFactory.getNormalCandy(CandyColors.BLUE));
@@ -63,7 +61,7 @@ public final class TestStage {
 		s = new StageBuilderImpl()
 				.setDimensions(3, 3)
 				.setCandies(m)
-				.setObjective(of.explode())
+				.setObjective(ObjectiveFactory.explode())
 				.setController(controller)
 				.build();
 	}
