@@ -32,7 +32,6 @@ import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyBuilderImpl;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyFactory;
-import model.game.grid.candies.CandyFactoryImpl;
 import model.game.grid.candies.CandyTypes;
 import model.game.grid.shapes.ShapeCoordinates;
 import model.game.grid.shapes.Shapes;
@@ -46,7 +45,6 @@ public final class GridManagerImpl implements GridManager {
 			RandomGeneratorFactory.getDefault().create(System.nanoTime());
 
 	private final Map<Point2D, Optional<Candy>> grid;
-	private final CandyFactory cndFac;
 	private final Status score;
 	private final List<CandyColors> spawnedCandyColors;
 	private boolean updateScore;
@@ -69,7 +67,6 @@ public final class GridManagerImpl implements GridManager {
 		this.grid = new HashMap<>(initialGrid);
 		this.spawnedCandyColors = colors;
 		this.score = score;
-		this.cndFac = new CandyFactoryImpl();
 		this.dropCandies();
 		this.updateScore = true;
 		if (jelly) {
@@ -404,25 +401,25 @@ public final class GridManagerImpl implements GridManager {
 							// Adding special candy if needed.
 							switch (shp.getCandyType()) {
 								case FRECKLES:
-									this.grid.put(crd, Optional.of(cndFac.getFreckles()));
+									this.grid.put(crd, Optional.of(CandyFactory.getFreckles()));
 									if (this.updateScore) {
 										controller.getSound().playSound("colour_bomb_created");
 									}
 									break;
 								case STRIPED_HORIZONTAL:
-									this.grid.put(crd, Optional.of(cndFac.getHorizontalStriped(cndCol)));
+									this.grid.put(crd, Optional.of(CandyFactory.getHorizontalStriped(cndCol)));
 									if (this.updateScore) {
 										controller.getSound().playSound("striped_candy_created1");
 									}
 									break;
 								case STRIPED_VERTICAL:
-									this.grid.put(crd, Optional.of(cndFac.getVerticalStripedCandy(cndCol)));
+									this.grid.put(crd, Optional.of(CandyFactory.getVerticalStripedCandy(cndCol)));
 									if (this.updateScore) {
 										controller.getSound().playSound("striped_candy_created1");
 									}
 									break;
 								case WRAPPED:
-									this.grid.put(crd, Optional.of(cndFac.getWrapped(cndCol)));
+									this.grid.put(crd, Optional.of(CandyFactory.getWrapped(cndCol)));
 									if (this.updateScore) {
 										controller.getSound().playSound("wrapped_candy_created1");
 									}
@@ -456,14 +453,14 @@ public final class GridManagerImpl implements GridManager {
 						final Point2D p = new Point2D(crd.x() - i, crd.y());
 
 						if (this.grid.containsKey(p)) {
-							// If candy is empty we don't need to drop that one.
+							// If candy is empty, we don't need to drop that one.
 							if (this.grid.get(p).isEmpty()) {
 								found = true;
 								break;
 							}
 							// Candy found.
 							tmp = this.grid.get(p);
-							// Here upper candy disappear.
+							// Here upper candy disappears.
 							this.grid.put(p, Optional.empty());
 							found = true;
 							break;
@@ -471,7 +468,7 @@ public final class GridManagerImpl implements GridManager {
 					}
 					// If no candy was found, we generate a new one.
 					if (!found) {
-						tmp = Optional.of(cndFac.getNormalCandy(
+						tmp = Optional.of(CandyFactory.getNormalCandy(
 								this.spawnedCandyColors.get(rng.nextInt(this.spawnedCandyColors.size()))));
 					}
 
@@ -544,11 +541,11 @@ public final class GridManagerImpl implements GridManager {
 			if (this.grid.get(relCord).orElseThrow().getType() == CandyTypes.FRECKLES) {
 				return false;
 			}
-			// Same color.
-			// If shape is a near one we check for the match of colors with last relative
+			// Same colour.
+			// If the shape is near, we check for the match of colours with last relative
 			// coordinates.
 			// Else
-			// We check for the match of colors with original one.
+			// We check for the match of colours with the original one.
 			if ((near)
 					? this.grid.get(last.orElseThrow()).orElseThrow().getColor()
 							!= this.grid.get(relCord).orElseThrow().getColor()
@@ -563,15 +560,15 @@ public final class GridManagerImpl implements GridManager {
 	private void updateChocolate() {
 		final List<Point2D> relMov = Arrays.asList( // Up - Down - Left - Right
 				new Point2D(-1, 0), new Point2D(1, 0), new Point2D(0, -1), new Point2D(0, 1));
-		// Choose a random chocolate candy.
+		// Choose random chocolate candy.
 		final List<Point2D> chcList = new ArrayList<>();
-		// Filling chcList with chocolate coordinates (that has no chocolate neighbor).
+		// Filling chcList with chocolate coordinates (that have no chocolate neighbour).
 		for (final Point2D crd : this.grid.keySet()) {
 			// Not empty.
 			if (this.grid.get(crd).isPresent()) {
 				// Is chocolate.
 				if (this.grid.get(crd).orElseThrow().getType() == CandyTypes.CHOCOLATE) {
-					// Has non-chocolate neighbor.
+					// Has a non-chocolate neighbour.
 					boolean onlyChocolate = true;
 					Point2D tmp;
 					for (final Point2D rel : relMov) {
@@ -600,7 +597,7 @@ public final class GridManagerImpl implements GridManager {
 		// Select random chocolate.
 		final Point2D crdRandom = chcList.get(rng.nextInt(chcList.size()));
 		Point2D crdToChocolize;
-		// Select random neighbor.
+		// Select a random neighbour.
 		do {
 			int rndInd = rng.nextInt(relMov.size());
 			crdToChocolize = new Point2D(
@@ -609,9 +606,9 @@ public final class GridManagerImpl implements GridManager {
 		} while ((!this.grid.containsKey(crdToChocolize))
 				|| this.grid.get(crdToChocolize).isEmpty()
 				|| this.grid.get(crdToChocolize).orElseThrow().getType() == CandyTypes.CHOCOLATE);
-		// Found non-chocolate neighbor.
+		// Found a non-chocolate neighbour.
 		// CHOCOLIZE IT!!!!
-		this.grid.put(crdToChocolize, Optional.of(cndFac.getChocolate()));
+		this.grid.put(crdToChocolize, Optional.of(CandyFactory.getChocolate()));
 		controller.getSound().playSound("chocolate_grows");
 
 		//	if (!this.controller.isStageEnded()) {

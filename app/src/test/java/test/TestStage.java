@@ -31,7 +31,6 @@ import controller.ControllerImpl;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyFactory;
-import model.game.grid.candies.CandyFactoryImpl;
 import model.game.level.stage.Stage;
 import model.game.level.stage.StageBuilderImpl;
 import model.objectives.ObjectiveFactory;
@@ -48,19 +47,18 @@ public final class TestStage {
 
 	@BeforeEach
 	public void prepare() {
-		final CandyFactory cf = new CandyFactoryImpl();
 		final ObjectiveFactory of = new ObjectiveFactoryImpl();
 		final Controller controller = new ControllerImpl();
 
-		m.put(new Point2D(0, 0), cf.getNormalCandy(CandyColors.BLUE));
-		m.put(new Point2D(0, 1), cf.getNormalCandy(CandyColors.RED));
-		m.put(new Point2D(0, 2), cf.getNormalCandy(CandyColors.YELLOW));
-		m.put(new Point2D(1, 0), cf.getNormalCandy(CandyColors.PURPLE));
-		m.put(new Point2D(1, 1), cf.getNormalCandy(CandyColors.YELLOW));
-		m.put(new Point2D(1, 2), cf.getNormalCandy(CandyColors.BLUE));
-		m.put(new Point2D(2, 0), cf.getNormalCandy(CandyColors.RED));
-		m.put(new Point2D(2, 1), cf.getNormalCandy(CandyColors.ORANGE));
-		m.put(new Point2D(2, 2), cf.getNormalCandy(CandyColors.ORANGE));
+		m.put(new Point2D(0, 0), CandyFactory.getNormalCandy(CandyColors.BLUE));
+		m.put(new Point2D(0, 1), CandyFactory.getNormalCandy(CandyColors.RED));
+		m.put(new Point2D(0, 2), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		m.put(new Point2D(1, 0), CandyFactory.getNormalCandy(CandyColors.PURPLE));
+		m.put(new Point2D(1, 1), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		m.put(new Point2D(1, 2), CandyFactory.getNormalCandy(CandyColors.BLUE));
+		m.put(new Point2D(2, 0), CandyFactory.getNormalCandy(CandyColors.RED));
+		m.put(new Point2D(2, 1), CandyFactory.getNormalCandy(CandyColors.ORANGE));
+		m.put(new Point2D(2, 2), CandyFactory.getNormalCandy(CandyColors.ORANGE));
 
 		s = new StageBuilderImpl()
 				.setDimensions(3, 3)

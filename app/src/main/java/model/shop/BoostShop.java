@@ -26,7 +26,7 @@ import controller.Controller;
 import controller.files.FileTypes;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyColors;
-import model.game.grid.candies.CandyFactoryImpl;
+import model.game.grid.candies.CandyFactory;
 import model.game.grid.candies.CandyTypes;
 import model.players.PlayerManagerImpl;
 import model.score.Status;
@@ -67,23 +67,22 @@ public final class BoostShop {
 				case 0:
 					flag = false;
 					// boost to add at the shop
-					candy = new CandyFactoryImpl().getFreckles();
+					candy = CandyFactory.getFreckles();
 					this.boosts.add(new Boost(CandyTypes.FRECKLES.name(), FRECKLESPRICE, candy));
-
 					break;
 				case 1:
 					flag = false;
-					candy = new CandyFactoryImpl().getHorizontalStriped(color);
+					candy = CandyFactory.getHorizontalStriped(color);
 					this.boosts.add(new Boost(CandyTypes.STRIPED_HORIZONTAL.name(), STRIPEDPRICE, candy));
 					break;
 				case 2:
 					flag = false;
-					candy = new CandyFactoryImpl().getVerticalStripedCandy(color);
+					candy = CandyFactory.getVerticalStripedCandy(color);
 					this.boosts.add(new Boost(CandyTypes.STRIPED_VERTICAL.name(), STRIPEDPRICE, candy));
 					break;
 				case 3:
 					flag = false;
-					candy = new CandyFactoryImpl().getWrapped(color);
+					candy = CandyFactory.getWrapped(color);
 					this.boosts.add(new Boost(CandyTypes.WRAPPED.name(), WRAPPEDPRICE, candy));
 					break;
 				default:

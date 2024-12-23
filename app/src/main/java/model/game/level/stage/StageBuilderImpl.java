@@ -31,7 +31,6 @@ import model.game.grid.GridManagerImpl;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyFactory;
-import model.game.grid.candies.CandyFactoryImpl;
 import model.objectives.Objective;
 import model.score.StatusImpl;
 import utils.Point2D;
@@ -188,12 +187,10 @@ public final class StageBuilderImpl implements StageBuilder {
 
 		alreadyBuilt = true;
 
-		List<CandyColors> colorList = new ArrayList<>(colors);
-
-		CandyFactory cf = new CandyFactoryImpl();
+		final List<CandyColors> colorList = new ArrayList<>(colors);
 
 		// Adding chocolate to map
-		chocolate.forEach(p -> grid.put(p, Optional.of(cf.getChocolate())));
+		chocolate.forEach(p -> grid.put(p, Optional.of(CandyFactory.getChocolate())));
 
 		return new StageImpl(
 				new GridManagerImpl(

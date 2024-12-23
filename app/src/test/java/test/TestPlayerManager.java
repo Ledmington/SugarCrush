@@ -31,7 +31,7 @@ import controller.ControllerImpl;
 import controller.files.FileTypes;
 import controller.files.StatsTypes;
 import model.game.grid.candies.CandyColors;
-import model.game.grid.candies.CandyFactoryImpl;
+import model.game.grid.candies.CandyFactory;
 import model.game.grid.shapes.Shapes;
 import model.players.PlayerManager;
 import model.players.PlayerManagerImpl;
@@ -71,8 +71,8 @@ public final class TestPlayerManager {
 
 		// modify all stats with score and status
 		final Status status = new StatusImpl(controller);
-		status.update(new CandyFactoryImpl().getNormalCandy(CandyColors.PURPLE));
-		status.update(new CandyFactoryImpl().getWrapped(CandyColors.BLUE));
+		status.update(CandyFactory.getNormalCandy(CandyColors.PURPLE));
+		status.update(CandyFactory.getWrapped(CandyColors.BLUE));
 		status.update(Shapes.LINE_FIVE);
 		status.complete();
 		pm.setStat("tmpPlayer", status, 3);

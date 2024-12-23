@@ -32,7 +32,6 @@ import controller.ControllerImpl;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyFactory;
-import model.game.grid.candies.CandyFactoryImpl;
 import model.game.level.stage.StageBuilder;
 import model.game.level.stage.StageBuilderImpl;
 import model.objectives.ObjectiveFactory;
@@ -43,7 +42,6 @@ import utils.Point2D;
 public final class TestStageBuilder {
 
 	private StageBuilder sb;
-	private CandyFactory cf;
 	private ObjectiveFactory of;
 	private Controller controller;
 
@@ -52,19 +50,14 @@ public final class TestStageBuilder {
 	@BeforeEach
 	public void prepare() {
 		sb = new StageBuilderImpl();
-		cf = new CandyFactoryImpl();
 		of = new ObjectiveFactoryImpl();
 		controller = new ControllerImpl();
 	}
 
 	@Test
 	public void zeroOrNegativeDimensions() {
-		final String msg = "Zero or negative values shouldn't be passed as grid dimensions.";
-
 		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(5, 0));
-
 		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(0, 2));
-
 		assertThrows(IllegalArgumentException.class, () -> sb.setDimensions(-1, -1));
 	}
 
@@ -108,9 +101,8 @@ public final class TestStageBuilder {
 
 	@Test
 	public void candiesNotInGrid() {
-		final String msg = "Setting candies in unexisting positions shouldn't be allowed.";
 		final Map<Point2D, Candy> m = new HashMap<>();
-		m.put(new Point2D(3, 3), cf.getFreckles());
+		m.put(new Point2D(3, 3), CandyFactory.getFreckles());
 
 		// Setting candies without map
 		assertThrows(IllegalArgumentException.class, () -> sb.setCandies(m));
@@ -123,7 +115,7 @@ public final class TestStageBuilder {
 	@Test
 	public void twoCandiesInSamePosition() {
 		final Map<Point2D, Candy> m = new HashMap<>();
-		m.put(new Point2D(3, 3), cf.getFreckles());
+		m.put(new Point2D(3, 3), CandyFactory.getFreckles());
 
 		sb.setDimensions(5, 5).setCandies(m);
 		assertThrows(IllegalArgumentException.class, () -> sb.setCandies(m));
@@ -191,10 +183,8 @@ public final class TestStageBuilder {
 	@Test
 	public void chocolateAndCandyInSamePosition() {
 		final Map<Point2D, Candy> m = new HashMap<>();
-		m.put(new Point2D(2, 2), cf.getVerticalStripedCandy(CandyColors.BLUE));
-
+		m.put(new Point2D(2, 2), CandyFactory.getVerticalStripedCandy(CandyColors.BLUE));
 		sb.setDimensions(5, 5).setCandies(m).addChocolatePosition(new Point2D(2, 2));
-
 		assertThrows(IllegalStateException.class, () -> sb.build());
 	}
 

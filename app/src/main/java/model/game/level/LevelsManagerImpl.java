@@ -29,7 +29,6 @@ import controller.Controller;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyFactory;
-import model.game.grid.candies.CandyFactoryImpl;
 import model.game.level.stage.Stage;
 import model.game.level.stage.StageBuilderImpl;
 import model.objectives.ChallengeBuilder;
@@ -58,7 +57,6 @@ public final class LevelsManagerImpl implements LevelsManager {
 	public LevelsManagerImpl(final Controller controller) {
 		super();
 		final ObjectiveFactory of = new ObjectiveFactoryImpl();
-		final CandyFactory cf = new CandyFactoryImpl();
 
 		/*
 		 * SCHEME OF TUTORIAL, STAGE 1
@@ -67,15 +65,15 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 *    G Y G
 		 */
 		final Map<Point2D, Candy> tutorialMap1 = new HashMap<>();
-		tutorialMap1.put(new Point2D(0, 0), cf.getNormalCandy(CandyColors.GREEN));
-		tutorialMap1.put(new Point2D(0, 1), cf.getNormalCandy(CandyColors.YELLOW));
-		tutorialMap1.put(new Point2D(0, 2), cf.getNormalCandy(CandyColors.BLUE));
-		tutorialMap1.put(new Point2D(1, 0), cf.getNormalCandy(CandyColors.YELLOW));
-		tutorialMap1.put(new Point2D(1, 1), cf.getNormalCandy(CandyColors.ORANGE));
-		tutorialMap1.put(new Point2D(1, 2), cf.getNormalCandy(CandyColors.BLUE));
-		tutorialMap1.put(new Point2D(2, 0), cf.getNormalCandy(CandyColors.GREEN));
-		tutorialMap1.put(new Point2D(2, 1), cf.getNormalCandy(CandyColors.YELLOW));
-		tutorialMap1.put(new Point2D(2, 2), cf.getNormalCandy(CandyColors.GREEN));
+		tutorialMap1.put(new Point2D(0, 0), CandyFactory.getNormalCandy(CandyColors.GREEN));
+		tutorialMap1.put(new Point2D(0, 1), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		tutorialMap1.put(new Point2D(0, 2), CandyFactory.getNormalCandy(CandyColors.BLUE));
+		tutorialMap1.put(new Point2D(1, 0), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		tutorialMap1.put(new Point2D(1, 1), CandyFactory.getNormalCandy(CandyColors.ORANGE));
+		tutorialMap1.put(new Point2D(1, 2), CandyFactory.getNormalCandy(CandyColors.BLUE));
+		tutorialMap1.put(new Point2D(2, 0), CandyFactory.getNormalCandy(CandyColors.GREEN));
+		tutorialMap1.put(new Point2D(2, 1), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		tutorialMap1.put(new Point2D(2, 2), CandyFactory.getNormalCandy(CandyColors.GREEN));
 
 		/*
 		 * SCHEME OF TUTORIAL, STAGE 2
@@ -85,22 +83,22 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 *    Y O Y Y
 		 */
 		final Map<Point2D, Candy> tutorialMap2 = new HashMap<>();
-		tutorialMap2.put(new Point2D(0, 0), cf.getNormalCandy(CandyColors.ORANGE));
-		tutorialMap2.put(new Point2D(0, 1), cf.getNormalCandy(CandyColors.GREEN));
-		tutorialMap2.put(new Point2D(0, 2), cf.getNormalCandy(CandyColors.ORANGE));
-		tutorialMap2.put(new Point2D(0, 3), cf.getNormalCandy(CandyColors.BLUE));
-		tutorialMap2.put(new Point2D(1, 0), cf.getNormalCandy(CandyColors.BLUE));
-		tutorialMap2.put(new Point2D(1, 1), cf.getNormalCandy(CandyColors.GREEN));
-		tutorialMap2.put(new Point2D(1, 2), cf.getNormalCandy(CandyColors.ORANGE));
-		tutorialMap2.put(new Point2D(1, 3), cf.getNormalCandy(CandyColors.ORANGE));
-		tutorialMap2.put(new Point2D(2, 0), cf.getNormalCandy(CandyColors.BLUE));
-		tutorialMap2.put(new Point2D(2, 1), cf.getNormalCandy(CandyColors.YELLOW));
-		tutorialMap2.put(new Point2D(2, 2), cf.getNormalCandy(CandyColors.YELLOW));
-		tutorialMap2.put(new Point2D(2, 3), cf.getNormalCandy(CandyColors.BLUE));
-		tutorialMap2.put(new Point2D(3, 0), cf.getNormalCandy(CandyColors.YELLOW));
-		tutorialMap2.put(new Point2D(3, 1), cf.getNormalCandy(CandyColors.ORANGE));
-		tutorialMap2.put(new Point2D(3, 2), cf.getNormalCandy(CandyColors.YELLOW));
-		tutorialMap2.put(new Point2D(3, 3), cf.getNormalCandy(CandyColors.YELLOW));
+		tutorialMap2.put(new Point2D(0, 0), CandyFactory.getNormalCandy(CandyColors.ORANGE));
+		tutorialMap2.put(new Point2D(0, 1), CandyFactory.getNormalCandy(CandyColors.GREEN));
+		tutorialMap2.put(new Point2D(0, 2), CandyFactory.getNormalCandy(CandyColors.ORANGE));
+		tutorialMap2.put(new Point2D(0, 3), CandyFactory.getNormalCandy(CandyColors.BLUE));
+		tutorialMap2.put(new Point2D(1, 0), CandyFactory.getNormalCandy(CandyColors.BLUE));
+		tutorialMap2.put(new Point2D(1, 1), CandyFactory.getNormalCandy(CandyColors.GREEN));
+		tutorialMap2.put(new Point2D(1, 2), CandyFactory.getNormalCandy(CandyColors.ORANGE));
+		tutorialMap2.put(new Point2D(1, 3), CandyFactory.getNormalCandy(CandyColors.ORANGE));
+		tutorialMap2.put(new Point2D(2, 0), CandyFactory.getNormalCandy(CandyColors.BLUE));
+		tutorialMap2.put(new Point2D(2, 1), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		tutorialMap2.put(new Point2D(2, 2), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		tutorialMap2.put(new Point2D(2, 3), CandyFactory.getNormalCandy(CandyColors.BLUE));
+		tutorialMap2.put(new Point2D(3, 0), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		tutorialMap2.put(new Point2D(3, 1), CandyFactory.getNormalCandy(CandyColors.ORANGE));
+		tutorialMap2.put(new Point2D(3, 2), CandyFactory.getNormalCandy(CandyColors.YELLOW));
+		tutorialMap2.put(new Point2D(3, 3), CandyFactory.getNormalCandy(CandyColors.YELLOW));
 
 		/*
 		 * SCHEME OF TUTORIAL, STAGE 3
@@ -111,8 +109,8 @@ public final class LevelsManagerImpl implements LevelsManager {
 		 *     ? ? ? ? ?
 		 */
 		final Map<Point2D, Candy> tutorialMap3 = new HashMap<>();
-		tutorialMap3.put(new Point2D(2, 2), cf.getHorizontalStriped(CandyColors.BLUE));
-		tutorialMap3.put(new Point2D(2, 3), cf.getWrapped(CandyColors.RED));
+		tutorialMap3.put(new Point2D(2, 2), CandyFactory.getHorizontalStriped(CandyColors.BLUE));
+		tutorialMap3.put(new Point2D(2, 3), CandyFactory.getWrapped(CandyColors.RED));
 
 		tutorial = () -> {
 			ObjectiveBuilder ob = new ObjectiveBuilderImpl();

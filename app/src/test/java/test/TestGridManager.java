@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +38,6 @@ import model.game.grid.GridManagerImpl;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyFactory;
-import model.game.grid.candies.CandyFactoryImpl;
 import model.game.grid.candies.CandyTypes;
 import model.score.Status;
 import model.score.StatusImpl;
@@ -50,9 +48,6 @@ public final class TestGridManager {
 
 	private GridManager grdMng;
 	private Map<Point2D, Optional<Candy>> map;
-	private Map<Point2D, Optional<Candy>> map2;
-	private Map<Point2D, Optional<Candy>> map3;
-	private final CandyFactory cndFac = new CandyFactoryImpl();
 	private List<CandyColors> colors;
 	private Status score;
 	private final Controller c = new ControllerImpl();
@@ -68,37 +63,13 @@ public final class TestGridManager {
 		colors.add(CandyColors.PURPLE);
 		colors.add(CandyColors.RED);
 		map = new HashMap<>() {
-			@Serial
-			private static final long serialVersionUID = 1L;
-
 			{
-				put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(3, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(4, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(5, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-			}
-		};
-		map.put(new Point2D(6, 0), Optional.empty());
-		map2 = new HashMap<>() {
-			@Serial
-			private static final long serialVersionUID = 1L;
-
-			{
-				put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.GREEN)));
-				put(new Point2D(4, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-			}
-		};
-		map3 = new HashMap<>() {
-			@Serial
-			private static final long serialVersionUID = 1L;
-
-			{
-				put(new Point2D(1, 0), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
-				put(new Point2D(2, 0), Optional.of(cndFac.getNormalCandy(CandyColors.PURPLE)));
-				put(new Point2D(3, 0), Optional.of(cndFac.getNormalCandy(CandyColors.GREEN)));
-				put(new Point2D(4, 0), Optional.of(cndFac.getChocolate()));
+				put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(3, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(4, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(5, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(6, 0), Optional.empty());
 			}
 		};
 	}
@@ -126,13 +97,21 @@ public final class TestGridManager {
 
 	@Test
 	public void genericChecks() {
-		grdMng = new GridManagerImpl(c, map2, this.score, colors, false);
+		final Map<Point2D, Optional<Candy>> m = new HashMap<>() {
+			{
+				put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.GREEN)));
+				put(new Point2D(4, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
+			}
+		};
+		grdMng = new GridManagerImpl(c, m, this.score, colors, false);
+
 		assertFalse(grdMng.move(new Point2D(1, 0), new Point2D(2, 0)));
 		assertFalse(grdMng.move(new Point2D(1, 0), new Point2D(4, 0)));
 		assertTrue(grdMng.forceMove(new Point2D(1, 0), new Point2D(2, 0)));
-		grdMng.mutateCandy(new Point2D(1, 0), cndFac.getVerticalStripedCandy(CandyColors.RED));
+		grdMng.mutateCandy(new Point2D(1, 0), CandyFactory.getVerticalStripedCandy(CandyColors.RED));
 		grdMng.destroyCandy(new Point2D(1, 0));
-		assertFalse(grdMng.getGrid().containsValue(Optional.of(cndFac.getNormalCandy(CandyColors.BLUE))));
+		assertFalse(grdMng.getGrid().containsValue(Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE))));
 	}
 
 	@Test
@@ -140,7 +119,7 @@ public final class TestGridManager {
 		final Map<Point2D, Optional<Candy>> nsnMap = new HashMap<>();
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
-				nsnMap.put(new Point2D(i, j), Optional.of(cndFac.getNormalCandy(CandyColors.BLUE)));
+				nsnMap.put(new Point2D(i, j), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
 			}
 		}
 		grdMng = new GridManagerImpl(c, nsnMap, this.score, colors, false);
@@ -148,14 +127,22 @@ public final class TestGridManager {
 
 	@Test
 	public void chocolateLiveness() {
-		grdMng = new GridManagerImpl(c, map3, this.score, colors, false);
+		final Map<Point2D, Optional<Candy>> m = new HashMap<>() {
+			{
+				put(new Point2D(1, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.BLUE)));
+				put(new Point2D(2, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.PURPLE)));
+				put(new Point2D(3, 0), Optional.of(CandyFactory.getNormalCandy(CandyColors.GREEN)));
+				put(new Point2D(4, 0), Optional.of(CandyFactory.getChocolate()));
+			}
+		};
+		grdMng = new GridManagerImpl(c, m, this.score, colors, false);
 
 		// Checking ascending chocolate and if it is possible to destroy it.
 		assertTrue(grdMng.forceMove(new Point2D(1, 0), new Point2D(2, 0)));
-		assertEquals(grdMng.getGrid().get(new Point2D(4, 0)).orElseThrow(), cndFac.getChocolate());
+		assertEquals(grdMng.getGrid().get(new Point2D(4, 0)).orElseThrow(), CandyFactory.getChocolate());
 		assertTrue(grdMng.forceMove(new Point2D(1, 0), new Point2D(2, 0)));
-		assertEquals(grdMng.getGrid().get(new Point2D(4, 0)).orElseThrow(), cndFac.getChocolate());
-		assertEquals(grdMng.getGrid().get(new Point2D(3, 0)).orElseThrow(), cndFac.getChocolate());
+		assertEquals(grdMng.getGrid().get(new Point2D(4, 0)).orElseThrow(), CandyFactory.getChocolate());
+		assertEquals(grdMng.getGrid().get(new Point2D(3, 0)).orElseThrow(), CandyFactory.getChocolate());
 		assertTrue(grdMng.destroyCandy(new Point2D(2, 0)));
 		assertTrue(grdMng.getGrid().get(new Point2D(3, 0)).isEmpty());
 	}

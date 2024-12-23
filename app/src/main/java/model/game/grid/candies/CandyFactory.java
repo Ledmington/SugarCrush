@@ -18,7 +18,9 @@
 package model.game.grid.candies;
 
 /** @author Filippo Benvenuti */
-public interface CandyFactory {
+public final class CandyFactory {
+
+	private CandyFactory() {}
 
 	/**
 	 * Return normal {@link Candy} with specified {@link CandyColors}.
@@ -26,7 +28,16 @@ public interface CandyFactory {
 	 * @param cndColor The {@link CandyColors} of the {@link Candy}.
 	 * @return The {@link Candy} obtained.
 	 */
-	Candy getNormalCandy(CandyColors cndColor);
+	public static Candy getNormalCandy(final CandyColors cndColor) {
+		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
+			throw new IllegalArgumentException("Chocolate and freckles are not normal candies.");
+		}
+
+		return new CandyBuilderImpl()
+				.setColor(cndColor)
+				.setType(CandyTypes.NORMAL)
+				.build();
+	}
 
 	/**
 	 * Return vertical striped {@link Candy} with specified {@link CandyColors}.
@@ -34,7 +45,16 @@ public interface CandyFactory {
 	 * @param cndColor The {@link CandyColors} of the {@link Candy}.
 	 * @return The {@link Candy} obtained.
 	 */
-	Candy getVerticalStripedCandy(CandyColors cndColor);
+	public static Candy getVerticalStripedCandy(final CandyColors cndColor) {
+		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
+			throw new IllegalArgumentException("Chocolate and freckles are not vertical striped candies.");
+		}
+
+		return new CandyBuilderImpl()
+				.setColor(cndColor)
+				.setType(CandyTypes.STRIPED_VERTICAL)
+				.build();
+	}
 
 	/**
 	 * Return horizontal striped {@link Candy} with specified {@link CandyColors}.
@@ -42,7 +62,16 @@ public interface CandyFactory {
 	 * @param cndColor The {@link CandyColors} of the {@link Candy}.
 	 * @return The {@link Candy} obtained.
 	 */
-	Candy getHorizontalStriped(CandyColors cndColor);
+	public static Candy getHorizontalStriped(final CandyColors cndColor) {
+		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
+			throw new IllegalArgumentException("Chocolate and freckles are not horizontal striped candies.");
+		}
+
+		return new CandyBuilderImpl()
+				.setColor(cndColor)
+				.setType(CandyTypes.STRIPED_HORIZONTAL)
+				.build();
+	}
 
 	/**
 	 * Return wrapped {@link Candy} with specified {@link CandyColors}.
@@ -50,19 +79,38 @@ public interface CandyFactory {
 	 * @param cndColor The {@link CandyColors} of the {@link Candy}.
 	 * @return The {@link Candy} obtained.
 	 */
-	Candy getWrapped(CandyColors cndColor);
+	public static Candy getWrapped(final CandyColors cndColor) {
+		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
+			throw new IllegalArgumentException("Chocolate and freckles are not wrapper candies.");
+		}
+
+		return new CandyBuilderImpl()
+				.setColor(cndColor)
+				.setType(CandyTypes.WRAPPED)
+				.build();
+	}
 
 	/**
 	 * Return freckles {@link Candy}.
 	 *
 	 * @return The {@link Candy} obtained.
 	 */
-	Candy getFreckles();
+	public static Candy getFreckles() {
+		return new CandyBuilderImpl()
+				.setColor(CandyColors.FRECKLES)
+				.setType(CandyTypes.FRECKLES)
+				.build();
+	}
 
 	/**
 	 * Return chocolate {@link Candy}.
 	 *
 	 * @return The {@link Candy} obtained.
 	 */
-	Candy getChocolate();
+	public static Candy getChocolate() {
+		return new CandyBuilderImpl()
+				.setColor(CandyColors.CHOCOLATE)
+				.setType(CandyTypes.CHOCOLATE)
+				.build();
+	}
 }
