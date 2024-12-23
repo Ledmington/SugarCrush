@@ -17,17 +17,19 @@
  */
 package model.shop;
 
-import static controller.Controller.playerName;
-import static controller.files.StatsTypes.MONEY;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import controller.Controller;
 import controller.files.FileTypes;
-import model.game.grid.candies.*;
-import model.players.*;
+import model.game.grid.candies.Candy;
+import model.game.grid.candies.CandyColors;
+import model.game.grid.candies.CandyFactoryImpl;
+import model.game.grid.candies.CandyTypes;
+import model.players.PlayerManagerImpl;
+import model.score.Status;
 
 /** @author Davide Degli Esposti */
 public final class BoostShop {
@@ -100,11 +102,13 @@ public final class BoostShop {
 		final PlayerManagerImpl pl = new PlayerManagerImpl();
 		final List<Map<String, Object>> list = pl.getPlayers(FileTypes.STATS);
 		for (Map<String, Object> map : list) {
-			if (map.get(playerName).toString().equals("\"" + name + "\"")) {
-				if ((Integer.parseInt(map.get(MONEY.name()).toString())) >= bst.getPrice()) {
+			if (map.get(Controller.playerName).toString().equals("\"" + name + "\"")) {
+				if ((Integer.parseInt(map.get(Status.Ratios.MONEY.name()).toString())) >= bst.getPrice()) {
 					map.put(
-							MONEY.name(),
-							(Integer.parseInt(map.get(MONEY.name()).toString()) - bst.getPrice()));
+							Status.Ratios.MONEY.name(),
+							(Integer.parseInt(
+											map.get(Status.Ratios.MONEY.name()).toString())
+									- bst.getPrice()));
 					pl.update(list, FileTypes.STATS);
 					addBoostToPlayer(name, bst);
 					return;
@@ -122,7 +126,7 @@ public final class BoostShop {
 	}
 
 	/**
-	 * update the FileTypes.BOOSTS of the player with the boost just bought
+	 * Update the {@link FileTypes#BOOSTS} of the player with the boost just bought
 	 *
 	 * @param name the name of the player
 	 * @param bst the boost to add to the file
@@ -130,7 +134,7 @@ public final class BoostShop {
 	private void addBoostToPlayer(final String name, final Boost bst) {
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.BOOSTS);
 		for (final Map<String, Object> map : list) {
-			if (map.get(playerName).toString().equals("\"" + name + "\"")) {
+			if (map.get(Controller.playerName).toString().equals("\"" + name + "\"")) {
 				map.put(bst.getName(), Integer.parseInt(map.get(bst.getName()).toString()) + 1);
 			}
 		}

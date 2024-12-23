@@ -17,7 +17,7 @@
  */
 package model.shop;
 
-import model.game.grid.candies.*;
+import model.game.grid.candies.Candy;
 
 /** @author Davide Degli Esposti */
 public final class Boost {

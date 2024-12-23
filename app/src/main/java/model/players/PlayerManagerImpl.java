@@ -17,17 +17,27 @@
  */
 package model.players;
 
-import static controller.Controller.playerName;
-import static controller.files.FileTypes.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import java.io.*;
-import java.util.*;
-import java.util.stream.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import com.google.gson.*;
-
-import controller.files.*;
+import controller.Controller;
+import controller.files.BoostsTypes;
 import controller.files.FileTypes;
+import controller.files.StatsTypes;
 import model.game.grid.candies.CandyColors;
 import model.score.Status;
 import utils.Triple;
@@ -45,13 +55,13 @@ public final class PlayerManagerImpl implements PlayerManager {
 	private static final Map<FileTypes, Triple<String, File, JsonArray>> FILES_MAP = new HashMap<>() {
 		{
 			put(
-					STATS,
+					FileTypes.STATS,
 					new Triple<>(
 							SUGAR_CRUSH_HOME + File.separator + "stats.json",
 							new File(SUGAR_CRUSH_HOME, "stats.json"),
 							new JsonArray()));
 			put(
-					BOOSTS,
+					FileTypes.BOOSTS,
 					new Triple<>(
 							SUGAR_CRUSH_HOME + File.separator + "boosts.json",
 							new File(SUGAR_CRUSH_HOME, "boosts.json"),
@@ -63,10 +73,12 @@ public final class PlayerManagerImpl implements PlayerManager {
 		Objects.requireNonNull(name);
 		this.stringCheck(name);
 		final Map<FileTypes, JsonObject> obMap = new HashMap<>();
-		obMap.put(STATS, new JsonObject());
-		obMap.put(BOOSTS, new JsonObject());
-		this.initializeProperties(obMap.get(STATS), obMap.get(BOOSTS), name);
-		this.createFiles(FILES_MAP.get(STATS).second(), FILES_MAP.get(BOOSTS).second());
+		obMap.put(FileTypes.STATS, new JsonObject());
+		obMap.put(FileTypes.BOOSTS, new JsonObject());
+		this.initializeProperties(obMap.get(FileTypes.STATS), obMap.get(FileTypes.BOOSTS), name);
+		this.createFiles(
+				FILES_MAP.get(FileTypes.STATS).second(),
+				FILES_MAP.get(FileTypes.BOOSTS).second());
 
 		// for every file type, it adds the player
 		for (final FileTypes type : FileTypes.values()) {
@@ -103,20 +115,24 @@ public final class PlayerManagerImpl implements PlayerManager {
 		this.levelCheck(level);
 		this.stringCheck(name);
 		final String lev = "LEVEL_" + level + "_SCORE";
-		this.createFiles(FILES_MAP.get(STATS).second(), FILES_MAP.get(BOOSTS).second());
+		this.createFiles(
+				FILES_MAP.get(FileTypes.STATS).second(),
+				FILES_MAP.get(FileTypes.BOOSTS).second());
 		final JsonParser parser = new JsonParser();
-		try (final FileReader reader = new FileReader(FILES_MAP.get(STATS).first())) {
+		try (final FileReader reader =
+				new FileReader(FILES_MAP.get(FileTypes.STATS).first())) {
 			FILES_MAP.put(
-					STATS,
+					FileTypes.STATS,
 					new Triple<>(
-							FILES_MAP.get(STATS).first(), FILES_MAP.get(STATS).second(), (JsonArray)
-									parser.parse(reader)));
+							FILES_MAP.get(FileTypes.STATS).first(),
+							FILES_MAP.get(FileTypes.STATS).second(),
+							(JsonArray) parser.parse(reader)));
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 		// put every single information in the JsonObject
-		FILES_MAP.get(STATS).third().forEach(jse -> {
-			if (((JsonObject) jse).get(playerName).getAsString().equals(name)) {
+		FILES_MAP.get(FileTypes.STATS).third().forEach(jse -> {
+			if (((JsonObject) jse).get(Controller.playerName).getAsString().equals(name)) {
 				final JsonObject jso = (JsonObject) jse;
 				Stream.of(CandyColors.values())
 						.filter(color -> !color.equals(CandyColors.FRECKLES))
@@ -152,8 +168,9 @@ public final class PlayerManagerImpl implements PlayerManager {
 			}
 		});
 		// writes in stats.json
-		try (final FileWriter fileName = new FileWriter(FILES_MAP.get(STATS).first())) {
-			fileName.write(FILES_MAP.get(STATS).third().toString());
+		try (final FileWriter fileName =
+				new FileWriter(FILES_MAP.get(FileTypes.STATS).first())) {
+			fileName.write(FILES_MAP.get(FileTypes.STATS).third().toString());
 			fileName.flush();
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
@@ -188,7 +205,9 @@ public final class PlayerManagerImpl implements PlayerManager {
 	public List<Map<String, Object>> getPlayers(final FileTypes type) {
 		Objects.requireNonNull(type);
 		final List<Map<String, Object>> list = new LinkedList<>();
-		this.createFiles(FILES_MAP.get(STATS).second(), FILES_MAP.get(BOOSTS).second());
+		this.createFiles(
+				FILES_MAP.get(FileTypes.STATS).second(),
+				FILES_MAP.get(FileTypes.BOOSTS).second());
 		// Initializes the list checking the correct file type
 		if (FILES_MAP.get(type).second().length() != 0) {
 			final JsonParser parser = new JsonParser();
@@ -233,7 +252,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 				}
 			}
 			for (final JsonElement jse : FILES_MAP.get(type).third()) {
-				if (((JsonObject) jse).get(playerName).toString().equals("\"" + name + "\"")) {
+				if (((JsonObject) jse).get(Controller.playerName).toString().equals("\"" + name + "\"")) {
 					el = jse;
 				}
 			}
@@ -251,8 +270,8 @@ public final class PlayerManagerImpl implements PlayerManager {
 
 	// Initializes stats and boost
 	private void initializeProperties(final JsonObject player, final JsonObject boosts, final String name) {
-		player.addProperty(playerName, name);
-		boosts.addProperty(playerName, name);
+		player.addProperty(Controller.playerName, name);
+		boosts.addProperty(Controller.playerName, name);
 		Stream.of(StatsTypes.values()).forEach(type -> player.addProperty(type.name(), 0));
 		Stream.of(BoostsTypes.values()).forEach(type -> boosts.addProperty(type.name(), 0));
 	}

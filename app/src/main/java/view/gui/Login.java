@@ -17,9 +17,6 @@
  */
 package view.gui;
 
-import static controller.Controller.playerName;
-import static controller.files.FileTypes.*;
-
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -28,11 +25,16 @@ import java.awt.event.KeyEvent;
 import java.io.Serial;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import controller.Controller;
+import controller.files.FileTypes;
 import view.View;
-import view.sounds.*;
+import view.sounds.SoundImpl;
 
 /**
  * A {@link GUI} that sets the current player and add him if he isn't already saved
@@ -84,8 +86,8 @@ public final class Login extends GUI {
 		new SoundImpl().playSound("button_press");
 		if (!jtf.getText().isEmpty() && !jtf.getText().contains("\"")) {
 			boolean isPresent = false;
-			for (final Map<String, Object> map : controller.getPlayers(STATS)) {
-				if (map.get(playerName).toString().equals("\"" + jtf.getText() + "\"")) {
+			for (final Map<String, Object> map : controller.getPlayers(FileTypes.STATS)) {
+				if (map.get(Controller.playerName).toString().equals("\"" + jtf.getText() + "\"")) {
 					isPresent = true;
 					break;
 				}

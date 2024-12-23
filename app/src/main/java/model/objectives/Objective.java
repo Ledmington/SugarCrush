@@ -28,7 +28,7 @@ import java.util.Optional;
 public interface Objective {
 
 	/**
-	 * Enum of the used scores
+	 * Enum of the used scores.
 	 *
 	 * @author Emanuele Lamagna
 	 */

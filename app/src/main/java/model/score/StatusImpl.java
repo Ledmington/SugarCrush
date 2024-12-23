@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import controller.Controller;
-import controller.files.*;
+import controller.files.StatsTypes;
 import model.game.grid.candies.Candy;
 import model.game.grid.candies.CandyColors;
 import model.game.grid.candies.CandyTypes;

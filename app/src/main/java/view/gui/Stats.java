@@ -17,9 +17,6 @@
  */
 package view.gui;
 
-import static controller.Controller.playerName;
-import static controller.files.FileTypes.*;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -28,10 +25,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import controller.Controller;
-import controller.files.*;
+import controller.files.FileTypes;
+import controller.files.StatsTypes;
 import view.View;
 
 /**
@@ -49,8 +50,10 @@ public final class Stats extends GUI {
 	Stats(final Controller controller, final View view) {
 		super(controller, view);
 		// initialize the map
-		controller.getPlayers(STATS).stream()
-				.filter(map -> map.get(playerName).toString().equals(("\"" + controller.getCurrentPlayerName() + "\"")))
+		controller.getPlayers(FileTypes.STATS).stream()
+				.filter(map -> map.get(Controller.playerName)
+						.toString()
+						.equals(("\"" + controller.getCurrentPlayerName() + "\"")))
 				.forEach(map -> this.player = map);
 		this.setLayout(new BorderLayout());
 		final JPanel stats = new JPanel();

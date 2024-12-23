@@ -17,13 +17,12 @@
  */
 package model.rank;
 
-import static controller.Controller.playerName;
-
 import java.util.List;
 
+import controller.Controller;
 import controller.files.FileTypes;
 import controller.files.StatsTypes;
-import model.players.*;
+import model.players.PlayerManagerImpl;
 import utils.Pair;
 
 /** @author Davide Degli Esposti */
@@ -35,7 +34,7 @@ public final class ScoreBoard {
 	public List<Pair<String, Integer>> rankByGeneralScore() {
 		return PLAYERS.getPlayers(FileTypes.STATS).stream()
 				.map(p -> new Pair<>(
-						p.get(playerName).toString(),
+						p.get(Controller.playerName).toString(),
 						Integer.parseInt(p.get(StatsTypes.TOTAL_SCORE.name()).toString())))
 				.sorted((a, b) -> Integer.compare(b.second(), a.second()))
 				.toList();
@@ -48,7 +47,7 @@ public final class ScoreBoard {
 	public List<Pair<String, Integer>> rankByScoreInLevel(final int lvlNumber) {
 		return PLAYERS.getPlayers(FileTypes.STATS).stream()
 				.map(p -> new Pair<>(
-						p.get(playerName).toString(),
+						p.get(Controller.playerName).toString(),
 						Integer.parseInt(p.get("LEVEL_" + lvlNumber + "_SCORE").toString())))
 				.sorted((a, b) -> Integer.compare(b.second(), a.second()))
 				.toList();

@@ -17,8 +17,6 @@
  */
 package model.objectives;
 
-import static model.objectives.Objective.Values.*;
-
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,8 +27,8 @@ import java.util.Optional;
  */
 public final class ObjectiveBuilderImpl implements ObjectiveBuilder {
 
-	private int maxScore = SIMPLE_SCORE.getValue();
-	private int maxMoves = DEF_MOVES.getValue();
+	private int maxScore = Objective.Values.SIMPLE_SCORE.getValue();
+	private int maxMoves = Objective.Values.DEF_MOVES.getValue();
 	private Optional<Challenge> challenge = Optional.empty();
 	private String text = "";
 	private boolean built = false;

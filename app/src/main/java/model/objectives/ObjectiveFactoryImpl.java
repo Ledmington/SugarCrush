@@ -17,8 +17,6 @@
  */
 package model.objectives;
 
-import static model.objectives.Objective.Values.*;
-
 import java.util.Optional;
 
 /**
@@ -30,23 +28,25 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 
 	public Objective normal() {
 		return new ObjectiveBuilderImpl()
-				.setMaxScore(DEF_SCORE.getValue())
-				.setObjectiveText(
-						"Reach a score of " + DEF_SCORE.getValue() + " within " + DEF_MOVES.getValue() + " moves!")
+				.setMaxScore(Objective.Values.DEF_SCORE.getValue())
+				.setObjectiveText("Reach a score of " + Objective.Values.DEF_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves!")
 				.build();
 	}
 
 	public Objective primary() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(new ChallengeBuilderImpl()
-						.setRed(DEF_RED.getValue())
-						.setBlue(DEF_BLUE.getValue())
-						.setYellow(DEF_YELLOW.getValue())
+						.setRed(Objective.Values.DEF_RED.getValue())
+						.setBlue(Objective.Values.DEF_BLUE.getValue())
+						.setYellow(Objective.Values.DEF_YELLOW.getValue())
 						.build()))
-				.setObjectiveText("Reach a score of " + SIMPLE_SCORE.getValue() + " within " + DEF_MOVES.getValue()
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue()
 						+ " moves and destroy "
-						+ DEF_RED.getValue() + " red candies, " + DEF_YELLOW.getValue() + " yellow candies and "
-						+ DEF_BLUE.getValue() + " blue candies!")
+						+ Objective.Values.DEF_RED.getValue() + " red candies, "
+						+ Objective.Values.DEF_YELLOW.getValue() + " yellow candies and "
+						+ Objective.Values.DEF_BLUE.getValue() + " blue candies!")
 				.build();
 	}
 
@@ -54,10 +54,11 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 	public Objective lineParty() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(new ChallengeBuilderImpl()
-						.setStriped(DEF_STRIPED.getValue())
+						.setStriped(Objective.Values.DEF_STRIPED.getValue())
 						.build()))
-				.setObjectiveText("Reach a score of " + SIMPLE_SCORE.getValue() + " within " + DEF_MOVES.getValue()
-						+ " moves and farm " + DEF_STRIPED.getValue() + " striped candies!")
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves and farm "
+						+ Objective.Values.DEF_STRIPED.getValue() + " striped candies!")
 				.build();
 	}
 
@@ -65,10 +66,11 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 	public Objective explode() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(new ChallengeBuilderImpl()
-						.setWrapped(DEF_WRAPPED.getValue())
+						.setWrapped(Objective.Values.DEF_WRAPPED.getValue())
 						.build()))
-				.setObjectiveText("Reach a score of " + SIMPLE_SCORE.getValue() + " within " + DEF_MOVES.getValue()
-						+ " moves and farm " + DEF_WRAPPED.getValue() + " wrapped candies!")
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves and farm "
+						+ Objective.Values.DEF_WRAPPED.getValue() + " wrapped candies!")
 				.build();
 	}
 
@@ -76,10 +78,11 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 	public Objective multiBombs() {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(new ChallengeBuilderImpl()
-						.setFreckles(DEF_FRECKLES.getValue())
+						.setFreckles(Objective.Values.DEF_FRECKLES.getValue())
 						.build()))
-				.setObjectiveText("Reach a score of " + SIMPLE_SCORE.getValue() + " within " + DEF_MOVES.getValue()
-						+ " moves and farm " + DEF_FRECKLES.getValue() + " freckles candies!")
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves and farm "
+						+ Objective.Values.DEF_FRECKLES.getValue() + " freckles candies!")
 				.build();
 	}
 
@@ -88,8 +91,8 @@ public final class ObjectiveFactoryImpl implements ObjectiveFactory {
 		return new ObjectiveBuilderImpl()
 				.setChallenge(Optional.of(
 						new ChallengeBuilderImpl().setDestroyJelly(true).build()))
-				.setObjectiveText("Reach a score of " + SIMPLE_SCORE.getValue() + " within " + DEF_MOVES.getValue()
-						+ " moves and destroy all jelly!")
+				.setObjectiveText("Reach a score of " + Objective.Values.SIMPLE_SCORE.getValue() + " within "
+						+ Objective.Values.DEF_MOVES.getValue() + " moves and destroy all jelly!")
 				.build();
 	}
 }
