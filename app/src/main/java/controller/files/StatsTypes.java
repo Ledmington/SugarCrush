@@ -35,18 +35,18 @@ public enum StatsTypes {
 	STRIPED("Striped farmed"),
 	WRAPPED("Wrapped farmed"),
 	CHOCOLATE("Chocolate destroyed"),
-	money("Total money"),
-	totalScore("Total score"),
-	level1Score("Level 1 top score"),
-	level2Score("Level 2 top score"),
-	level3Score("Level 3 top score"),
-	level4Score("Level 4 top score"),
-	level5Score("Level 5 top score"),
-	level6Score("Level 6 top score"),
-	level7Score("Level 7 top score"),
-	level8Score("Level 8 top score"),
-	level9Score("Level 9 top score"),
-	level10Score("Level 10 top score");
+	MONEY("Total money"),
+	TOTAL_SCORE("Total score"),
+	LEVEL_1_SCORE("Level 1 top score"),
+	LEVEL_2_SCORE("Level 2 top score"),
+	LEVEL_3_SCORE("Level 3 top score"),
+	LEVEL_4_SCORE("Level 4 top score"),
+	LEVEL_5_SCORE("Level 5 top score"),
+	LEVEL_6_SCORE("Level 6 top score"),
+	LEVEL_7_SCORE("Level 7 top score"),
+	LEVEL_8_SCORE("Level 8 top score"),
+	LEVEL_9_SCORE("Level 9 top score"),
+	LEVEL_10_SCORE("Level 10 top score");
 
 	private final String description;
 

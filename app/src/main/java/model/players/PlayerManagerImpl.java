@@ -102,7 +102,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 		Objects.requireNonNull(status);
 		this.levelCheck(level);
 		this.stringCheck(name);
-		final String lev = "level" + level + "Score";
+		final String lev = "LEVEL_" + level + "_SCORE";
 		this.createFiles(FILES_MAP.get(STATS).second(), FILES_MAP.get(BOOSTS).second());
 		final JsonParser parser = new JsonParser();
 		try (final FileReader reader = new FileReader(FILES_MAP.get(STATS).first())) {
@@ -135,20 +135,20 @@ public final class PlayerManagerImpl implements PlayerManager {
 				// refreshes it
 				if (status.isCompleted()) {
 					jso.addProperty(
-							StatsTypes.money.name(),
-							jso.get(StatsTypes.money.name()).getAsInt() + status.getMoney());
+							StatsTypes.MONEY.name(),
+							jso.get(StatsTypes.MONEY.name()).getAsInt() + status.getMoney());
 					jso.keySet().stream()
 							.filter(s -> s.equals(lev)
 									&& Integer.parseInt(jso.get(lev).toString()) < status.getScore())
 							.forEach(s -> jso.addProperty(s, status.getScore()));
 				}
 				// resets totalScore, to recalculate it from scratch
-				jso.addProperty(StatsTypes.totalScore.name(), 0);
+				jso.addProperty(StatsTypes.TOTAL_SCORE.name(), 0);
 				IntStream.range(1, 11)
 						.forEach(i -> jso.addProperty(
-								StatsTypes.totalScore.name(),
-								jso.get("level" + i + "Score").getAsInt()
-										+ jso.get(StatsTypes.totalScore.name()).getAsInt()));
+								StatsTypes.TOTAL_SCORE.name(),
+								jso.get("LEVEL_" + i + "_SCORE").getAsInt()
+										+ jso.get(StatsTypes.TOTAL_SCORE.name()).getAsInt()));
 			}
 		});
 		// writes in stats.json
@@ -214,8 +214,9 @@ public final class PlayerManagerImpl implements PlayerManager {
 	public void removePlayer(final String name) {
 		Objects.requireNonNull(name);
 		this.stringCheck(name);
+
 		// Removes the player in every file
-		Stream.of(FileTypes.values()).forEach(type -> {
+		for (final FileTypes type : FileTypes.values()) {
 			JsonElement el = null;
 			if (FILES_MAP.get(type).second().length() != 0) {
 				final JsonParser parser = new JsonParser();
@@ -245,7 +246,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 			} catch (final IOException e) {
 				throw new RuntimeException(e);
 			}
-		});
+		}
 	}
 
 	// Initializes stats and boost

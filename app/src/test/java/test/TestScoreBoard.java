@@ -56,8 +56,8 @@ public final class TestScoreBoard {
 		for (final Map<String, Object> map : list) {
 			if (map.get(Controller.playerName).toString().equals("\"" + name + "\"")) {
 				map.put(
-						StatsTypes.totalScore.name(),
-						Integer.parseInt(map.get(StatsTypes.totalScore.name()).toString()) + score);
+						StatsTypes.TOTAL_SCORE.name(),
+						Integer.parseInt(map.get(StatsTypes.TOTAL_SCORE.name()).toString()) + score);
 			}
 		}
 		pm.update(list, FileTypes.STATS);
@@ -69,8 +69,10 @@ public final class TestScoreBoard {
 		for (final Map<String, Object> map : list) {
 			if (map.get(Controller.playerName).toString().equals("\"" + name + "\"")) {
 				map.put(
-						StatsTypes.level3Score.name(),
-						Integer.parseInt(map.get(StatsTypes.level3Score.name()).toString()) + score);
+						StatsTypes.LEVEL_3_SCORE.name(),
+						Integer.parseInt(
+										map.get(StatsTypes.LEVEL_3_SCORE.name()).toString())
+								+ score);
 			}
 		}
 		pm.update(list, FileTypes.STATS);

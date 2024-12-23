@@ -17,29 +17,27 @@
  */
 package model.achievement;
 
-import static controller.Controller.playerName;
-import static controller.files.StatsTypes.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import controller.*;
+import controller.Controller;
 import controller.files.FileTypes;
+import controller.files.StatsTypes;
 import model.players.PlayerManagerImpl;
 
 /** @author Davide Degli Esposti */
 public final class AchievementManager {
 
 	private final List<Achievement> achievements = new ArrayList<>(); // list of all achievement of the player
-	private final Controller cntrlImpl; // variable to get the current player
+	private final Controller controller; // variable to get the current player
 	private Map<String, Object> mapCurrentPlayer; // contains the map with the stats of the current player
 	private final PlayerManagerImpl pm = new PlayerManagerImpl(); // variable to get the players
 
 	/** the constructor of the class */
 	public AchievementManager(final Controller controller) {
-		this.cntrlImpl = Objects.requireNonNull(controller);
+		this.controller = Objects.requireNonNull(controller);
 
 		// first achievement
 		this.achievements.add(Achievement.builder()
@@ -47,27 +45,27 @@ public final class AchievementManager {
 				.description("Finish the first level")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(
-									mapCurrentPlayer.get(level1Score.name()).toString())
+					return Integer.parseInt(mapCurrentPlayer
+									.get(StatsTypes.LEVEL_1_SCORE.name())
+									.toString())
 							> 0;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// second achievement
 		this.achievements.add(Achievement.builder()
-				.title("Nayan Ca...ndy!")
+				.title("Nyan Ca...ndy!")
 				.description("Farm 5 freckles")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(
-									mapCurrentPlayer.get(FRECKLES.name()).toString())
+					return Integer.parseInt(mapCurrentPlayer
+									.get(StatsTypes.FRECKLES.name())
+									.toString())
 							>= 5;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
-
-		AchievementBuilder gb;
 
 		// third achievement
 		this.achievements.add(Achievement.builder()
@@ -75,9 +73,12 @@ public final class AchievementManager {
 				.description("Destroy 250 green candy")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(mapCurrentPlayer.get(GREEN.name()).toString()) >= 250;
+					return Integer.parseInt(mapCurrentPlayer
+									.get(StatsTypes.GREEN.name())
+									.toString())
+							>= 250;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 4th achievement
@@ -86,9 +87,11 @@ public final class AchievementManager {
 				.description("Destroy 250 blue candy")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString()) >= 250;
+					return Integer.parseInt(
+									mapCurrentPlayer.get(StatsTypes.BLUE.name()).toString())
+							>= 250;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 5th achievement
@@ -97,9 +100,11 @@ public final class AchievementManager {
 				.description("Destroy 500 blue candy")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString()) >= 500;
+					return Integer.parseInt(
+									mapCurrentPlayer.get(StatsTypes.BLUE.name()).toString())
+							>= 500;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 6th achievement
@@ -108,9 +113,11 @@ public final class AchievementManager {
 				.description("Destroy 250 red candy")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(mapCurrentPlayer.get(RED.name()).toString()) >= 250;
+					return Integer.parseInt(
+									mapCurrentPlayer.get(StatsTypes.RED.name()).toString())
+							>= 250;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 7th achievement
@@ -119,9 +126,12 @@ public final class AchievementManager {
 				.description("Destroy 250 yellow candy")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(mapCurrentPlayer.get(YELLOW.name()).toString()) >= 250;
+					return Integer.parseInt(mapCurrentPlayer
+									.get(StatsTypes.YELLOW.name())
+									.toString())
+							>= 250;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 8th achievement
@@ -130,9 +140,12 @@ public final class AchievementManager {
 				.description("Destroy 250 purple candy")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(mapCurrentPlayer.get(PURPLE.name()).toString()) >= 250;
+					return Integer.parseInt(mapCurrentPlayer
+									.get(StatsTypes.PURPLE.name())
+									.toString())
+							>= 250;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 9th achievement
@@ -141,9 +154,12 @@ public final class AchievementManager {
 				.description("Destroy 250 orange candy")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(mapCurrentPlayer.get(ORANGE.name()).toString()) >= 250;
+					return Integer.parseInt(mapCurrentPlayer
+									.get(StatsTypes.ORANGE.name())
+									.toString())
+							>= 250;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 10th achievement
@@ -152,11 +168,12 @@ public final class AchievementManager {
 				.description("Destroy 50 pieces of chocolate")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(
-									mapCurrentPlayer.get(CHOCOLATE.name()).toString())
+					return Integer.parseInt(mapCurrentPlayer
+									.get(StatsTypes.CHOCOLATE.name())
+									.toString())
 							>= 50;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 11th achievement
@@ -165,20 +182,27 @@ public final class AchievementManager {
 				.description("Destroy 300 candy")
 				.check(e -> {
 					resetPlayerMap();
-					return (Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString())
-									+ Integer.parseInt(
-											mapCurrentPlayer.get(GREEN.name()).toString())
-									+ Integer.parseInt(
-											mapCurrentPlayer.get(ORANGE.name()).toString())
-									+ Integer.parseInt(
-											mapCurrentPlayer.get(PURPLE.name()).toString())
-									+ Integer.parseInt(
-											mapCurrentPlayer.get(RED.name()).toString())
-									+ Integer.parseInt(
-											mapCurrentPlayer.get(YELLOW.name()).toString()))
+					return (Integer.parseInt(mapCurrentPlayer
+											.get(StatsTypes.BLUE.name())
+											.toString())
+									+ Integer.parseInt(mapCurrentPlayer
+											.get(StatsTypes.GREEN.name())
+											.toString())
+									+ Integer.parseInt(mapCurrentPlayer
+											.get(StatsTypes.ORANGE.name())
+											.toString())
+									+ Integer.parseInt(mapCurrentPlayer
+											.get(StatsTypes.PURPLE.name())
+											.toString())
+									+ Integer.parseInt(mapCurrentPlayer
+											.get(StatsTypes.RED.name())
+											.toString())
+									+ Integer.parseInt(mapCurrentPlayer
+											.get(StatsTypes.YELLOW.name())
+											.toString()))
 							>= 300;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 
 		// 12th achievement
@@ -187,25 +211,26 @@ public final class AchievementManager {
 				.description("Finish the game")
 				.check(e -> {
 					resetPlayerMap();
-					return Integer.parseInt(
-									mapCurrentPlayer.get(level10Score.name()).toString())
+					return Integer.parseInt(mapCurrentPlayer
+									.get(StatsTypes.LEVEL_10_SCORE.name())
+									.toString())
 							> 0;
 				})
-				.setController(cntrlImpl)
+				.setController(this.controller)
 				.build());
 	}
 
 	/** Tells the {@link AchievementManager} to reset the internal data about current player. */
 	public void resetPlayerMap() {
 		for (final Map<String, Object> map : pm.getPlayers(FileTypes.STATS)) {
-			if (map.get(playerName).toString().equals("\"" + cntrlImpl.getCurrentPlayer() + "\"")) {
+			if (map.get(Controller.playerName).toString().equals("\"" + controller.getCurrentPlayerName() + "\"")) {
 				mapCurrentPlayer = map;
 				break;
 			}
 		}
 	}
 
-	/** @return the list of achievements of the player */
+	/** @return the list of achievements of the player. */
 	public List<Achievement> getAchievements() {
 		return this.achievements;
 	}

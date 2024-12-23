@@ -53,8 +53,8 @@ public final class TestBoostShop {
 		for (final Map<String, Object> map : list) {
 			if (map.get(playerName).toString().equals("\"Player\"")) {
 				map.put(
-						StatsTypes.money.name(),
-						Integer.parseInt(map.get(StatsTypes.money.name()).toString()) + moneyGained);
+						StatsTypes.MONEY.name(),
+						Integer.parseInt(map.get(StatsTypes.MONEY.name()).toString()) + moneyGained);
 			}
 		}
 		pm.update(list, FileTypes.STATS);
@@ -69,7 +69,7 @@ public final class TestBoostShop {
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
 		for (final Map<String, Object> map : list) {
 			if (map.get(playerName).toString().equals("\"Player\"")) {
-				map.put(StatsTypes.money.name(), 0);
+				map.put(StatsTypes.MONEY.name(), 0);
 				break;
 			}
 		}

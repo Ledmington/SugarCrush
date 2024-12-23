@@ -28,7 +28,7 @@ import controller.Controller;
 public final class AchievementBuilderImpl implements AchievementBuilder {
 
 	private Optional<String> title = Optional.empty();
-	private Optional<String> descr = Optional.empty();
+	private Optional<String> description = Optional.empty();
 	private Optional<Predicate<Map<String, Object>>> method = Optional.empty();
 	private boolean alreadyBuilt = false;
 	private Optional<Controller> controller = Optional.empty();
@@ -49,7 +49,7 @@ public final class AchievementBuilderImpl implements AchievementBuilder {
 		if (description.isBlank()) {
 			throw new IllegalArgumentException("Description can't be null");
 		}
-		this.descr = Optional.of(description);
+		this.description = Optional.of(description);
 		return this;
 	}
 
@@ -67,7 +67,7 @@ public final class AchievementBuilderImpl implements AchievementBuilder {
 		if (this.title.isEmpty()) {
 			throw new NullPointerException("Title not set.");
 		}
-		if (this.descr.isEmpty()) {
+		if (this.description.isEmpty()) {
 			throw new NullPointerException("Description not set.");
 		}
 		if (this.method.isEmpty()) {
@@ -81,7 +81,7 @@ public final class AchievementBuilderImpl implements AchievementBuilder {
 		return new Achievement(
 				this.controller.orElseThrow(),
 				this.title.orElseThrow(),
-				this.descr.orElseThrow(),
+				this.description.orElseThrow(),
 				this.method.orElseThrow());
 	}
 

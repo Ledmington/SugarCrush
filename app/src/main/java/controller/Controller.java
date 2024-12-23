@@ -53,18 +53,18 @@ public interface Controller {
 	void setCurrentPlayer(final String player);
 
 	/**
-	 * Getter of the name of the current player
+	 * Getter of the name of the current player.
 	 *
 	 * @return the name of the current player
 	 */
-	String getCurrentPlayer();
+	String getCurrentPlayerName();
 
 	/**
 	 * Getter of the map of the current player
 	 *
-	 * @return the map of the current player (for stats or boosts, depending by "type" parameter)
+	 * @return the map of the current player (for stats or boosts, depending on "type" parameter)
 	 */
-	Map<String, Object> getCurrentPlayerMap(final FileTypes type);
+	Map<String, Object> getCurrentPlayer(final FileTypes type);
 
 	/**
 	 * Allows to set the {@link Level} corresponding to the given number as the current {@link Level}.
@@ -80,7 +80,7 @@ public interface Controller {
 	Optional<Integer> getCurrentLevel();
 
 	/**
-	 * Reads the right file to get all the players stats, achievements or boost (it depends by "type" parameter)
+	 * Reads the right file to get all the players stats, achievements or boost (it depends on "type" parameter)
 	 *
 	 * @param type the type of file to get (boosts or stats)
 	 * @return a list of all the players (as maps)
@@ -184,7 +184,7 @@ public interface Controller {
 	List<Point2D> getHint();
 
 	/**
-	 * Retrieves a Map from {@link Point2D} to {@link Integer} representing kelly liveness.
+	 * Retrieves a Map from {@link Point2D} to {@link Integer} representing jelly liveness.
 	 *
 	 * @return The Map of jelly liveness.
 	 */
@@ -227,12 +227,10 @@ public interface Controller {
 	 * @return Objective of current level.
 	 */
 	Objective getObjective();
-	// -----------------------
 
 	// About view
 	/** Tells the view to update the grid. */
 	void updateGrid();
-	// -----------------
 
 	/** @return a list of triple containing all the info about achievements */
 	List<Triple<String, String, Boolean>> getAchievements();
@@ -241,7 +239,7 @@ public interface Controller {
 	List<Pair<String, Integer>> getRankByGeneralScore();
 
 	/** @return the list of players sort by the score of the lvlNumber */
-	List<Pair<String, Integer>> getRankByLevelScore(int lvlNumber);
+	List<Pair<String, Integer>> getRankByLevelScore(final int levelNumber);
 
 	/**
 	 * A method that calculates the right import to write in the percentage of completion in the game gui
@@ -256,9 +254,9 @@ public interface Controller {
 	/**
 	 * @return A list containing the name and the number of each currently obtained boost (no zero values contained).
 	 */
-	Map<String, Integer> getObtatinedBoosts();
+	Map<String, Integer> getObtainedBoosts();
 
-	/** make the payement for the selected item in the shop */
+	/** make the payment for the selected item in the shop */
 	void pay(final String playerName, final Boost bst);
 
 	/**
@@ -273,7 +271,7 @@ public interface Controller {
 	void resetShop();
 
 	/**
-	 * Getter of the sound object uset to play sounds or set the on/off system
+	 * Getter of the sound object used to play sounds or set the on/off system
 	 *
 	 * @return the sound object, to play sounds or set the on/off system
 	 */

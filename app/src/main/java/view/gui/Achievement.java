@@ -49,8 +49,8 @@ public final class Achievement extends GUI {
 		titleLabel.setFont(new Font("System", Font.BOLD, 20));
 
 		// the main panel
-		final JPanel achvPanel = new JPanel();
-		this.add(achvPanel, BorderLayout.CENTER);
+		final JPanel achievementsPanel = new JPanel();
+		this.add(achievementsPanel, BorderLayout.CENTER);
 		// button to go back to Main Menu
 		final JButton back = new JButton("Back");
 		this.add(back, BorderLayout.SOUTH);
@@ -58,26 +58,26 @@ public final class Achievement extends GUI {
 		// add to panel labels with title and description of each achievement distinguishing between achieved and not
 		// through the background
 		final List<Triple<String, String, Boolean>> acv = controller.getAchievements();
-		achvPanel.setLayout(new GridLayout(acv.size() * 2, 2));
+		achievementsPanel.setLayout(new GridLayout(acv.size() * 2, 2));
 		for (final Triple<String, String, Boolean> stringStringBooleanTriple : acv) {
 			final JLabel tmpTitleLabel = new JLabel(); // contains the title of an achievement
-			final JLabel tmpDescrLabel = new JLabel(); // contains the description of an achievement
+			final JLabel tmpDescriptionLabel = new JLabel(); // contains the description of an achievement
 			tmpTitleLabel.setOpaque(true);
-			tmpDescrLabel.setOpaque(true);
+			tmpDescriptionLabel.setOpaque(true);
 			tmpTitleLabel.setText(stringStringBooleanTriple.first() + ":");
 			tmpTitleLabel.setFont(new Font("System", Font.BOLD, 16));
-			tmpDescrLabel.setText(stringStringBooleanTriple.second());
+			tmpDescriptionLabel.setText(stringStringBooleanTriple.second());
 			if (stringStringBooleanTriple.third()) {
 				tmpTitleLabel.setBackground(Color.GREEN);
-				tmpDescrLabel.setBackground(Color.GREEN);
+				tmpDescriptionLabel.setBackground(Color.GREEN);
 			} else {
 				tmpTitleLabel.setBackground(Color.PINK);
-				tmpDescrLabel.setBackground(Color.PINK);
+				tmpDescriptionLabel.setBackground(Color.PINK);
 			}
-			achvPanel.add(tmpTitleLabel);
-			achvPanel.add(tmpDescrLabel);
-			achvPanel.add(new JLabel(" "));
-			achvPanel.add(new JLabel(" "));
+			achievementsPanel.add(tmpTitleLabel);
+			achievementsPanel.add(tmpDescriptionLabel);
+			achievementsPanel.add(new JLabel(" "));
+			achievementsPanel.add(new JLabel(" "));
 		}
 
 		// event on back button

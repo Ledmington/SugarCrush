@@ -33,26 +33,26 @@ public final class Achievement {
 	}
 
 	private final String title; // The main title of the goal
-	private final String descr; // The short description of the goal
+	private final String description; // The short description of the goal
 	private boolean reached;
 	private final Predicate<Map<String, Object>> method; // the method for check if a goal is reached
-	private final Controller cntrlImpl;
+	private final Controller controller;
 
 	/**
 	 * constructor for initializing the achievement
 	 *
 	 * @param title the title of the goal
-	 * @param descr the description of the goal
+	 * @param description the description of the goal
 	 * @param method the method for check if a goal is reached
 	 */
 	public Achievement(
 			final Controller controller,
 			final String title,
-			final String descr,
+			final String description,
 			final Predicate<Map<String, Object>> method) {
-		this.cntrlImpl = controller;
+		this.controller = controller;
 		this.title = title;
-		this.descr = descr;
+		this.description = description;
 		this.reached = false;
 		this.method = method;
 	}
@@ -64,7 +64,7 @@ public final class Achievement {
 
 	/** @return the description of the goal */
 	public String getDescription() {
-		return this.descr;
+		return this.description;
 	}
 
 	/** @return true if the goal is reached */
@@ -78,9 +78,9 @@ public final class Achievement {
 	 * @return true if is reached
 	 */
 	public boolean checkIfReached(final PlayerManager pm) {
-		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
-		for (final Map<String, Object> map : list) {
-			if (map.get(Controller.playerName).toString().equals("\"" + cntrlImpl.getCurrentPlayer() + "\"")) {
+		final List<Map<String, Object>> playersList = pm.getPlayers(FileTypes.STATS);
+		for (final Map<String, Object> map : playersList) {
+			if (map.get(Controller.playerName).toString().equals("\"" + controller.getCurrentPlayerName() + "\"")) {
 				this.reached = this.method.test(map);
 				break;
 			}

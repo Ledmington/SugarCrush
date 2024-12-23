@@ -57,7 +57,7 @@ public final class Settings extends GUI {
 			final int input = JOptionPane.showConfirmDialog(
 					null, "Are you sure?", "Select an option", JOptionPane.YES_NO_CANCEL_OPTION);
 			if (input == 0) {
-				final String tmp = controller.getCurrentPlayer();
+				final String tmp = controller.getCurrentPlayerName();
 				controller.removePlayer(tmp);
 				this.load(new Login(controller, view));
 			}

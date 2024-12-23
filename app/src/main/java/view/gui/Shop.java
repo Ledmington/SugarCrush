@@ -92,7 +92,7 @@ public final class Shop extends GUI {
 				index = itemBtns.indexOf(jb);
 				try {
 					controller.pay(
-							controller.getCurrentPlayer(),
+							controller.getCurrentPlayerName(),
 							controller.getBoostOnSale().get(index));
 					itemBtns.get(index).setEnabled(false);
 					btnNotEnable--;

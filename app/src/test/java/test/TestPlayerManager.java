@@ -69,7 +69,7 @@ public final class TestPlayerManager {
 		assertEquals(
 				"\"tmpPlayer\"", mapB.orElseThrow().get(Controller.playerName).toString());
 
-		// modifiy all stats with score and status
+		// modify all stats with score and status
 		final Status status = new StatusImpl(controller);
 		status.update(new CandyFactoryImpl().getNormalCandy(CandyColors.PURPLE));
 		status.update(new CandyFactoryImpl().getWrapped(CandyColors.BLUE));
@@ -83,30 +83,32 @@ public final class TestPlayerManager {
 					assertEquals("1", map.get(StatsTypes.BLUE.name()).toString());
 					assertEquals("1", map.get(StatsTypes.FRECKLES.name()).toString());
 					assertEquals(
-							map.get(StatsTypes.level3Score.name()).toString(),
+							map.get(StatsTypes.LEVEL_3_SCORE.name()).toString(),
 							Integer.toString((Ratios.WRAPPED.get() + Ratios.DEF.get() * 5)));
 					assertEquals(
-							map.get(StatsTypes.level3Score.name()).toString(),
-							map.get(StatsTypes.totalScore.name()).toString());
+							map.get(StatsTypes.LEVEL_3_SCORE.name()).toString(),
+							map.get(StatsTypes.TOTAL_SCORE.name()).toString());
 				});
+
 		// modify a stat with update
 		final int moneyGained = 20;
 		int moneyHold = 0;
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
 		for (final Map<String, Object> map : list) {
 			if (map.get(Controller.playerName).toString().equals("\"tmpPlayer\"")) {
-				moneyHold = Integer.parseInt(map.get(StatsTypes.money.name()).toString());
+				moneyHold = Integer.parseInt(map.get(StatsTypes.MONEY.name()).toString());
 				map.put(
-						StatsTypes.money.name(),
-						Integer.parseInt(map.get(StatsTypes.money.name()).toString()) + moneyGained);
+						StatsTypes.MONEY.name(),
+						Integer.parseInt(map.get(StatsTypes.MONEY.name()).toString()) + moneyGained);
 			}
 		}
 		pm.update(list, FileTypes.STATS);
 		for (final Map<String, Object> map : pm.getPlayers(FileTypes.STATS)) {
 			if (map.get(Controller.playerName).toString().equals("\"tmpPlayer\"")) {
-				assertEquals(map.get(StatsTypes.money.name()).toString(), Integer.toString(moneyHold + moneyGained));
+				assertEquals(map.get(StatsTypes.MONEY.name()).toString(), Integer.toString(moneyHold + moneyGained));
 			}
 		}
+
 		// remove the player
 		pm.removePlayer("tmpPlayer");
 		mapP = check(FileTypes.STATS);

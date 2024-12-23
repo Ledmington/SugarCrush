@@ -22,7 +22,7 @@ public final class CandyFactoryImpl implements CandyFactory {
 
 	public Candy getNormalCandy(final CandyColors cndColor) {
 		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
-			throw new IllegalStateException();
+			throw new IllegalArgumentException("Chocolate and freckles are not normal candies.");
 		}
 
 		return new CandyBuilderImpl()
@@ -33,7 +33,7 @@ public final class CandyFactoryImpl implements CandyFactory {
 
 	public Candy getVerticalStripedCandy(final CandyColors cndColor) {
 		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
-			throw new IllegalStateException();
+			throw new IllegalArgumentException("Chocolate and freckles are not vertical striped candies.");
 		}
 
 		return new CandyBuilderImpl()
@@ -44,7 +44,7 @@ public final class CandyFactoryImpl implements CandyFactory {
 
 	public Candy getHorizontalStriped(final CandyColors cndColor) {
 		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
-			throw new IllegalStateException();
+			throw new IllegalArgumentException("Chocolate and freckles are not horizontal striped candies.");
 		}
 
 		return new CandyBuilderImpl()
@@ -55,7 +55,7 @@ public final class CandyFactoryImpl implements CandyFactory {
 
 	public Candy getWrapped(final CandyColors cndColor) {
 		if (cndColor == CandyColors.CHOCOLATE || cndColor == CandyColors.FRECKLES) {
-			throw new IllegalStateException();
+			throw new IllegalArgumentException("Chocolate and freckles are not wrapper candies.");
 		}
 
 		return new CandyBuilderImpl()

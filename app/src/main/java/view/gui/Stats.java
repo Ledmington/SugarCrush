@@ -50,7 +50,7 @@ public final class Stats extends GUI {
 		super(controller, view);
 		// initialize the map
 		controller.getPlayers(STATS).stream()
-				.filter(map -> map.get(playerName).toString().equals(("\"" + controller.getCurrentPlayer() + "\"")))
+				.filter(map -> map.get(playerName).toString().equals(("\"" + controller.getCurrentPlayerName() + "\"")))
 				.forEach(map -> this.player = map);
 		this.setLayout(new BorderLayout());
 		final JPanel stats = new JPanel();
@@ -60,7 +60,7 @@ public final class Stats extends GUI {
 		stats.add(new JLabel("STATS"));
 		stats.add(new JLabel("VALUES"));
 		stats.add(new JLabel("Player"));
-		stats.add(new JLabel(controller.getCurrentPlayer()));
+		stats.add(new JLabel(controller.getCurrentPlayerName()));
 		Stream.of(StatsTypes.values()).forEach(s -> {
 			stats.add(new JLabel(s.getDescription()));
 			stats.add(new JLabel(player.get(s.name()).toString()));

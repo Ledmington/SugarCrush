@@ -19,7 +19,6 @@ package model.rank;
 
 import static controller.Controller.playerName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import controller.files.FileTypes;
@@ -30,20 +29,16 @@ import utils.Pair;
 /** @author Davide Degli Esposti */
 public final class ScoreBoard {
 
-	private final PlayerManagerImpl pl = new PlayerManagerImpl(); // variable for get player's properties
-	private List<Pair<String, Integer>> rankPlayer; // list for represent certain rank of player
+	private static final PlayerManagerImpl PLAYERS = new PlayerManagerImpl();
 
 	/** @return list of players sorted by general score */
 	public List<Pair<String, Integer>> rankByGeneralScore() {
-		this.rankPlayer = new ArrayList<>();
-		pl.getPlayers(FileTypes.STATS).stream()
-				.sorted((a, b) -> Integer.valueOf((b.get(StatsTypes.totalScore.name())).toString())
-						.compareTo(Integer.valueOf(
-								a.get(StatsTypes.totalScore.name()).toString())))
-				.forEach(p -> this.rankPlayer.add(new Pair<>(
+		return PLAYERS.getPlayers(FileTypes.STATS).stream()
+				.map(p -> new Pair<>(
 						p.get(playerName).toString(),
-						Integer.parseInt(p.get(StatsTypes.totalScore.name()).toString()))));
-		return this.rankPlayer;
+						Integer.parseInt(p.get(StatsTypes.TOTAL_SCORE.name()).toString())))
+				.sorted((a, b) -> Integer.compare(b.second(), a.second()))
+				.toList();
 	}
 
 	/**
@@ -51,14 +46,11 @@ public final class ScoreBoard {
 	 * @return list of players sorted by score in the given level
 	 */
 	public List<Pair<String, Integer>> rankByScoreInLevel(final int lvlNumber) {
-		this.rankPlayer = new ArrayList<>();
-		pl.getPlayers(FileTypes.STATS).stream()
-				.sorted((a, b) -> Integer.valueOf((b.get("level" + lvlNumber + "Score")).toString())
-						.compareTo(Integer.valueOf(
-								a.get("level" + lvlNumber + "Score").toString())))
-				.forEach(p -> this.rankPlayer.add(new Pair<>(
+		return PLAYERS.getPlayers(FileTypes.STATS).stream()
+				.map(p -> new Pair<>(
 						p.get(playerName).toString(),
-						Integer.parseInt(p.get("level" + lvlNumber + "Score").toString()))));
-		return this.rankPlayer;
+						Integer.parseInt(p.get("LEVEL_" + lvlNumber + "_SCORE").toString())))
+				.sorted((a, b) -> Integer.compare(b.second(), a.second()))
+				.toList();
 	}
 }

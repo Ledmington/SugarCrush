@@ -100,7 +100,7 @@ public final class ControllerImpl implements Controller {
 		model.resetGoals();
 	}
 
-	public String getCurrentPlayer() {
+	public String getCurrentPlayerName() {
 		return this.currentPlayer.orElseThrow();
 	}
 
@@ -145,8 +145,8 @@ public final class ControllerImpl implements Controller {
 
 	public int getLastLevelUnlocked() {
 		for (int i = 1; i <= 10; i++) {
-			if (Integer.parseInt(getCurrentPlayerMap(FileTypes.STATS)
-							.get("level" + i + "Score")
+			if (Integer.parseInt(getCurrentPlayer(FileTypes.STATS)
+							.get("LEVEL_" + i + "_SCORE")
 							.toString())
 					== 0) {
 				return i;
@@ -185,7 +185,7 @@ public final class ControllerImpl implements Controller {
 		final boolean result = isStageEnded() && !this.model.hasNextStage();
 		if (result) {
 			setPlayerStats(
-					getCurrentPlayer(), getCurrentScore(), getCurrentLevel().orElseThrow());
+					getCurrentPlayerName(), getCurrentScore(), getCurrentLevel().orElseThrow());
 		}
 		return result;
 	}
@@ -213,7 +213,7 @@ public final class ControllerImpl implements Controller {
 		return result.getDescription();
 	}
 
-	public Map<String, Object> getCurrentPlayerMap(final FileTypes type) {
+	public Map<String, Object> getCurrentPlayer(final FileTypes type) {
 		Map<String, Object> player = null;
 		for (final Map<String, Object> map : this.model.getPlayers(type)) {
 			if (map.get(playerName).toString().equals("\"" + this.currentPlayer.orElseThrow() + "\"")) {
@@ -264,9 +264,9 @@ public final class ControllerImpl implements Controller {
 		Objects.requireNonNull(status);
 		// No need to update stats in tutorial
 		if (level != 0) {
-			final Map<String, Object> pl = this.getCurrentPlayerMap(FileTypes.STATS);
+			final Map<String, Object> pl = this.getCurrentPlayer(FileTypes.STATS);
 			final boolean check =
-					Integer.parseInt(pl.get("level" + this.getCurrentLevel().orElseThrow() + "Score")
+					Integer.parseInt(pl.get("LEVEL_" + this.getCurrentLevel().orElseThrow() + "_SCORE")
 									.toString())
 							== 0;
 			status.isFirstTime(check);
@@ -410,9 +410,9 @@ public final class ControllerImpl implements Controller {
 		return model.getBoostsList();
 	}
 
-	public Map<String, Integer> getObtatinedBoosts() {
+	public Map<String, Integer> getObtainedBoosts() {
 		final Map<String, Integer> map = new HashMap<>();
-		final Map<String, Object> m = new HashMap<>(getCurrentPlayerMap(FileTypes.BOOSTS));
+		final Map<String, Object> m = new HashMap<>(getCurrentPlayer(FileTypes.BOOSTS));
 		m.remove(playerName);
 
 		m.keySet().stream()
@@ -442,7 +442,7 @@ public final class ControllerImpl implements Controller {
 
 		final List<Map<String, Object>> l = getPlayers(FileTypes.BOOSTS);
 		for (final Map<String, Object> map : l) {
-			if (map.get(playerName).toString().equals("\"" + getCurrentPlayer() + "\"")) {
+			if (map.get(playerName).toString().equals("\"" + getCurrentPlayerName() + "\"")) {
 				map.put(ct.name(), Integer.parseInt(map.get(ct.name()).toString()) - 1);
 			}
 		}
@@ -458,8 +458,7 @@ public final class ControllerImpl implements Controller {
 	}
 
 	public int getCurrentMoney() {
-		return Integer.parseInt(getCurrentPlayerMap(FileTypes.STATS)
-				.get(StatsTypes.money.name())
-				.toString());
+		return Integer.parseInt(
+				getCurrentPlayer(FileTypes.STATS).get(StatsTypes.MONEY.name()).toString());
 	}
 }

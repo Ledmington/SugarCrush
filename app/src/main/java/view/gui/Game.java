@@ -64,7 +64,7 @@ public final class Game extends GUI {
 	private final boolean slowShow;
 	private final JPanel gameGrid = new JPanel();
 	private final JPanel mainPanel;
-	private final transient Map<String, Integer> playerBoosts = controller.getObtatinedBoosts();
+	private final transient Map<String, Integer> playerBoosts = controller.getObtainedBoosts();
 	private final transient List<JButton> boostsBtn = new LinkedList<>();
 	private transient Optional<JButton> tmpCandy = Optional.empty();
 	private transient Optional<String> boostSelected = Optional.empty();

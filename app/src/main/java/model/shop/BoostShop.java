@@ -18,7 +18,7 @@
 package model.shop;
 
 import static controller.Controller.playerName;
-import static controller.files.StatsTypes.money;
+import static controller.files.StatsTypes.MONEY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,10 +101,10 @@ public final class BoostShop {
 		final List<Map<String, Object>> list = pl.getPlayers(FileTypes.STATS);
 		for (Map<String, Object> map : list) {
 			if (map.get(playerName).toString().equals("\"" + name + "\"")) {
-				if ((Integer.parseInt(map.get(money.name()).toString())) >= bst.getPrice()) {
+				if ((Integer.parseInt(map.get(MONEY.name()).toString())) >= bst.getPrice()) {
 					map.put(
-							money.name(),
-							(Integer.parseInt(map.get(money.name()).toString()) - bst.getPrice()));
+							MONEY.name(),
+							(Integer.parseInt(map.get(MONEY.name()).toString()) - bst.getPrice()));
 					pl.update(list, FileTypes.STATS);
 					addBoostToPlayer(name, bst);
 					return;
