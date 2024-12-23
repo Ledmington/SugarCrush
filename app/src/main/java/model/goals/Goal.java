@@ -17,24 +17,21 @@
  */
 package model.goals;
 
-import static controller.Controller.playerName;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import controller.*;
 import controller.files.FileTypes;
-import model.players.PlayerManagerImpl;
+import model.players.PlayerManager;
 
 /** @author Davide Degli Esposti */
 public final class Goal {
 
-	private final String title; // is the main title of the goal
-	private final String descr; // is the short description of the goal
-	private boolean reached; // is the flag that is true if the a goal is reached
+	private final String title; // The main title of the goal
+	private final String descr; // The short description of the goal
+	private boolean reached;
 	private final Predicate<Map<String, Object>> method; // the method for check if a goal is reached
-	private final PlayerManagerImpl pm = new PlayerManagerImpl(); // variable to get the list of the players
 	private final Controller cntrlImpl;
 
 	/**
@@ -72,14 +69,14 @@ public final class Goal {
 	}
 
 	/**
-	 * check through "method" if the goal is reached
+	 * check through "method" if the goal is reached.
 	 *
 	 * @return true if is reached
 	 */
-	public boolean checkIfReached() {
+	public boolean checkIfReached(final PlayerManager pm) {
 		final List<Map<String, Object>> list = pm.getPlayers(FileTypes.STATS);
 		for (final Map<String, Object> map : list) {
-			if (map.get(playerName).toString().equals("\"" + cntrlImpl.getCurrentPlayer() + "\"")) {
+			if (map.get(Controller.playerName).toString().equals("\"" + cntrlImpl.getCurrentPlayer() + "\"")) {
 				this.reached = this.method.test(map);
 				break;
 			}

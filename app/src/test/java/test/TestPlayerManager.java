@@ -56,7 +56,7 @@ public final class TestPlayerManager {
 		controller.startLevel(3);
 	}
 
-	/** Creates a new player, modifies some informations and then remove it */
+	/** Creates a new player, modifies some information and then remove it. */
 	@Test
 	public void testStats() {
 		// create player

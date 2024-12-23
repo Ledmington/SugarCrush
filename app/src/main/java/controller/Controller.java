@@ -45,8 +45,6 @@ public interface Controller {
 
 	String playerName = "playerName";
 
-	// About player(s)
-
 	/**
 	 * Sets the name of the current player
 	 *

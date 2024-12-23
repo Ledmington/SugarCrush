@@ -24,9 +24,9 @@ import controller.files.FileTypes;
 import model.score.Status;
 
 /**
- * Contains a Map with all the informations of the player. As key there are the {@link FileTypes}, as values there are
+ * Contains a Map with all the information of the player. As key there are the {@link FileTypes}, as values there are
  * triples of path, File and JsonArray of that file type. Moreover, contains the enums for all the files, stats and
- * boosts
+ * boosts.
  *
  * @author Emanuele Lamagna
  */
@@ -40,7 +40,7 @@ public interface PlayerManager {
 	void addPlayer(final String name);
 
 	/**
-	 * Checks the values in {@link Status} and refreshes the informations of that player
+	 * Checks the values in {@link Status} and refreshes the information of that player.
 	 *
 	 * @param name the name of the player
 	 * @param status the status of the current player
@@ -49,7 +49,7 @@ public interface PlayerManager {
 	void setStat(final String name, final Status status, final int level);
 
 	/**
-	 * Updates the informations of the player, with the received list of maps
+	 * Updates the information of the player, with the received list of maps.
 	 *
 	 * @param list the list of all the players (all as maps)
 	 * @param type the type of file to use

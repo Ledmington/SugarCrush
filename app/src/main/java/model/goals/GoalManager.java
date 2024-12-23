@@ -57,11 +57,7 @@ public final class GoalManager {
 		gb.setDescr("Farm 5 freckles");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(FRECKLES.name()).toString()) >= 5) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(FRECKLES.name()).toString()) >= 5;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -72,11 +68,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 250 green candy");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(GREEN.name()).toString()) >= 250) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(GREEN.name()).toString()) >= 250;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -87,11 +79,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 250 blue candy");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString()) >= 250) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString()) >= 250;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -102,11 +90,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 500 blue candy");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString()) >= 500) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString()) >= 500;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -117,11 +101,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 250 red candy");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(RED.name()).toString()) >= 250) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(RED.name()).toString()) >= 250;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -132,11 +112,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 250 yellow candy");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(YELLOW.name()).toString()) >= 250) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(YELLOW.name()).toString()) >= 250;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -147,11 +123,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 250 purple candy");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(PURPLE.name()).toString()) >= 250) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(PURPLE.name()).toString()) >= 250;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -162,11 +134,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 250 orange candy");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(ORANGE.name()).toString()) >= 250) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(ORANGE.name()).toString()) >= 250;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -177,11 +145,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 50 pieces of chocolate");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(CHOCOLATE.name()).toString()) >= 50) {
-				return true;
-			} else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(CHOCOLATE.name()).toString()) >= 50;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -192,7 +156,7 @@ public final class GoalManager {
 		gb.setDescr("Destroy 300 candy");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if ((Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString())
+			return (Integer.parseInt(mapCurrentPlayer.get(BLUE.name()).toString())
 							+ Integer.parseInt(
 									mapCurrentPlayer.get(GREEN.name()).toString())
 							+ Integer.parseInt(
@@ -202,11 +166,7 @@ public final class GoalManager {
 							+ Integer.parseInt(mapCurrentPlayer.get(RED.name()).toString())
 							+ Integer.parseInt(
 									mapCurrentPlayer.get(YELLOW.name()).toString()))
-					>= 300) {
-				return true;
-			} else {
-				return false;
-			}
+					>= 300;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());
@@ -217,10 +177,7 @@ public final class GoalManager {
 		gb.setDescr("Finish the game");
 		gb.setMethod(e -> {
 			resetPlayerMap();
-			if (Integer.parseInt(mapCurrentPlayer.get(level10Score.name()).toString()) > 0) return true;
-			else {
-				return false;
-			}
+			return Integer.parseInt(mapCurrentPlayer.get(level10Score.name()).toString()) > 0;
 		});
 		gb.setController(cntrlImpl);
 		this.achievement.add(gb.build());

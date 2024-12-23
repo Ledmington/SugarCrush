@@ -18,6 +18,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +55,8 @@ import view.sounds.*;
  */
 public final class ControllerImpl implements Controller {
 
-	private static View view = null;
-	private static Model model = null;
+	private View view = null;
+	private Model model = null;
 	private Optional<String> currentPlayer;
 
 	/*
@@ -73,13 +74,13 @@ public final class ControllerImpl implements Controller {
 
 	public ControllerImpl() {
 		super();
-		ControllerImpl.view = new ViewImpl();
-		ControllerImpl.model = new ModelImpl(this);
-		ControllerImpl.view.setCurrentGUI(new Login(this, ControllerImpl.view));
+		this.view = new ViewImpl();
+		this.model = new ModelImpl(this);
+		this.view.setCurrentGUI(new Login(this, this.view));
 	}
 
 	public void setCurrentLevel(final int level) {
-		if (level < 0 || level > ControllerImpl.model.getNumLevels()) {
+		if (level < 0 || level > this.model.getNumLevels()) {
 			throw new IllegalArgumentException("Invalid level number.");
 		}
 		this.currentLevel = Optional.of(level);
@@ -87,8 +88,7 @@ public final class ControllerImpl implements Controller {
 
 	public Optional<Integer> getCurrentLevel() {
 		if (this.currentLevel.isPresent()) {
-			if (this.currentLevel.orElseThrow() < 0
-					|| this.currentLevel.orElseThrow() > ControllerImpl.model.getNumLevels()) {
+			if (this.currentLevel.orElseThrow() < 0 || this.currentLevel.orElseThrow() > this.model.getNumLevels()) {
 				throw new IllegalStateException("Current level is invalid number.");
 			}
 		}
@@ -105,16 +105,16 @@ public final class ControllerImpl implements Controller {
 	}
 
 	public int getRemainingMoves() {
-		return ControllerImpl.model.getRemainingMoves();
+		return this.model.getRemainingMoves();
 	}
 
 	public Status getCurrentScore() {
-		return ControllerImpl.model.getCurrentScore();
+		return this.model.getCurrentScore();
 	}
 
 	public boolean move(final Point2D first, final Point2D second) {
 
-		final boolean ris = ControllerImpl.model.move(first, second);
+		final boolean ris = this.model.move(first, second);
 
 		view.updateGrid();
 
@@ -126,8 +126,8 @@ public final class ControllerImpl implements Controller {
 			this.stageEnd();
 			// Stage is ended, we check if the level is done.
 			if (this.isLevelEnded()) {
-				for (Goal g : model.getAchievement()) {
-					if (!g.isReached() && g.checkIfReached()) {
+				for (final Goal g : model.getAchievement()) {
+					if (!g.isReached() && g.checkIfReached(this.model.getPlayerManager())) {
 						view.achievementUnlocked("Achievement Unlocked!\n" + g.getTitle() + "\n" + g.getDescription());
 					}
 				}
@@ -140,7 +140,7 @@ public final class ControllerImpl implements Controller {
 	}
 
 	public int getNumLevels() {
-		return ControllerImpl.model.getNumLevels();
+		return this.model.getNumLevels();
 	}
 
 	public int getLastLevelUnlocked() {
@@ -156,33 +156,33 @@ public final class ControllerImpl implements Controller {
 	}
 
 	public Map<Point2D, Optional<Candy>> getGrid() {
-		return ControllerImpl.model.getGrid();
+		return this.model.getGrid();
 	}
 
 	public void startTutorial() {
-		ControllerImpl.model.startNewGame(Optional.empty());
+		this.model.startNewGame(Optional.empty());
 		setCurrentLevel(0);
 	}
 
 	public void startLevel(final int levelNumber) {
-		ControllerImpl.model.startNewGame(Optional.of(levelNumber));
+		this.model.startNewGame(Optional.of(levelNumber));
 		setCurrentLevel(levelNumber);
 	}
 
 	public Optional<String> getStartingMessage() {
-		return ControllerImpl.model.getStartingMessage();
+		return this.model.getStartingMessage();
 	}
 
 	public Optional<String> getEndingMessage() {
-		return ControllerImpl.model.getEndingMessage();
+		return this.model.getEndingMessage();
 	}
 
 	public boolean isStageEnded() {
-		return ControllerImpl.model.getResult() != GameResult.STILL_PLAYING;
+		return this.model.getResult() != GameResult.STILL_PLAYING;
 	}
 
 	public boolean isLevelEnded() {
-		final boolean result = isStageEnded() && !ControllerImpl.model.hasNextStage();
+		final boolean result = isStageEnded() && !this.model.hasNextStage();
 		if (result) {
 			setPlayerStats(
 					getCurrentPlayer(), getCurrentScore(), getCurrentLevel().orElseThrow());
@@ -191,21 +191,21 @@ public final class ControllerImpl implements Controller {
 	}
 
 	public boolean hasNextStage() {
-		return ControllerImpl.model.hasNextStage();
+		return this.model.hasNextStage();
 	}
 
 	public void nextStage() {
-		ControllerImpl.model.nextStage();
+		this.model.nextStage();
 		view.nextStage();
 	}
 
 	public String getResult() {
-		final GameResult result = ControllerImpl.model.getResult();
+		final GameResult result = this.model.getResult();
 		if (getCurrentLevel().orElseThrow() != 0) {
 			// If game won, it completes the level calling complete in Status
 			if (result.equals(GameResult.MIN_SCORE_REACHED) || result.equals(GameResult.CHALLENGE_COMPLETED)) {
 				sound.playSound("level_completed");
-				ControllerImpl.model.getCurrentLevel().getCurrentScore().complete();
+				this.model.getCurrentLevel().getCurrentScore().complete();
 			} else {
 				sound.playSound("level_failed1");
 			}
@@ -215,7 +215,7 @@ public final class ControllerImpl implements Controller {
 
 	public Map<String, Object> getCurrentPlayerMap(final FileTypes type) {
 		Map<String, Object> player = null;
-		for (Map<String, Object> map : ControllerImpl.model.getPlayers(type)) {
+		for (final Map<String, Object> map : this.model.getPlayers(type)) {
 			if (map.get(playerName).toString().equals("\"" + this.currentPlayer.orElseThrow() + "\"")) {
 				player = map;
 				break;
@@ -230,9 +230,9 @@ public final class ControllerImpl implements Controller {
 	// returns the list of the maps of the players, according to the file type
 	public List<Map<String, Object>> getPlayers(final FileTypes type) {
 		Objects.requireNonNull(type);
-		for (FileTypes ft : FileTypes.values()) {
+		for (final FileTypes ft : FileTypes.values()) {
 			if (ft.equals(type)) {
-				return ControllerImpl.model.getPlayers(ft);
+				return this.model.getPlayers(ft);
 			}
 		}
 		throw new IllegalArgumentException("Invalid type");
@@ -241,21 +241,21 @@ public final class ControllerImpl implements Controller {
 	// removes a player
 	public void removePlayer(final String name) {
 		Objects.requireNonNull(name);
-		ControllerImpl.model.removePlayer(name);
+		this.model.removePlayer(name);
 		this.currentPlayer = Optional.empty();
 	}
 
 	// adds a player
 	public void addPlayer(final String player) {
 		Objects.requireNonNull(player);
-		ControllerImpl.model.addPlayer(player);
+		this.model.addPlayer(player);
 	}
 
 	// update the infos about the players
 	public void updatePlayer(final List<Map<String, Object>> list, final FileTypes type) {
 		Objects.requireNonNull(list);
 		Objects.requireNonNull(type);
-		ControllerImpl.model.updatePlayer(list, type);
+		this.model.updatePlayer(list, type);
 	}
 
 	// sets the stats of a player
@@ -270,13 +270,13 @@ public final class ControllerImpl implements Controller {
 									.toString())
 							== 0;
 			status.isFirstTime(check);
-			ControllerImpl.model.setPlayerStats(player, status, level);
+			this.model.setPlayerStats(player, status, level);
 		}
 	}
 
 	// returns an objective
 	public Objective getObjective() {
-		return ControllerImpl.model.getObjective();
+		return this.model.getObjective();
 	}
 
 	public Point2D getGridSize() {
@@ -284,7 +284,7 @@ public final class ControllerImpl implements Controller {
 		int maxX = Integer.MIN_VALUE;
 		int minY = Integer.MAX_VALUE;
 		int maxY = Integer.MIN_VALUE;
-		final Set<Point2D> grid = ControllerImpl.model.getGrid().keySet();
+		final Set<Point2D> grid = this.model.getGrid().keySet();
 
 		for (Point2D p : grid) {
 			int cx = p.x();
@@ -307,7 +307,7 @@ public final class ControllerImpl implements Controller {
 	}
 
 	public List<Point2D> getHint() {
-		return ControllerImpl.model.getHint();
+		return this.model.getHint();
 	}
 
 	public void levelEnd() {
@@ -321,8 +321,9 @@ public final class ControllerImpl implements Controller {
 
 	public List<Triple<String, String, Boolean>> getAchievements() {
 		final List<Triple<String, String, Boolean>> dataAchievement = new ArrayList<>();
-		for (Goal g : model.getAchievement()) {
-			dataAchievement.add(new Triple<>(g.getTitle(), g.getDescription(), g.checkIfReached()));
+		for (final Goal g : model.getAchievement()) {
+			dataAchievement.add(
+					new Triple<>(g.getTitle(), g.getDescription(), g.checkIfReached(this.model.getPlayerManager())));
 		}
 		return dataAchievement;
 	}
@@ -425,13 +426,11 @@ public final class ControllerImpl implements Controller {
 	}
 
 	public void useBoost(final String candyType, final Point2D position) {
-		CandyTypes ct = null;
-		for (final CandyTypes c : CandyTypes.values()) {
-			if (c.name().equalsIgnoreCase(candyType)) {
-				ct = c;
-				break;
-			}
-		}
+		final CandyTypes ct = Arrays.stream(CandyTypes.values())
+				.filter(c -> c.name().equalsIgnoreCase(candyType))
+				.findFirst()
+				.orElseThrow();
+
 		final CandyColors cc;
 		if (ct == CandyTypes.FRECKLES) {
 			cc = CandyColors.FRECKLES;

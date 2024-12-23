@@ -33,25 +33,29 @@ import model.score.Status;
 import utils.Triple;
 
 /**
- * A class that implements {@link PlayerManager}
+ * A class that implements {@link PlayerManager}.
  *
  * @author Emanuele Lamagna
  */
 public final class PlayerManagerImpl implements PlayerManager {
 
 	// creates the File to be used to create the folder where the json files will be
-	final File folder = new File(System.getProperty("user.home"), ".sugarcrush");
+	private static final File SUGAR_CRUSH_HOME = new File(System.getProperty("user.home"), ".sugarcrush");
 	// a map that keeps a filetype as key, and a triple of <path, file, jsonArray> as value
-	private final Map<FileTypes, Triple<String, File, JsonArray>> filesMap = new HashMap<>() {
+	private static final Map<FileTypes, Triple<String, File, JsonArray>> FILES_MAP = new HashMap<>() {
 		{
 			put(
 					STATS,
 					new Triple<>(
-							folder + File.separator + "stats.json", new File(folder, "stats.json"), new JsonArray()));
+							SUGAR_CRUSH_HOME + File.separator + "stats.json",
+							new File(SUGAR_CRUSH_HOME, "stats.json"),
+							new JsonArray()));
 			put(
 					BOOSTS,
 					new Triple<>(
-							folder + File.separator + "boosts.json", new File(folder, "boosts.json"), new JsonArray()));
+							SUGAR_CRUSH_HOME + File.separator + "boosts.json",
+							new File(SUGAR_CRUSH_HOME, "boosts.json"),
+							new JsonArray()));
 		}
 	};
 
@@ -62,35 +66,35 @@ public final class PlayerManagerImpl implements PlayerManager {
 		obMap.put(STATS, new JsonObject());
 		obMap.put(BOOSTS, new JsonObject());
 		this.initializeProperties(obMap.get(STATS), obMap.get(BOOSTS), name);
-		this.createFiles(
-				this.filesMap.get(STATS).second(), this.filesMap.get(BOOSTS).second());
+		this.createFiles(FILES_MAP.get(STATS).second(), FILES_MAP.get(BOOSTS).second());
 
 		// for every file type, it adds the player
-		Stream.of(FileTypes.values()).forEach(type -> {
-			if (filesMap.get(type).second().length() != 0) {
+		for (final FileTypes type : FileTypes.values()) {
+			if (FILES_MAP.get(type).second().length() != 0) {
 				final JsonParser parser = new JsonParser();
-				try (final FileReader reader = new FileReader(filesMap.get(type).first())) {
-					filesMap.put(
+				try (final FileReader reader =
+						new FileReader(FILES_MAP.get(type).first())) {
+					FILES_MAP.put(
 							type,
 							new Triple<>(
-									filesMap.get(type).first(),
-									filesMap.get(type).second(),
+									FILES_MAP.get(type).first(),
+									FILES_MAP.get(type).second(),
 									(JsonArray) parser.parse(reader)));
 				} catch (final IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
-			if (!filesMap.get(type).third().contains(obMap.get(type))) {
-				filesMap.get(type).third().add(obMap.get(type));
+			if (!FILES_MAP.get(type).third().contains(obMap.get(type))) {
+				FILES_MAP.get(type).third().add(obMap.get(type));
 				try (final FileWriter fileName =
-						new FileWriter(filesMap.get(type).first())) {
-					fileName.write(filesMap.get(type).third().toString());
+						new FileWriter(FILES_MAP.get(type).first())) {
+					fileName.write(FILES_MAP.get(type).third().toString());
 					fileName.flush();
 				} catch (final IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
-		});
+		}
 	}
 
 	public void setStat(final String name, final Status status, final int level) {
@@ -99,21 +103,19 @@ public final class PlayerManagerImpl implements PlayerManager {
 		this.levelCheck(level);
 		this.stringCheck(name);
 		final String lev = "level" + level + "Score";
-		this.createFiles(
-				this.filesMap.get(STATS).second(), this.filesMap.get(BOOSTS).second());
+		this.createFiles(FILES_MAP.get(STATS).second(), FILES_MAP.get(BOOSTS).second());
 		final JsonParser parser = new JsonParser();
-		try (final FileReader reader = new FileReader(this.filesMap.get(STATS).first())) {
-			this.filesMap.put(
+		try (final FileReader reader = new FileReader(FILES_MAP.get(STATS).first())) {
+			FILES_MAP.put(
 					STATS,
 					new Triple<>(
-							this.filesMap.get(STATS).first(),
-							this.filesMap.get(STATS).second(),
-							(JsonArray) parser.parse(reader)));
+							FILES_MAP.get(STATS).first(), FILES_MAP.get(STATS).second(), (JsonArray)
+									parser.parse(reader)));
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 		// put every single information in the JsonObject
-		this.filesMap.get(STATS).third().forEach(jse -> {
+		FILES_MAP.get(STATS).third().forEach(jse -> {
 			if (((JsonObject) jse).get(playerName).getAsString().equals(name)) {
 				final JsonObject jso = (JsonObject) jse;
 				Stream.of(CandyColors.values())
@@ -150,8 +152,8 @@ public final class PlayerManagerImpl implements PlayerManager {
 			}
 		});
 		// writes in stats.json
-		try (final FileWriter fileName = new FileWriter(this.filesMap.get(STATS).first())) {
-			fileName.write(this.filesMap.get(STATS).third().toString());
+		try (final FileWriter fileName = new FileWriter(FILES_MAP.get(STATS).first())) {
+			fileName.write(FILES_MAP.get(STATS).third().toString());
 			fileName.flush();
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
@@ -174,8 +176,8 @@ public final class PlayerManagerImpl implements PlayerManager {
 			});
 			jse.add(jso);
 		});
-		// Writes in the correct file, depending by the file types passed as parameter
-		try (final FileWriter fileName = new FileWriter(filesMap.get(type).first())) {
+		// Writes in the correct file, depending on the file types passed as parameter
+		try (final FileWriter fileName = new FileWriter(FILES_MAP.get(type).first())) {
 			fileName.write(jse.toString());
 			fileName.flush();
 		} catch (final IOException e) {
@@ -186,23 +188,22 @@ public final class PlayerManagerImpl implements PlayerManager {
 	public List<Map<String, Object>> getPlayers(final FileTypes type) {
 		Objects.requireNonNull(type);
 		final List<Map<String, Object>> list = new LinkedList<>();
-		this.createFiles(
-				this.filesMap.get(STATS).second(), this.filesMap.get(BOOSTS).second());
+		this.createFiles(FILES_MAP.get(STATS).second(), FILES_MAP.get(BOOSTS).second());
 		// Initializes the list checking the correct file type
-		if (filesMap.get(type).second().length() != 0) {
+		if (FILES_MAP.get(type).second().length() != 0) {
 			final JsonParser parser = new JsonParser();
-			try (final FileReader reader = new FileReader(filesMap.get(type).first())) {
-				filesMap.put(
+			try (final FileReader reader = new FileReader(FILES_MAP.get(type).first())) {
+				FILES_MAP.put(
 						type,
 						new Triple<>(
-								filesMap.get(type).first(), filesMap.get(type).second(), (JsonArray)
+								FILES_MAP.get(type).first(), FILES_MAP.get(type).second(), (JsonArray)
 										parser.parse(reader)));
 			} catch (final IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 		// adds every map to the list
-		filesMap.get(type).third().forEach(jse -> {
+		FILES_MAP.get(type).third().forEach(jse -> {
 			final Map<String, Object> map = new HashMap<>();
 			((JsonObject) jse).keySet().forEach(s -> map.put(s, ((JsonObject) jse).get(s)));
 			list.add(map);
@@ -216,29 +217,30 @@ public final class PlayerManagerImpl implements PlayerManager {
 		// Removes the player in every file
 		Stream.of(FileTypes.values()).forEach(type -> {
 			JsonElement el = null;
-			if (filesMap.get(type).second().length() != 0) {
+			if (FILES_MAP.get(type).second().length() != 0) {
 				final JsonParser parser = new JsonParser();
-				try (final FileReader reader = new FileReader(filesMap.get(type).first())) {
-					filesMap.put(
+				try (final FileReader reader =
+						new FileReader(FILES_MAP.get(type).first())) {
+					FILES_MAP.put(
 							type,
 							new Triple<>(
-									filesMap.get(type).first(),
-									filesMap.get(type).second(),
+									FILES_MAP.get(type).first(),
+									FILES_MAP.get(type).second(),
 									(JsonArray) parser.parse(reader)));
 				} catch (final IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
-			for (final JsonElement jse : filesMap.get(type).third()) {
+			for (final JsonElement jse : FILES_MAP.get(type).third()) {
 				if (((JsonObject) jse).get(playerName).toString().equals("\"" + name + "\"")) {
 					el = jse;
 				}
 			}
 			if (el != null) {
-				filesMap.get(type).third().remove(el);
+				FILES_MAP.get(type).third().remove(el);
 			}
-			try (final FileWriter fileName = new FileWriter(filesMap.get(type).first())) {
-				fileName.write(filesMap.get(type).third().toString());
+			try (final FileWriter fileName = new FileWriter(FILES_MAP.get(type).first())) {
+				fileName.write(FILES_MAP.get(type).third().toString());
 				fileName.flush();
 			} catch (final IOException e) {
 				throw new RuntimeException(e);
@@ -256,7 +258,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 
 	// Creates the files (if they don't exist)
 	private void createFiles(final File st, final File boo) {
-		folder.mkdir();
+		SUGAR_CRUSH_HOME.mkdir();
 		try {
 			st.createNewFile();
 			boo.createNewFile();
@@ -278,14 +280,14 @@ public final class PlayerManagerImpl implements PlayerManager {
 	// If the number of the level is < 1 or > 10, throws an exception
 	private void levelCheck(final int lev) {
 		if (lev < 1 || lev > 10) {
-			throw new IllegalArgumentException("Level must be between 1 and 10");
+			throw new IllegalArgumentException("Level must be between 1 and 10.");
 		}
 	}
 
 	// If the string is empty or contains '\', throws an exception
 	private void stringCheck(final String name) {
-		if (name.isEmpty() || name.contains("\"")) {
-			throw new IllegalArgumentException("Invalid name");
+		if (name.isBlank() || name.contains("\"")) {
+			throw new IllegalArgumentException("Invalid name.");
 		}
 	}
 }

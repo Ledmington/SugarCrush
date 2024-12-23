@@ -28,6 +28,7 @@ import model.game.level.Level;
 import model.game.level.stage.Stage;
 import model.goals.Goal;
 import model.objectives.Objective;
+import model.players.PlayerManager;
 import model.score.Status;
 import model.shop.Boost;
 import utils.Pair;
@@ -123,7 +124,7 @@ public interface Model {
 	void addPlayer(final String name);
 
 	/**
-	 * Checks the values in Status and refreshes the informations of that player
+	 * Checks the values in Status and refreshes the information of that player.
 	 *
 	 * @param name the name of the player
 	 * @param status the status of the current player
@@ -132,7 +133,7 @@ public interface Model {
 	void setPlayerStats(final String name, final Status status, final int level);
 
 	/**
-	 * Updates the informations of the player, with the received list of maps
+	 * Updates the information of the player, with the received list of maps.
 	 *
 	 * @param list the list of the players (as maps)
 	 * @param type the type of file to update (boosts or stats)
@@ -140,7 +141,7 @@ public interface Model {
 	void updatePlayer(final List<Map<String, Object>> list, final FileTypes type);
 
 	/**
-	 * Reads the right file to get all the players stats or boost (it depends by "type" parameter)
+	 * Reads the right file to get all the players stats or boost (it depends on "type" parameter)
 	 *
 	 * @param type the type of file to get (boosts or stats)
 	 * @return a list of all the players (as maps)
@@ -206,4 +207,6 @@ public interface Model {
 
 	/** refresh the shop */
 	void resetShop();
+
+	PlayerManager getPlayerManager();
 }

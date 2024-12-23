@@ -68,6 +68,11 @@ public final class ModelImpl implements Model {
 		this.bs = new BoostShop();
 	}
 
+	@Override
+	public PlayerManager getPlayerManager() {
+		return pm;
+	}
+
 	public void startNewGame(final Optional<Integer> levelIndex) {
 		if (this.currentLevel.isPresent()) {
 			throw new IllegalStateException("Game already running! End the running game first.");

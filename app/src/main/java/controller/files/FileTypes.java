@@ -18,7 +18,7 @@
 package controller.files;
 
 /**
- * Enum of all the file types
+ * Enum of all the file types.
  *
  * @author Emanuele Lamagna
  */
