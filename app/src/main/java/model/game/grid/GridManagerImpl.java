@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.random.RandomGenerator;
 import java.util.random.RandomGeneratorFactory;
@@ -58,17 +59,16 @@ public final class GridManagerImpl implements GridManager {
 			final Status score,
 			final List<CandyColors> colors,
 			final boolean jelly) {
-		if (initialGrid == null || score == null || colors == null || controller == null) {
-			throw new NullPointerException();
-		}
-		this.controller = controller;
+		this.controller = Objects.requireNonNull(controller);
+		this.grid = new HashMap<>(Objects.requireNonNull(initialGrid));
+		this.spawnedCandyColors = Objects.requireNonNull(colors);
+		this.score = Objects.requireNonNull(score);
+
 		this.updateScore = false;
 		this.jelly = Optional.empty();
-		this.grid = new HashMap<>(initialGrid);
-		this.spawnedCandyColors = colors;
-		this.score = score;
 		this.dropCandies();
 		this.updateScore = true;
+
 		if (jelly) {
 			this.jelly = Optional.of(new HashMap<>());
 			this.grid.forEach((crd, cnd) -> this.jelly.orElseThrow().put(crd, 2));
@@ -379,7 +379,8 @@ public final class GridManagerImpl implements GridManager {
 	}
 
 	private boolean searchDestroyShapes() {
-		boolean shpFound = false;
+		boolean shapeFound = false;
+
 		// For each shape (ordered) we search for corresponds.
 		for (final Shapes shp : Shapes.values()) {
 			ShapeCoordinates shpCrd = shp.getCoordinates();
@@ -394,7 +395,7 @@ public final class GridManagerImpl implements GridManager {
 						final CandyColors cndCol = candy.orElseThrow().getColor();
 						// If shape is found we destroy the shape.
 						if (this.findShape(shpCrd, crd, false)) {
-							shpFound = true;
+							shapeFound = true;
 							// Inform score that this shape has been destroyed.
 							if (this.updateScore) {
 								this.score.update(shp);
@@ -442,10 +443,10 @@ public final class GridManagerImpl implements GridManager {
 			}
 		}
 		// If at least one shape is found, we have to make candies drop.
-		if (shpFound) {
+		if (shapeFound) {
 			this.dropCandies();
 		}
-		return shpFound;
+		return shapeFound;
 	}
 
 	private void dropCandies() {
