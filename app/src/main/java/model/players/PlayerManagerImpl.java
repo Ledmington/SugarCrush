@@ -88,7 +88,6 @@ public final class PlayerManagerImpl implements PlayerManager {
 		// for every file type, it adds the player
 		for (final FileTypes type : FileTypes.values()) {
 			if (FILES_MAP.get(type).second().length() != 0) {
-				final JsonParser parser = new JsonParser();
 				try (final BufferedReader reader =
 						Files.newBufferedReader(Path.of(FILES_MAP.get(type).first()), StandardCharsets.UTF_8)) {
 					FILES_MAP.put(
@@ -96,7 +95,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 							new Triple<>(
 									FILES_MAP.get(type).first(),
 									FILES_MAP.get(type).second(),
-									(JsonArray) parser.parse(reader)));
+									(JsonArray) JsonParser.parseReader(reader)));
 				} catch (final IOException e) {
 					throw new RuntimeException(e);
 				}
@@ -123,7 +122,6 @@ public final class PlayerManagerImpl implements PlayerManager {
 		this.createFiles(
 				FILES_MAP.get(FileTypes.STATS).second(),
 				FILES_MAP.get(FileTypes.BOOSTS).second());
-		final JsonParser parser = new JsonParser();
 		try (final BufferedReader reader =
 				Files.newBufferedReader(Path.of(FILES_MAP.get(FileTypes.STATS).first()), StandardCharsets.UTF_8)) {
 			FILES_MAP.put(
@@ -131,7 +129,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 					new Triple<>(
 							FILES_MAP.get(FileTypes.STATS).first(),
 							FILES_MAP.get(FileTypes.STATS).second(),
-							(JsonArray) parser.parse(reader)));
+							(JsonArray) JsonParser.parseReader(reader)));
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -217,13 +215,12 @@ public final class PlayerManagerImpl implements PlayerManager {
 				FILES_MAP.get(FileTypes.BOOSTS).second());
 		// Initializes the list checking the correct file type
 		if (FILES_MAP.get(type).second().length() != 0) {
-			final JsonParser parser = new JsonParser();
 			try (final FileReader reader = new FileReader(FILES_MAP.get(type).first(), StandardCharsets.UTF_8)) {
 				FILES_MAP.put(
 						type,
 						new Triple<>(
 								FILES_MAP.get(type).first(), FILES_MAP.get(type).second(), (JsonArray)
-										parser.parse(reader)));
+										JsonParser.parseReader(reader)));
 			} catch (final IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -246,7 +243,6 @@ public final class PlayerManagerImpl implements PlayerManager {
 		for (final FileTypes type : FileTypes.values()) {
 			JsonElement el = null;
 			if (FILES_MAP.get(type).second().length() != 0) {
-				final JsonParser parser = new JsonParser();
 				try (final BufferedReader reader =
 						Files.newBufferedReader(Path.of(FILES_MAP.get(type).first()), StandardCharsets.UTF_8)) {
 					FILES_MAP.put(
@@ -254,7 +250,7 @@ public final class PlayerManagerImpl implements PlayerManager {
 							new Triple<>(
 									FILES_MAP.get(type).first(),
 									FILES_MAP.get(type).second(),
-									(JsonArray) parser.parse(reader)));
+									(JsonArray) JsonParser.parseReader(reader)));
 				} catch (final IOException e) {
 					throw new RuntimeException(e);
 				}
